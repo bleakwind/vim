@@ -1618,19 +1618,6 @@ function! MarkdownAnchor(...)
         endif
         let l:i = l:i+1
     endwhile
-    " replace time
-    "let l:conres = substitute(l:conres, '\v\$[0-9]{4}\-[0-9]{2}\-[0-9]{2} [0-9]{2}\:[0-9]{2}\:[0-9]{2}\c', '$'.strftime("%Y-%m-%d %H:%M:%S"), 'g')
-    " replace anchor
-    "let l:conres = substitute(l:conres, '\v\<span id\=\"[^"]*\"\>\<\/span\>\n\n\c', '', 'g')
-    "let l:conres = substitute(l:conres, '\v[\n]+([^\n]+)\n([\-]+)\c', '\="\n\n<span id=\"".substitute(substitute(tolower(submatch(1)), "[\:\.]", "", "g"), "[ ]", "-", "g")."\"></span>\n\n".submatch(1)."\n".submatch(2)', 'g')
-    "let l:conres = substitute(l:conres, '\v[\n]+([\#]+ )([^\n]+)\c',  '\="\n\n<span id=\"".substitute(substitute(tolower(submatch(2)), "[\:\.]", "", "g"), "[ ]", "-", "g")."\"></span>\n\n".submatch(1).submatch(2)', 'g')
-    " write content
-    "let l:conres = split(l:conres, '\n')
-    "let l:i = 0
-    "while l:i < len(l:conres)
-    "    call setline(l:i+1, l:conres[l:i])
-    "    let l:i = l:i+1
-    "endwhile
 endfunction
 " ------------------------------------------------
 
