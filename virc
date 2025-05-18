@@ -39,27 +39,23 @@ augroup END
 
 " ############################################################################
 " +--------------------------------------------------------------------------+
-" | $Id: virc 2018-10-18 10:06:29 Bleakwind Exp $                            |
+" | $Id: vimrc 2018-10-18 10:06:29 Bleakwind Exp $                           |
 " +--------------------------------------------------------------------------+
 " | Copyright (c) 2008-2018 Bleakwind(Rick Wu).                              |
 " +--------------------------------------------------------------------------+
-" | This source file is virc.                                                |
+" | This source file is vimrc.                                               |
 " | This source file is release under BSD license.                           |
 " +--------------------------------------------------------------------------+
 " | Author: Bleakwind(Rick Wu) <bleakwind@qq.com>                            |
 " +--------------------------------------------------------------------------+
 " ############################################################################
 
-" ############################################################################
-" Settings by Bleakwind
-" ############################################################################
 " ============================================================================
 " Global Setting
 " ============================================================================
 set nocompatible
 set tags=./.tags;,.tags
 set wildignore+=*/.svn/*,*/.git/*
-set guifontset=
 
 " ============================================================================
 " System Setting
@@ -107,10 +103,10 @@ set norelativenumber
 
 " Set Folding
 set foldenable
-set foldmethod=marker
+set foldmethod=indent
 set foldcolumn=4
 set foldnestmax=3
-set foldlevel=3
+set foldlevel=99
 set foldminlines=1
 
 " Set Cursor
@@ -129,7 +125,8 @@ set expandtab
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
-set synmaxcol=0
+set synmaxcol=1000
+set redrawtime=6000
 set iskeyword+=_,$,@,%,#,-
 set selection=inclusive
 
@@ -158,13 +155,18 @@ set helpheight=20
 set mouse=a
 set winaltkeys=no
 set scrolljump=1
-set scrolloff=9
+set scrolloff=3
 set history=100
 set wildmenu
 set laststatus=2
 set shortmess=atI
 set completeopt=menuone
 set fillchars=stl:\ ,stlnc:\ ,vert:\ ,fold:-,diff:-
+
+" Set Term
+"if !empty($TMUX)
+    set termguicolors
+"endif
 
 " Set Keyboard
 map     <C-Insert>      "+y:let @*=@+<CR>
@@ -185,19 +187,32 @@ map     <4-MiddleMouse> <4-LeftMouse>
 imap    <4-MiddleMouse> <4-LeftMouse>
 vmap    <4-MiddleMouse> <4-LeftMouse>
 
+" ============================================================================
+" Initialize
+" ============================================================================
+" Clean Autocmd
+" autocmd!
+
 " ############################################################################
 " Syntax Color by Bleakwind
 " ############################################################################
+" ----------------------------------------------------------------------------
+" Red         LightRed        DarkRed
+" Green       LightGreen      DarkGreen       SeaGreen
+" Blue        LightBlue       DarkBlue        SlateBlue
+" Cyan        LightCyan       DarkCyan
+" Magenta     LightMagenta    DarkMagenta
+" Yellow      LightYellow     Brown           DarkYellow
+" Gray        LightGray       DarkGray
+" Black       White
+" Orange      Purple          Violet
+" Bold, Underline, Undercurl, Reverse, Italic, Standout, NONE
+" ----------------------------------------------------------------------------
+" $str = '...'; preg_match_all('/(c[A-Z][a-zA-Z0-9_]*)[^a-zA-Z0-9_]/', $str, $matches); print_r(array_unique($matches[1]));
+" $str = '...'; preg_match_all('/\s(hi|highlight)\s+(def\s+|default\s+|link\s+)*([a-zA-Z0-9_]*)\s/', $str, $matches); sort($matches[3]); print_r(array_values(array_unique($matches[3])));
+" ----------------------------------------------------------------------------
 syntax enable
 syntax on
-
-set background=dark
-if version > 580
-    "hi clear
-    if exists("syntax_on")
-        syntax reset
-    endif
-endif
 
 " ============================================================================
 " Color detail: System
@@ -291,8 +306,4 @@ hi Todo                                 ctermfg=LightBlue   ctermbg=NONE        
 " ============================================================================
 hi Nothing                              ctermfg=NONE        ctermbg=NONE        cterm=NONE        guifg=NONE      guibg=NONE      gui=NONE
 hi Unknown                              ctermfg=Black       ctermbg=Yellow      cterm=NONE        guifg=Black     guibg=Yellow    gui=NONE
-
-" ############################################################################
-" === End ===
-" ############################################################################
 

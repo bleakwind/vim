@@ -1,37 +1,56 @@
-set nocompatible      " Enable Vim mode (instead of vi emulation)
+" An example for a vimrc file.
+"
+" Maintainer:   The Vim Project <https://github.com/vim/vim>
+" Last Change:  2023 Aug 10
+" Former Maintainer:    Bram Moolenaar <Bram@vim.org>
+"
+" To use it, copy it to
+"              for Unix:  ~/.vimrc
+"             for Amiga:  s:.vimrc
+"        for MS-Windows:  $VIM\_vimrc
+"             for Haiku:  ~/config/settings/vim/vimrc
+"           for OpenVMS:  sys$login:.vimrc
 
-let g:is_posix = 1    " Our /bin/sh is POSIX, not bash
-set autoindent        " Intelligent indentation matching
-set autoread          " Update the file if it's changed externally
-set backspace=indent,eol,start  " Allow backspacing over anything
-set belloff=all       " Turn off bells
-set display=truncate  " Show '@@@' when the last screen line overflows
-set formatoptions+=j  " Delete comment char when joining lines
-set history=100       " Undo up to this many commands
-set hlsearch          " Highlight search results
-set incsearch         " Highlight search matches as you type them
-set ruler             " Show cursor position
-set ttyfast           " Redraw faster for smoother scrolling
-set wildmenu          " Show menu for tab completion in command mode
-
-try
-    syntax on         " Enable syntax highlighting
-catch | endtry        " vim-tiny is installed without the syntax files
-
-if v:lang =~ "utf8$" || v:lang =~ "UTF-8$"
-    set fileencodings=ucs-bom,utf-8,latin1
+" When started as "evim", evim.vim will already have done these settings, bail
+" out.
+if v:progname =~? "evim"
+  finish
 endif
 
-" CTRL-L will mute highlighted search results
-nnoremap <silent> <C-l> :<C-u>nohlsearch<CR><C-l>
+" Get the defaults that most users want.
+source $VIMRUNTIME/defaults.vim
 
-augroup FreeBSD
-    autocmd!
-    autocmd BufNewFile /usr/ports/*/*/Makefile 0r /usr/ports/Templates/Makefile
-    if !empty($PORTSDIR)
-        autocmd BufNewFile $PORTSDIR/*/*/Makefile 0r $PORTSDIR/Templates/Makefile
-    endif
+if has("vms")
+  set nobackup          " do not keep a backup file, use versions instead
+else
+  set backup            " keep a backup file (restore to previous version)
+  if has('persistent_undo')
+    set undofile        " keep an undo file (undo changes after closing)
+  endif
+endif
+
+if &t_Co > 2 || has("gui_running")
+  " Switch on highlighting the last used search pattern.
+  set hlsearch
+endif
+
+" Put these in an autocmd group, so that we can delete them easily.
+augroup vimrcEx
+  au!
+
+  " For all text files set 'textwidth' to 78 characters.
+  autocmd FileType text setlocal textwidth=78
 augroup END
+
+" Add optional packages.
+"
+" The matchit plugin makes the % command work better, but it is not backwards
+" compatible.
+" The ! means the package won't be loaded right away but when plugins are
+" loaded during initialization.
+if has('syntax') && has('eval')
+  packadd! matchit
+endif
 
 " ############################################################################
 " === Vimrc Begin ===
@@ -99,11 +118,8 @@ augroup END
 " MiniBufferExplorer
 " https://github.com/fholgado/minibufexpl.vim
 " ============================================================================
-" Unite
-" https://github.com/Shougo/unite.vim
-" ----------------------------------------------------------------------------
-" Unite-Neomru
-" https://github.com/Shougo/neomru.vim
+" Vim-Minimap
+" https://github.com/severin-lemaignan/vim-minimap
 " ============================================================================
 " FencView
 " https://github.com/adah1972/fencview
@@ -129,6 +145,12 @@ augroup END
 " Vim-Dict
 " Plugin 'skywind3000/vim-dict'
 " ============================================================================
+" Vim-Markdown
+" Plugin 'plasticboy/vim-markdown'
+" ============================================================================
+" Vim-Markdown-Toc
+" Plugin 'mzlogin/vim-markdown-toc'
+" ============================================================================
 
 " ############################################################################
 " Settings by Bleakwind
@@ -146,9 +168,10 @@ if has('unix')
     let g:config_dir_tree                 = '/pub/'
     let g:config_dir_work                 = '/pub/project/'
     let g:config_dir_data                 = '/pub/_program/vim/data/'
-    let g:config_debug_url                = 'http://localhost/'
+    let g:config_debug_url                = 'http://127.0.0.1:88/'
     let g:config_debug_browser1           = 'chrome'
     let g:config_debug_browser2           = 'firefox'
+    let g:config_markdown_script          = 'http://127.0.0.1:88/project/markdown/markdown/markdown.php'
 
     call add(g:config_nerdtree_bookmark,    '01./ /')
     call add(g:config_nerdtree_bookmark,    '02./pub /pub')
@@ -166,9 +189,10 @@ elseif has('mac')
     let g:config_dir_tree                 = '/pub/'
     let g:config_dir_work                 = '/pub/project/'
     let g:config_dir_data                 = '/pub/_program/vim/data/'
-    let g:config_debug_url                = 'http://localhost/'
+    let g:config_debug_url                = 'http://127.0.0.1:88/'
     let g:config_debug_browser1           = 'chrome'
     let g:config_debug_browser2           = 'firefox'
+    let g:config_markdown_script          = 'http://127.0.0.1:88/project/markdown/markdown/markdown.php'
 
     call add(g:config_nerdtree_bookmark,    '01./ /')
     call add(g:config_nerdtree_bookmark,    '02./pub /pub')
@@ -186,9 +210,10 @@ elseif has('win64') || has('win32')
     let g:config_dir_tree                 = 'E:/project/'
     let g:config_dir_work                 = 'E:/project/'
     let g:config_dir_data                 = 'D:/Program Files/vim/data/'
-    let g:config_debug_url                = 'http://localhost/'
+    let g:config_debug_url                = 'http://127.0.0.1:88/'
     let g:config_debug_browser1           = 'start '.shellescape('C:/Program Files (x86)/Google/Chrome/Application/chrome.exe')
     let g:config_debug_browser2           = 'start '.shellescape('D:/Program Files/Firefox/firefox.exe')
+    let g:config_markdown_script          = 'http://127.0.0.1:88/project/markdown/markdown/markdown.php'
 
     call add(g:config_nerdtree_bookmark,    '01.C: C:/')
     call add(g:config_nerdtree_bookmark,    '02.D: D:/')
@@ -277,8 +302,7 @@ Plugin 'skywind3000/asyncrun.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'fholgado/minibufexpl.vim'
 " ----------------------------------------------------------------------------
-Plugin 'Shougo/unite.vim'
-Plugin 'Shougo/neomru.vim'
+Plugin 'severin-lemaignan/vim-minimap'
 " ----------------------------------------------------------------------------
 Plugin 'adah1972/fencview'
 Plugin 'ap/vim-css-color'
@@ -290,6 +314,9 @@ Plugin 'honza/vim-snippets'
 " ----------------------------------------------------------------------------
 Plugin 'skywind3000/vim-auto-popmenu'
 Plugin 'skywind3000/vim-dict'
+" ----------------------------------------------------------------------------
+Plugin 'plasticboy/vim-markdown'
+Plugin 'mzlogin/vim-markdown-toc'
 " ----------------------------------------------------------------------------
 call vundle#end()
 " ----------------------------------------------------------------------------
@@ -340,10 +367,10 @@ set norelativenumber
 
 " Set Folding
 set foldenable
-set foldmethod=marker
+set foldmethod=indent
 set foldcolumn=4
 set foldnestmax=3
-set foldlevel=3
+set foldlevel=99
 set foldminlines=1
 
 " Set Cursor
@@ -362,7 +389,8 @@ set expandtab
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
-set synmaxcol=0
+set synmaxcol=1000
+set redrawtime=6000
 set iskeyword+=_,$,@,%,#,-
 set selection=inclusive
 
@@ -391,7 +419,7 @@ set helpheight=20
 set mouse=a
 set winaltkeys=no
 set scrolljump=1
-set scrolloff=9
+set scrolloff=3
 set history=100
 set wildmenu
 set laststatus=2
@@ -487,10 +515,10 @@ hi StatusLine_8                         ctermfg=Red         ctermbg=LightGray   
 " ============================================================================
 " Color detail: Buffer
 " ============================================================================
-hi BufferNormal                         ctermfg=Black       ctermbg=DarkGray    cterm=NONE        guifg=#59647A   guibg=#282c34   gui=NONE
-hi BufferChanged                        ctermfg=DarkRed     ctermbg=DarkGray    cterm=NONE        guifg=#A2000C   guibg=#282c34   gui=NONE
-hi BufferVisibleNormal                  ctermfg=Black       ctermbg=LightGray   cterm=NONE        guifg=#59647A   guibg=#21252b   gui=NONE
-hi BufferVisibleChanged                 ctermfg=DarkRed     ctermbg=LightGray   cterm=NONE        guifg=#A2000C   guibg=#21252b   gui=NONE
+hi BufferNormal                         ctermfg=Black       ctermbg=DarkGray    cterm=NONE        guifg=#DDDDDD   guibg=#59647A   gui=NONE
+hi BufferChanged                        ctermfg=DarkRed     ctermbg=DarkGray    cterm=NONE        guifg=#FF4D5B   guibg=#59647A   gui=NONE
+hi BufferVisibleNormal                  ctermfg=Black       ctermbg=LightGray   cterm=NONE        guifg=#DDDDDD   guibg=#21252b   gui=NONE
+hi BufferVisibleChanged                 ctermfg=DarkRed     ctermbg=LightGray   cterm=NONE        guifg=#FF939C   guibg=#21252b   gui=NONE
 hi BufferVisibleActiveNormal            ctermfg=Black       ctermbg=White       cterm=NONE        guifg=#A3D97D   guibg=#171C22   gui=NONE
 hi BufferVisibleActiveChanged           ctermfg=Red         ctermbg=White       cterm=NONE        guifg=#FF939C   guibg=#171C22   gui=NONE
 
@@ -503,124 +531,132 @@ if g:config_plugin_on == 'on'
 " Function List Define by Bleakwind
 " ############################################################################
 " ============================================================================
-" Variable for g:config
+" g:cheerful_set_xxx
 " ============================================================================
-let g:config_builddir                                   = {}
-let g:config_builddir['root']                           = g:config_dir_data
-let g:config_builddir['vim']                            = g:config_dir_data.'vim'
-let g:config_builddir['vim_backupdir']                  = g:config_dir_data.'vim/backupdir'
-let g:config_builddir['vim_viewdir']                    = g:config_dir_data.'vim/viewdir'
-let g:config_builddir['vim_undodir']                    = g:config_dir_data.'vim/undodir'
-let g:config_builddir['vim_swapdir']                    = g:config_dir_data.'vim/swapdir'
-let g:config_builddir['php']                            = g:config_dir_data.'php'
-let g:config_builddir['nerdtree']                       = g:config_dir_data.'nerdtree'
-let g:config_builddir['unite']                          = g:config_dir_data.'unite'
-let g:config_builddir['unite_bookmark']                 = g:config_dir_data.'unite/bookmark'
-let g:config_builddir['unite_file_rec']                 = g:config_dir_data.'unite/file_rec'
-let g:config_builddir['unite_file_rec_file']            = g:config_dir_data.'unite/file_rec/file'
-let g:config_builddir['neomru']                         = g:config_dir_data.'neomru'
-let g:config_builddir['ultisnips']                      = g:config_dir_data.'ultisnips'
-let g:config_builddir['cheerful_reopen_dir']            = g:config_dir_data.'cheerful'
+let g:cheerful_set_main                         = 0
+let g:cheerful_set_path                         = g:config_dir_data.'cheerful'
 
-let g:config_buildfile                                  = {}
-let g:config_buildfile['php_runscript']                 = g:config_dir_data.'php/runscript.php'
-let g:config_buildfile['php_runscript_input']           = g:config_dir_data.'php/runscript_input.php'
-let g:config_buildfile['nerdtree_bookmark']             = g:config_dir_data.'nerdtree/bookmark'
-let g:config_buildfile['neomru_neomru_file']            = g:config_dir_data.'neomru/neomru_file'
-let g:config_buildfile['neomru_neomru_directory']       = g:config_dir_data.'neomru/neomru_directory'
-let g:config_buildfile['ultisnips_all']                 = g:config_dir_data.'ultisnips/all.snippets'
-let g:config_buildfile['ultisnips_php']                 = g:config_dir_data.'ultisnips/php.snippets'
+let g:cheerful_set_name                         = {}
+let g:cheerful_set_type                         = {}
+let g:cheerful_set_part                         = {}
+let g:cheerful_set_buff                         = {}
+let g:cheerful_set_coth                         = {}
+let g:cheerful_set_size                         = {}
+let g:cheerful_set_open                         = {}
+let g:cheerful_set_clse                         = {}
+let g:cheerful_set_nohi                         = {}
+let g:cheerful_set_stat                         = {}
+let g:cheerful_set_show                         = {}
 
-let g:config_builddata                                  = {}
-let g:config_builddata['php_runscript']                 = []
-let g:config_builddata['php_runscript_input']           = []
-let g:config_builddata['nerdtree_bookmark']             = g:config_nerdtree_bookmark
-let g:config_builddata['neomru_neomru_file']            = []
-let g:config_builddata['neomru_neomru_directory']       = []
-let g:config_builddata['ultisnips_all']                 = g:config_ultisnips_all
-let g:config_builddata['ultisnips_php']                 = g:config_ultisnips_php
+let g:cheerful_set_name['nerdtree']             = 'Filelist'
+let g:cheerful_set_type['nerdtree']             = 'nerdtree'
+let g:cheerful_set_part['nerdtree']             = 'tree'
+let g:cheerful_set_buff['nerdtree']             = ''
+let g:cheerful_set_coth['nerdtree']             = ''
+let g:cheerful_set_size['nerdtree']             = 30
+let g:cheerful_set_open['nerdtree']             = 'NERDTree'
+let g:cheerful_set_clse['nerdtree']             = 'NERDTreeClose'
+let g:cheerful_set_nohi['nerdtree']             = 0
+let g:cheerful_set_stat['nerdtree']             = 0
+let g:cheerful_set_show['nerdtree']             = 0
 
-" ============================================================================
-" Variable for g:set_tool
-" ============================================================================
-let g:cheerful_set_name                                 = {}
-let g:cheerful_set_type                                 = {}
-let g:cheerful_set_part                                 = {}
-let g:cheerful_set_nocur                                = {}
-let g:cheerful_set_stay                                 = {}
-let g:cheerful_set_size                                 = {}
-let g:cheerful_set_open                                 = {}
-let g:cheerful_set_close                                = {}
+let g:cheerful_set_name['minibufexpl']          = 'Bufferlist'
+let g:cheerful_set_type['minibufexpl']          = 'minibufexpl'
+let g:cheerful_set_part['minibufexpl']          = 'tab'
+let g:cheerful_set_buff['minibufexpl']          = ''
+let g:cheerful_set_coth['minibufexpl']          = ''
+let g:cheerful_set_size['minibufexpl']          = 1
+let g:cheerful_set_open['minibufexpl']          = 'MBEOpen'
+let g:cheerful_set_clse['minibufexpl']          = 'MBEClose'
+let g:cheerful_set_nohi['minibufexpl']          = 1
+let g:cheerful_set_stat['minibufexpl']          = 0
+let g:cheerful_set_show['minibufexpl']          = 0
 
-let g:cheerful_set_name['nerdtree']                     = 'nerdtree'
-let g:cheerful_set_type['nerdtree']                     = 'nerdtree'
-let g:cheerful_set_part['nerdtree']                     = 'tree'
-let g:cheerful_set_nocur['nerdtree']                    = 0
-let g:cheerful_set_stay['nerdtree']                     = 0
-let g:cheerful_set_size['nerdtree']                     = 30
-let g:cheerful_set_open['nerdtree']                     = 'NERDTreeToggle'
-let g:cheerful_set_close['nerdtree']                    = 'NERDTreeToggle'
+let g:cheerful_set_name['quickfix']             = 'Quickfix'
+let g:cheerful_set_type['quickfix']             = 'qf'
+let g:cheerful_set_part['quickfix']             = 'output'
+let g:cheerful_set_buff['quickfix']             = ''
+let g:cheerful_set_coth['quickfix']             = ['minimap']
+let g:cheerful_set_size['quickfix']             = 10
+let g:cheerful_set_open['quickfix']             = 'botright copen '.g:cheerful_set_size['quickfix']
+let g:cheerful_set_clse['quickfix']             = 'cclose'
+let g:cheerful_set_nohi['quickfix']             = 0
+let g:cheerful_set_stat['quickfix']             = 1
+let g:cheerful_set_show['quickfix']             = 0
 
-let g:cheerful_set_name['minibufexpl']                  = 'minibufexpl'
-let g:cheerful_set_type['minibufexpl']                  = 'minibufexpl'
-let g:cheerful_set_part['minibufexpl']                  = 'tab'
-let g:cheerful_set_nocur['minibufexpl']                 = 1
-let g:cheerful_set_stay['minibufexpl']                  = 0
-let g:cheerful_set_size['minibufexpl']                  = 1
-let g:cheerful_set_open['minibufexpl']                  = 'MBEOpen'
-let g:cheerful_set_close['minibufexpl']                 = 'MBEClose'
-
-let g:cheerful_set_name['quickfix']                     = 'quickfix'
-let g:cheerful_set_type['quickfix']                     = 'qf'
-let g:cheerful_set_part['quickfix']                     = 'debug'
-let g:cheerful_set_nocur['quickfix']                    = 1
-let g:cheerful_set_stay['quickfix']                     = 0
-let g:cheerful_set_size['quickfix']                     = 10
-let g:cheerful_set_open['quickfix']                     = 'botright copen '.g:cheerful_set_size['quickfix']
-let g:cheerful_set_close['quickfix']                    = 'cclose'
-
-let g:cheerful_set_name['unite']                        = 'unite'
-let g:cheerful_set_type['unite']                        = 'unite'
-let g:cheerful_set_part['unite']                        = 'info'
-let g:cheerful_set_nocur['unite']                       = 0
-let g:cheerful_set_stay['unite']                        = 1
-let g:cheerful_set_size['unite']                        = 110
-let g:cheerful_set_open['unite']                        = 'Unite'
-let g:cheerful_set_close['unite']                       = 'close'
+let g:cheerful_set_name['minimap']              = 'Minimap'
+let g:cheerful_set_type['minimap']              = 'minimap'
+let g:cheerful_set_part['minimap']              = 'info'
+let g:cheerful_set_buff['minimap']              = 'vim-minimap'
+let g:cheerful_set_coth['minimap']              = ''
+let g:cheerful_set_size['minimap']              = 20
+let g:cheerful_set_open['minimap']              = 'Minimap'
+let g:cheerful_set_clse['minimap']              = 'MinimapClose'
+let g:cheerful_set_nohi['minimap']              = 1
+let g:cheerful_set_stat['minimap']              = 1
+let g:cheerful_set_show['minimap']              = 0
 
 " ============================================================================
-" Variable for g:set_other
+" g:set_xxx
 " ============================================================================
-let g:set_command_list                                  = {}
-let g:set_command_list['tab_prev']                      = 'MBEbp'
-let g:set_command_list['tab_next']                      = 'MBEbn'
-let g:set_command_list['file_locate']                   = 'NERDTreeFind'
+let g:set_command_list                          = {}
+let g:set_command_list['tab_prev']              = 'MBEbp'
+let g:set_command_list['tab_next']              = 'MBEbn'
+let g:set_command_list['file_locate']           = 'NERDTreeFind'
 
-let g:set_php_list                                      = {}
-let g:set_php_list['vimrc']                             = ''
-let g:set_php_list['funlist']                           = []
-let g:set_php_list['fundata']                           = {}
+let g:set_php_list                              = {}
+let g:set_php_list['vimrc']                     = ''
+let g:set_php_list['funlist']                   = []
+let g:set_php_list['fundata']                   = {}
 
-let g:set_statusline                                    = {}
-let g:set_statusline['except']                          = ['help']
-let g:set_statusline['modelist']                        = {"n"      : 'NORMAL',
-                                                         \ "no"     : 'OPERATOR-PENDING',
-                                                         \ "v"      : 'VISUAL',
-                                                         \ "V"      : 'VISUAL-LINE',
-                                                         \ "\<C-V>" : 'VISUAL-BLOCKWISE',
-                                                         \ "s"      : 'SELECT',
-                                                         \ "S"      : 'SELECT-LINE',
-                                                         \ "\<C-S>" : 'SELECT-BLOCKWISE',
-                                                         \ "i"      : 'INSERT',
-                                                         \ "R"      : 'REPLACE',
-                                                         \ "Rv"     : 'REPLACE-VIRTUAL',
-                                                         \ "c"      : 'COMMAND',
-                                                         \ "cv"     : 'EX-VIM',
-                                                         \ "ce"     : 'EX-NORMAL',
-                                                         \ "r"      : 'ENTER',
-                                                         \ "rm"     : 'MORE',
-                                                         \ "r?"     : 'CONFIRM',
-                                                         \ "!"      : 'EXTERNAL'}
+let g:set_status_list                           = {}
+let g:set_status_list['modelist']               = {"n"      : 'NORMAL',
+                                                \ "no"      : 'OPERATOR-PENDING',
+                                                \ "v"       : 'VISUAL',
+                                                \ "V"       : 'VISUAL-LINE',
+                                                \ "\<C-V>"  : 'VISUAL-BLOCKWISE',
+                                                \ "s"       : 'SELECT',
+                                                \ "S"       : 'SELECT-LINE',
+                                                \ "\<C-S>"  : 'SELECT-BLOCKWISE',
+                                                \ "i"       : 'INSERT',
+                                                \ "R"       : 'REPLACE',
+                                                \ "Rv"      : 'REPLACE-VIRTUAL',
+                                                \ "c"       : 'COMMAND',
+                                                \ "cv"      : 'EX-VIM',
+                                                \ "ce"      : 'EX-NORMAL',
+                                                \ "r"       : 'ENTER',
+                                                \ "rm"      : 'MORE',
+                                                \ "r?"      : 'CONFIRM',
+                                                \ "!"       : 'EXTERNAL'}
+
+" ============================================================================
+" g:config_builddir
+" ============================================================================
+let g:config_builddir                           = {}
+let g:config_builddir['root']                   = g:config_dir_data
+let g:config_builddir['vim']                    = g:config_dir_data.'vim'
+let g:config_builddir['vim_backupdir']          = g:config_dir_data.'vim/backupdir'
+let g:config_builddir['vim_viewdir']            = g:config_dir_data.'vim/viewdir'
+let g:config_builddir['vim_undodir']            = g:config_dir_data.'vim/undodir'
+let g:config_builddir['vim_swapdir']            = g:config_dir_data.'vim/swapdir'
+let g:config_builddir['php']                    = g:config_dir_data.'php'
+let g:config_builddir['nerdtree']               = g:config_dir_data.'nerdtree'
+let g:config_builddir['ultisnips']              = g:config_dir_data.'ultisnips'
+let g:config_builddir['cheerful_set_path']      = g:config_dir_data.'cheerful'
+
+let g:config_buildfile                          = {}
+let g:config_buildfile['php_runscript']         = g:config_dir_data.'php/runscript.php'
+let g:config_buildfile['php_runscript_input']   = g:config_dir_data.'php/runscript_input.php'
+let g:config_buildfile['nerdtree_bookmark']     = g:config_dir_data.'nerdtree/bookmark'
+let g:config_buildfile['ultisnips_all']         = g:config_dir_data.'ultisnips/all.snippets'
+let g:config_buildfile['ultisnips_php']         = g:config_dir_data.'ultisnips/php.snippets'
+
+let g:config_builddata                          = {}
+let g:config_builddata['php_runscript']         = []
+let g:config_builddata['php_runscript_input']   = []
+let g:config_builddata['nerdtree_bookmark']     = g:config_nerdtree_bookmark
+let g:config_builddata['ultisnips_all']         = g:config_ultisnips_all
+let g:config_builddata['ultisnips_php']         = g:config_ultisnips_php
 
 " ============================================================================
 " Function for Public
@@ -647,10 +683,15 @@ function! CheckConfig()
 endfunction
 
 function! ReturnVisual()
+    let l:if_wrap = 2
     let l:check_selection   = &selection == 'exclusive' ? 2 : 1
     let l:content           = []
     let [l:lnum1, l:col1]   = getpos("'<")[1:2]
     let [l:lnum2, l:col2]   = getpos("'>")[1:2]
+    if l:col2 > 1073741824
+        let l:col2 = strlen(getline(l:lnum2))
+        let l:if_wrap = 1
+    endif
     if l:lnum1 > 0 && l:lnum2 > 0
         let l:content   = getline(l:lnum1, l:lnum2)
         let l:char_add  = 0
@@ -666,6 +707,9 @@ function! ReturnVisual()
         endif
     endif
     let l:result = join(l:content, "\n")
+    if l:if_wrap == 1
+        let l:result = l:result."\n"
+    endif
     return l:result
 endfunction
 
@@ -697,12 +741,10 @@ endfunction
 " Function for Buffer
 " ============================================================================
 function! BufferNew()
-    call OperateJump()
     exe 'ene'
 endfunction
 
 function! BufferClose()
-    call OperateJump()
     if count(g:cheerful_set_type, &filetype) > 0
         echohl ErrorMsg | echo "Error: You can't close this window..." | echohl None
     elseif &modified == 1
@@ -722,7 +764,6 @@ function! BufferClose()
 endfunction
 
 function! BufferSwitch(ope)
-    call OperateJump()
     if (a:ope == 'next')
         exe g:set_command_list['tab_next']
     elseif (a:ope == 'prev')
@@ -734,7 +775,6 @@ endfunction
 " Function for File
 " ============================================================================
 function! FileLocate()
-    call OperateJump()
     if empty(bufname('%'))
         echohl ErrorMsg | echo "Error: This file is not save yet..." | echohl None
     else
@@ -772,44 +812,67 @@ function! FileEncoding()
 endfunction
 
 function! FileSave()
-    call OperateJump()
     let l:result_winview = winsaveview()
 
-    exe '%s/\t/    /ge'
-    exe '%s/\s\+$//ge'
-    exe '%s/\r\n/\r/ge'
-    exe '%s/\n\r/\r/ge'
-    if substitute(expand("%:t"), '\v([^\.]*)\..*\c', '\=submatch(1)', 'g') == "config" && &filetype == "php"
+    " ------------------------------------------------
+    " operate wrap
+    " ------------------------------------------------
+    " delete last blank line
+    while getline(line('$')) =~ '\v^[\s\r\n]*$\c' && getline(line('$')-1) =~ '\v^[\s\r\n]*$\c'
+        call deletebufline('%', line('$'))
+    endwhile
+
+    " delete last line r
+    if getline(line('$')) =~ '\v^[\s\n]*[\r]+[\s\n]*$\c'
+        call setline(line('$'), '')
+    endif
+
+    " replace char
+    exe '%s/\v\t\c/    /ge'
+    exe '%s/\v\s+$\c//ge'
+    exe '%s/\v\r\n\c/\r/ge'
+    exe '%s/\v[\r]+\c//ge'
+
+    " replace config file to r style
+    if &filetype == "php" && substitute(expand("%:t"), '\v([^\.]*)\..*\c', '\=submatch(1)', 'g') ==? "config"
         set fileformat=dos
-        exe '%s/\r/\r\n/ge'
-        let l:original_line = line('.')
-        let l:original_col  = col('.')
-        let l:line_last     = line('$')
-        while getline(l:line_last) =~ '\v^[\s\r\n]*$\c'
-            call cursor(l:line_last, 1)
-            if line('.') == l:line_last
-                exe 'd'
-                if l:line_last == 1
-                    break
-                endif
-                let l:line_last = line('$')
-            endif
-        endwhile
-        call cursor(l:original_line, l:original_col)
+        exe '%s/\v\r\c/\r\n/ge'
+    elseif &filetype == "text" && substitute(expand("%:t"), '\v([^\.]*)\..*\c', '\=submatch(1)', 'g') ==? "readme"
+        set fileformat=dos
+        exe '%s/\v\r\c/\r\n/ge'
+    elseif &filetype == "dosini"
+        set fileformat=dos
+        exe '%s/\v\r\c/\r\n/ge'
+    elseif &filetype == "dosbatch"
+        set fileformat=dos
+        exe '%s/\v\r\c/\r\n/ge'
+    elseif &filetype == "markdown"
+        call MarkdownAnchor()
     else
         set fileformat=unix
     endif
 
-    exe '%s/^\(\s*\)\(if\|for\|foreach\|while\)\(\|\s\{2,\}\)(/\1\2 (/ge'
+    " ------------------------------------------------
+    " operate space
+    " ------------------------------------------------
+    " ^[if|for|foreach|while] (
+    exe '%s/\v^(\s*)(if|for|foreach|while)(|\s{2,})\(\c/\1\2 (/ge'
+    " ^} [elseif|while|catch] (
+    exe '%s/\v^(\s*)\}(|\s{2,})(elseif|while|catch)(\s*)\(\c/\1} \3\4(/ge'
+    exe '%s/\v^(\s*)\}(\s*)(elseif|while|catch)(|\s{2,})\(\c/\1}\2\3 (/ge'
+    " ^} else if (
+    exe '%s/\v^(\s*)\}(|\s{2,})(else)(\s*)(if)(\s*)\(\c/\1} \3\4\5\6(/ge'
+    exe '%s/\v^(\s*)\}(\s*)(else)(\s{2,})(if)(\s*)\(\c/\1}\2\3 \5\6(/ge'
+    exe '%s/\v^(\s*)\}(\s*)(else)(\s*)(if)(|\s{2,})\(\c/\1}\2\3\4\5 (/ge'
+    " ^} else {
+    exe '%s/\v^(\s*)\}(|\s{2,})(else)(\s*)\{\c/\1} \3\4{/ge'
+    exe '%s/\v^(\s*)\}(\s*)(else)(|\s{2,})\{\c/\1}\2\3 {/ge'
+    " ) {$
+    exe '%s/\v\)(|\s{2,})\{$\c/) {/ge'
 
-    exe '%s/^\(\s*\)}\(elseif\|else\s*if\)\(\s\{0,\}\)(/\1} \2 (/ge'
-    exe '%s/^\(\s*\)}\(\s\{0,\}\)\(elseif\|else\s*if\)(/\1} \3 (/ge'
-
-    exe '%s/^\(\s*\)}\(else\)\(\s\{0,\}\){/\1} \2 {/ge'
-    exe '%s/^\(\s*\)}\(\s\{0,\}\)\(else\){/\1} \2 {/ge'
-
-    exe '%s/)\(\|\s\{2,\}\){$/) {/ge'
-
+    " ------------------------------------------------
+    " operate save newfile
+    " ------------------------------------------------
     call winrestview(l:result_winview)
     let l:file_copyright = FileCopyright()
     if empty(bufname('%'))
@@ -840,18 +903,22 @@ function! FileSave()
             silent exe 'w'
         endif
     endif
+
+    " ------------------------------------------------
+    " operate other
+    " ------------------------------------------------
     call MakeCheck()
 endfunction
 
 function! FileCopyright(...)
-    let l:cr_nickname           = 'Bleakwind'
-    let l:cr_fullname           = 'Rick Wu'
-    let l:cr_mailaddr           = 'bleakwind@qq.com'
-    let l:cr_datetime           = strftime("%Y-%m-%d %H:%M:%S")
-    let l:cr_filename           = expand("%:t")
-    let l:cr_dateyear           = strftime("%Y")
-    let l:cr_cpywidth           = 78
-    let l:cr_progtype           = ['<?php', '<%asp']
+    let l:nickname           = 'Bleakwind'
+    let l:fullname           = 'Rick Wu'
+    let l:mailaddr           = 'bleakwind@qq.com'
+    let l:datetime           = strftime("%Y-%m-%d %H:%M:%S")
+    let l:filename           = expand("%:t")
+    let l:dateyear           = strftime("%Y")
+    let l:cpywidth           = 78
+    let l:progtype           = ['<?php', '<%asp']
 
     let l:if_update_datetime    = 0
     let l:if_update_filename    = 0
@@ -866,23 +933,23 @@ function! FileCopyright(...)
     let l:prompt_item           = []
     let l:result_prompt         = ''
 
-    if l:cr_cpywidth < 75
-        let l:cr_cpywidth = 78
+    if l:cpywidth < 75
+        let l:cpywidth = 78
     endif
 
-    let l:cr_progtype = map(l:cr_progtype, 'ProceSlashes(''string'', v:val)')
+    let l:progtype = map(l:progtype, 'ProceSlashes(''string'', v:val)')
 
     call cursor(1, 1)
     let l:i = 1
     while l:i < l:line_total
         let l:content = getline(l:i)
         if l:content =~ '\v^\s*(\/\*|\*|\+|\|).*$\c'
-            if l:content =~ '\v^.*\$Id\:.*'.ProceSlashes('string', l:cr_nickname).'.*\$\s*[^\s]+$\c'
+            if l:content =~ '\v^.*\$Id\:.*'.ProceSlashes('string', l:nickname).'.*\$\s*[^\s]+$\c'
                 let l:if_mine = 1
             endif
             let l:if_copyright = 1
             let l:i = l:i+1
-        elseif l:content =~ '\v^\s*('.join(l:cr_progtype, "|").').*$\c'
+        elseif l:content =~ '\v^\s*('.join(l:progtype, "|").').*$\c'
             if l:line_program == 0
                 let l:line_program = l:i
             endif
@@ -904,21 +971,22 @@ function! FileCopyright(...)
             else
                 call cursor(1, 1)
             endif
+            echohl WarningMsg | echo l:filename.l:datetime.l:nickname | echohl None
             let l:add_copyright = []
             call add(l:add_copyright, "/* vim: set expandtab tabstop=4 softtabstop=4 shiftwidth=4: */")
             call add(l:add_copyright, "/**")
-            call add(l:add_copyright, " * +-------------------------------------------------------------------------+")
-            call add(l:add_copyright, " * | $Id: ".l:cr_filename." ".l:cr_datetime." ".l:cr_nickname." Exp $      ".        repeat(" ", l:cr_cpywidth-strlen(l:cr_filename.l:cr_datetime.l:cr_nickname)-25)."|")
-            call add(l:add_copyright, " * +-------------------------------------------------------------------------+")
-            call add(l:add_copyright, " * | Copyright (c) 2008-".l:cr_dateyear." ".l:cr_nickname."(".l:cr_fullname.").".    repeat(" ", l:cr_cpywidth-strlen(l:cr_dateyear.l:cr_nickname.l:cr_fullname)-29)."|")
-            call add(l:add_copyright, " * +-------------------------------------------------------------------------+")
-            call add(l:add_copyright, " * | This source file is ".l:cr_filename.".                                ".        repeat(" ", l:cr_cpywidth-strlen(l:cr_filename)-59)."|")
-            call add(l:add_copyright, " * | This source file is release under private license. If you did not     ".        repeat(" ", l:cr_cpywidth-76)."|")
-            call add(l:add_copyright, " * | receive an authorize of the our license and are unable to obtain it,  ".        repeat(" ", l:cr_cpywidth-76)."|")
-            call add(l:add_copyright, " * | please send an email to ".l:cr_mailaddr." and get an authorize.       ".        repeat(" ", l:cr_cpywidth-strlen(l:cr_mailaddr)-59)."|")
-            call add(l:add_copyright, " * +-------------------------------------------------------------------------+")
-            call add(l:add_copyright, " * | Author: ".l:cr_nickname."(".l:cr_fullname.")"." <".l:cr_mailaddr.">   ".        repeat(" ", l:cr_cpywidth-strlen(l:cr_nickname.l:cr_fullname.l:cr_mailaddr)-22)."|")
-            call add(l:add_copyright, " * +-------------------------------------------------------------------------+")
+            call add(l:add_copyright, " * +-------------------------------------------------------------------------".                                                                    "+")
+            call add(l:add_copyright, " * | $Id: ".l:filename." ".l:datetime." ".l:nickname.                " Exp $ ".repeat(" ", l:cpywidth-strlen(l:filename.l:datetime.l:nickname)-20)."|")
+            call add(l:add_copyright, " * +-------------------------------------------------------------------------".                                                                    "+")
+            call add(l:add_copyright, " * | Copyright (c) 2008-".l:dateyear." ".l:nickname."(".l:fullname.      "). ".repeat(" ", l:cpywidth-strlen(l:dateyear.l:nickname.l:fullname)-30)."|")
+            call add(l:add_copyright, " * +-------------------------------------------------------------------------".                                                                    "+")
+            call add(l:add_copyright, " * | This source file is ".l:filename.                                    ". ".repeat(" ", l:cpywidth-strlen(l:filename)-28).                      "|")
+            call add(l:add_copyright, " * | This source file is release under private license. If you did not       ".repeat(" ", l:cpywidth-78).                                         "|")
+            call add(l:add_copyright, " * | receive an authorize of the our license and are unable to obtain it,    ".repeat(" ", l:cpywidth-78).                                         "|")
+            call add(l:add_copyright, " * | please send an email to ".l:mailaddr.           " and get an authorize. ".repeat(" ", l:cpywidth-strlen(l:mailaddr)-53).                      "|")
+            call add(l:add_copyright, " * +-------------------------------------------------------------------------".                                                                    "+")
+            call add(l:add_copyright, " * | Author: ".l:nickname."(".l:fullname.")"." <".l:mailaddr.             "> ".repeat(" ", l:cpywidth-strlen(l:nickname.l:fullname.l:mailaddr)-20)."|")
+            call add(l:add_copyright, " * +-------------------------------------------------------------------------".                                                                    "+")
             call add(l:add_copyright, " */")
             call add(l:add_copyright, "")
             call append(l:line_program, l:add_copyright)
@@ -931,17 +999,24 @@ function! FileCopyright(...)
             call cursor(1, 1)
             let l:i = 1
             while l:i < l:line_copyright
+                let l:content_new = ''
                 let l:content = getline(l:i)
-                if l:content =~ '\v^.*\$Id\:.*\$\s*[^\s]+$\c'
-                    let l:content_new = substitute(l:content, '\v\$Id\:.*\$\s*\c', '\="$Id: ".l:cr_filename." ".l:cr_datetime." ".l:cr_nickname." Exp $ ".repeat(" ", strlen(submatch(0))-strlen(l:cr_filename.l:cr_datetime.l:cr_nickname)-14)', 'g')
+                if l:content =~ '\v^\s*\*\s*\|\s*\$Id\:.*\$\s*\|$\c'
+                    let l:content_new = substitute(l:content, '\v^\s*\*\s*\|\s*\$Id\:.*\$\s*\|$\c', '\=" * | $Id: ".l:filename." ".l:datetime." ".l:nickname." Exp $ ".repeat(" ", l:cpywidth-strlen(l:filename.l:datetime.l:nickname)-20)."|"', 'g')
                     "silent! exe 'undojoin'
                     call setline(l:i, l:content_new)
                     let l:if_update_filename = 1
                     call add(l:prompt_item, 'Filename')
                     let l:if_update_datetime = 1
                     call add(l:prompt_item, 'Datetime')
-                elseif l:content =~ '\v^.*Copyright\s*\(c\)\s*(\d{4})\-\d{4}\s*[^\.]+\.\s*[^\s]+$\c'
-                    let l:content_new = substitute(l:content, '\vCopyright\s*\(c\)\s*(\d{4})\-\d{4}\s*[^\.]+\.\s*\c', '\="Copyright (c) ".submatch(1)."-".l:cr_dateyear." ".l:cr_nickname."(".l:cr_fullname.").".repeat(" ", strlen(submatch(0))-strlen(l:cr_dateyear.l:cr_nickname.l:cr_fullname)-23)', 'g')
+                elseif l:content =~ '\v^\s*\*\s*\|\s*Copyright\s*\(c\)\s*(\d{4})\-\d{4}\s*[^\|]+\s*\|$\c'
+                    let l:content_new = substitute(l:content, '\v^\s*\*\s*\|\s*Copyright\s*\(c\)\s*(\d{4})\-\d{4}\s*[^\|]+\s*\|$\c', '\=" * | Copyright (c) ".submatch(1)."-".l:dateyear." ".l:nickname."(".l:fullname."). ".repeat(" ", l:cpywidth-strlen(l:dateyear.l:nickname.l:fullname)-30)."|"', 'g')
+                    "silent! exe 'undojoin'
+                    call setline(l:i, l:content_new)
+                    let l:if_update_copydate = 1
+                    call add(l:prompt_item, 'Copydate')
+                elseif l:content =~ '\v^\s*\*\s*\|\s*This source file is\s*[^\|\ ]+\s*\|$\c'
+                    let l:content_new = substitute(l:content, '\v^\s*\*\s*\|\s*This source file is\s*[^\|\ ]+\s*\|$\c', '\=" * | This source file is ".l:filename.". ".repeat(" ", l:cpywidth-strlen(l:filename)-28)."|"', 'g')
                     "silent! exe 'undojoin'
                     call setline(l:i, l:content_new)
                     let l:if_update_copydate = 1
@@ -964,17 +1039,14 @@ command! -nargs=? Copyright :call FileCopyright(<q-args>)
 " Function for Quickfix
 " ============================================================================
 function! QuickfixPrev()
-    call OperateJump()
     exe 'cp'
 endfunction
 
 function! QuickfixNext()
-    call OperateJump()
     exe 'cn'
 endfunction
 
 function! QuickfixHi()
-    call OperateJump()
     let g:env_qfmatch = []
     let l:qflist = getqflist()
     for l:val in l:qflist
@@ -983,7 +1055,6 @@ function! QuickfixHi()
 endfunction
 
 function! QuickfixNohi()
-    call OperateJump()
     if exists('g:env_qfmatch') && !empty(g:env_qfmatch)
         for l:val in g:env_qfmatch
            call matchdelete(l:val)
@@ -993,11 +1064,10 @@ function! QuickfixNohi()
 endfunction
 
 function! MakeDebug()
-    call OperateJump()
     if empty(bufname('%'))
         echohl ErrorMsg | echo "Warning: Please save this file first..." | echohl None
     else
-        call OperateTool('quickfix', 'open')
+        call CheerfulStructOperate('quickfix', 'open')
         call MakeCheck()
         if &filetype == 'c'
             let l:work_file = substitute(expand("%:p:r"), '\v[\/\\]+\c', '/', 'g')
@@ -1013,7 +1083,6 @@ function! MakeDebug()
 endfunction
 
 function! MakeCheck()
-    call OperateJump()
     if &filetype == 'c'
         call MakeC()
     elseif &filetype == 'php'
@@ -1044,7 +1113,6 @@ function! MakePHP()
 endfunction
 
 function! MakeBrowser(type)
-    call OperateJump()
     if empty(bufname('%'))
         echohl ErrorMsg | echo "Warning: Please save this file first..." | echohl None
     else
@@ -1054,11 +1122,15 @@ function! MakeBrowser(type)
             \ }
         let l:work_file = substitute(expand("%:p"), '\v[\/\\]+\c', '/', 'g')
         setlocal noshellslash
-        if stridx(l:work_file, g:config_dir_work) == -1
-            silent exe '!'.l:system_browser[a:type].' '.shellescape('file:///'.l:work_file)
+        if &filetype == "markdown"
+            silent exe '!'.l:system_browser[a:type].' '.shellescape(g:config_markdown_script.'?f='.l:work_file)
         else
-            let l:work_file = substitute(l:work_file, '\v'.ProceSlashes('string', g:config_dir_work).'\c', g:config_debug_url, '')
-            silent exe '!'.l:system_browser[a:type].' '.shellescape(l:work_file)
+            if stridx(l:work_file, g:config_dir_work) == -1
+                silent exe '!'.l:system_browser[a:type].' '.shellescape('file:///'.l:work_file)
+            else
+                let l:work_file = substitute(l:work_file, '\v'.ProceSlashes('string', g:config_dir_work).'\c', g:config_debug_url, '')
+                silent exe '!'.l:system_browser[a:type].' '.shellescape(l:work_file)
+            endif
         endif
         setlocal shellslash<
     endif
@@ -1113,17 +1185,17 @@ endfunction
 function! RphpVlistBlock(...)
     let l:code_funname = 'RphpVlistBlock'
     "php << EOF
-    "$result_content     = "";
-    "$input_content      = file_get_contents($argv[1]);
-    "$input_param        = $argv[2];
-    "$content_match      = preg_match("/^([\t ]*)[^\t ]/i", $input_content, $begin_space);
-    "$content_split      = preg_split("/\s*,\s*/i", $input_content);
+    "$result_content    = "";
+    "$input_content     = file_get_contents($argv[1]);
+    "$input_param       = $argv[2];
+    "$content_match     = preg_match("/^([\t ]*)[^\t ]/i", $input_content, $begin_space);
+    "$content_split     = preg_split("/\s*,\s*/i", $input_content);
     "if ($content_match) {
-    "    $begin_space        = $begin_space[1];
-    "    $begin_space_len    = strlen($begin_space);
+    "    $begin_space       = $begin_space[1];
+    "    $begin_space_len   = strlen($begin_space);
     "} else {
-    "    $begin_space        = "";
-    "    $begin_space_len    = 0;
+    "    $begin_space       = "";
+    "    $begin_space_len   = 0;
     "}
     "$content_split[0]   = trim($content_split[0]);
     "if (is_array($content_split) && count($content_split) > 0) {
@@ -1149,17 +1221,17 @@ command! -nargs=? RphpVlistBlock :call RphpVlistBlock(<q-args>)
 function! RphpVlistAlign(...)
     let l:code_funname = 'RphpVlistAlign'
     "php << EOF
-    "$result_content     = "";
-    "$input_content      = file_get_contents($argv[1]);
-    "$input_param        = $argv[2];
-    "$content_match      = preg_match("/^([\t ]*)[^\t ]/i", $input_content, $begin_space);
-    "$content_split      = preg_split("/\n/i", $input_content);
+    "$result_content    = "";
+    "$input_content     = file_get_contents($argv[1]);
+    "$input_param       = $argv[2];
+    "$content_match     = preg_match("/^([\t ]*)[^\t ]/i", $input_content, $begin_space);
+    "$content_split     = preg_split("/\n/i", $input_content);
     "if ($content_match) {
-    "    $begin_space        = $begin_space[1];
-    "    $begin_space_len    = strlen($begin_space);
+    "    $begin_space       = $begin_space[1];
+    "    $begin_space_len   = strlen($begin_space);
     "} else {
-    "    $begin_space        = "";
-    "    $begin_space_len    = 0;
+    "    $begin_space       = "";
+    "    $begin_space_len   = 0;
     "}
     "if (is_array($content_split) && count($content_split) > 0) {
     "    $content_split_maxlen = 0;
@@ -1189,6 +1261,21 @@ endfunction
 call RunPHPAddfun('RphpVlistAlign')
 command! -nargs=? RphpVlistAlign :call RphpVlistAlign(<q-args>)
 
+function! RphpPregReplace(...)
+    let l:code_funname = 'RphpPregReplace'
+    "php << EOF
+    "$result_content    = "";
+    "$input_content     = file_get_contents($argv[1]);
+    "$input_param       = $argv[2];
+    "$input_param_array = preg_split("/([^\\\])\//", $input_param, null, PREG_SPLIT_DELIM_CAPTURE);
+    "$result_content    = preg_replace("/".$input_param_array[0].$input_param_array[1]."/i", $input_param_array[2], $input_content);
+    "echo $result_content;
+    "EOF
+    return RunPHPVisual(l:code_funname, (exists('a:1') ? a:1 : ''))
+endfunction
+call RunPHPAddfun('RphpPregReplace')
+command! -nargs=? RphpPregReplace :call RphpPregReplace(<q-args>)
+
 " Autocmd
 autocmd VimEnter * call RunPHPBuildfun()
 
@@ -1196,95 +1283,89 @@ autocmd VimEnter * call RunPHPBuildfun()
 " Function for Statusline
 " ============================================================================
 function! StatuslineDetect(...)
-    " statusline
-    if (exists('a:1') && a:1 == 'statusline_filelist')
+    if (exists('a:1') && a:1 == 'Filelist')
         setlocal  statusline=%#StatusLine_0#
         setlocal statusline+=%#StatusLine_0#[Filelist]%#StatusLine_0#
         setlocal statusline+=%#StatusLine_0#%<
+
         setlocal statusline+=%#StatusLine_0#\ %=\ %#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#\ %(%l,%c%V%)\ %#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#\ %P\ %#StatusLine_0#
+        setlocal statusline+=%#StatusLine_0#\ %12.(%l,%c%V%)\ %#StatusLine_0#
+        setlocal statusline+=%#StatusLine_0#\ %8.P\ %#StatusLine_0#
         setlocal statusline+=%#StatusLine_0#
         return &statusline
-    elseif (exists('a:1') && a:1 == 'statusline_bufferlist')
+    elseif (exists('a:1') && a:1 == 'Bufferlist')
         setlocal  statusline=%#StatusLine_0#
         setlocal statusline+=%#StatusLine_0#[Bufferlist]%#StatusLine_0#
         setlocal statusline+=%#StatusLine_0#%<
+
         setlocal statusline+=%#StatusLine_7#\ [*:%{len(filter(range(1,bufnr('$')),'buflisted(v:val)'))}]%#StatusLine_7#
         setlocal statusline+=%#StatusLine_8#%{len(filter(range(1,bufnr('$')),'getbufvar(v:val,''&modified'')'))>0?'\ [+:'.len(filter(range(1,bufnr('$')),'getbufvar(v:val,''&modified'')')).']':''}%#StatusLine_8#
+
         setlocal statusline+=%#StatusLine_0#\ %=\ %#StatusLine_0#
         setlocal statusline+=%#StatusLine_0#\ %12.(%l,%c%V%)\ %#StatusLine_0#
         setlocal statusline+=%#StatusLine_0#\ %8.P\ %#StatusLine_0#
         setlocal statusline+=%#StatusLine_0#
         return &statusline
-    elseif (exists('a:1') && a:1 == 'statusline_taglist')
-        setlocal  statusline=%#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#[Taglist]%#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#%<
-        setlocal statusline+=%#StatusLine_0#\ %=\ %#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#[filename]%#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#
-        return &statusline
-    elseif (empty(&filetype) && empty(bufname('%'))) || (!empty(&filetype) && count(g:cheerful_set_type, &filetype) == 0 && count(g:set_statusline['except'], &filetype) == 0)
-        setlocal  statusline=%#StatusLine_0#
-        setlocal statusline+=%#StatusLine_1#\ %{(has_key(g:set_statusline['modelist'],mode())?g:set_statusline['modelist'][mode()]:mode())}\ %#StatusLine_1#
-        setlocal statusline+=%#StatusLine_0#%<
-        setlocal statusline+=%#StatusLine_2#\ %F\ %#StatusLine_2#
-        setlocal statusline+=%#StatusLine_3#\ %{(!empty(&filetype)?&filetype:'unkonw')}\ %#StatusLine_3#
-        setlocal statusline+=%#StatusLine_4#\ %{(&fileencoding).(&bomb?',BOM':'').(':'.&fileformat)}\ %#StatusLine_4#
-        setlocal statusline+=%#StatusLine_5#\ %r%m\ %#StatusLine_5#
-        setlocal statusline+=%#StatusLine_0#\ %=\ %#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#\ %([%b\ 0x%B]%)\ %#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#\ %12.(%l,%c%V%)\ %#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#\ %8.P\ %#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#
-    elseif (!empty(&filetype) && &filetype == 'qf')
+    elseif (exists('a:1') && a:1 == 'Quickfix')
         setlocal  statusline=%#StatusLine_0#
         setlocal statusline+=%#StatusLine_0#[Quickfix]%#StatusLine_0#
         setlocal statusline+=%#StatusLine_0#%<
+
         setlocal statusline+=%#StatusLine_7#%{exists('w:quickfix_title')?'\ ['.w:quickfix_title.']':''}%#StatusLine_7#
+
         setlocal statusline+=%#StatusLine_0#\ %=\ %#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#\ %([%b\ 0x%B]%)\ %#StatusLine_0#
         setlocal statusline+=%#StatusLine_0#\ %12.(%l,%c%V%)\ %#StatusLine_0#
         setlocal statusline+=%#StatusLine_0#\ %8.P\ %#StatusLine_0#
         setlocal statusline+=%#StatusLine_0#
-    elseif (!empty(&filetype) && &filetype == 'unite')
+    elseif (exists('a:1') && a:1 == 'Minimap')
         setlocal  statusline=%#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#[Unite]%#StatusLine_0#
+        setlocal statusline+=%#StatusLine_0#[Minimap]%#StatusLine_0#
         setlocal statusline+=%#StatusLine_0#%<
-        setlocal statusline+=%#StatusLine_0#\ %{(has_key(g:set_statusline['modelist'],mode())?g:set_statusline['modelist'][mode()]:mode())}\ %#StatusLine_0#
+
+        setlocal statusline+=%#StatusLine_0#\ %{(has_key(g:set_status_list['modelist'],mode())?g:set_status_list['modelist'][mode()]:mode())}\ %#StatusLine_0#
+
         setlocal statusline+=%#StatusLine_0#\ %=\ %#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#\ %(%l,%c%V%)\ %#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#\ %P\ %#StatusLine_0#
+        setlocal statusline+=%#StatusLine_0#\ %12.(%l,%c%V%)\ %#StatusLine_0#
+        setlocal statusline+=%#StatusLine_0#\ %8.P\ %#StatusLine_0#
         setlocal statusline+=%#StatusLine_0#
-    elseif (!empty(&filetype) && count(g:set_statusline['except'], &filetype) > 0)
+    elseif (exists('a:1') && a:1 == 'Other')
         setlocal  statusline=%#StatusLine_0#
+        setlocal statusline+=%#StatusLine_2#%F%#StatusLine_2#
+        setlocal statusline+=%#StatusLine_0#%<
+
+        setlocal statusline+=%#StatusLine_0#\ %=\ %#StatusLine_0#
+        setlocal statusline+=%#StatusLine_0#\ %12.(%l,%c%V%)\ %#StatusLine_0#
+        setlocal statusline+=%#StatusLine_0#\ %8.P\ %#StatusLine_0#
+        setlocal statusline+=%#StatusLine_0#
+    elseif (exists('a:1') && a:1 == 'Main')
+        setlocal  statusline=%#StatusLine_0#
+        setlocal statusline+=%#StatusLine_1#\ %{(has_key(g:set_status_list['modelist'],mode())?g:set_status_list['modelist'][mode()]:mode())}\ %#StatusLine_1#
         setlocal statusline+=%#StatusLine_2#\ %F\ %#StatusLine_2#
         setlocal statusline+=%#StatusLine_0#%<
+
         setlocal statusline+=%#StatusLine_3#\ %{(!empty(&filetype)?&filetype:'unkonw')}\ %#StatusLine_3#
         setlocal statusline+=%#StatusLine_4#\ %{(&fileencoding).(&bomb?',BOM':'').(':'.&fileformat)}\ %#StatusLine_4#
         setlocal statusline+=%#StatusLine_5#\ %r%m\ %#StatusLine_5#
+
         setlocal statusline+=%#StatusLine_0#\ %=\ %#StatusLine_0#
         setlocal statusline+=%#StatusLine_0#\ %([%b\ 0x%B]%)\ %#StatusLine_0#
         setlocal statusline+=%#StatusLine_0#\ %12.(%l,%c%V%)\ %#StatusLine_0#
         setlocal statusline+=%#StatusLine_0#\ %8.P\ %#StatusLine_0#
         setlocal statusline+=%#StatusLine_0#
     endif
-    " diff
-    "if &diff
-    "    setlocal nocursorline
-    "    setlocal nocursorcolumn
-    "endif
 endfunction
-
-" Autocmd
-autocmd BufEnter,BufWritePost * call StatuslineDetect()
 
 " ============================================================================
 " Command
 " ============================================================================
-" Autocmd
+" ------------------------------------------------
+" Vim-CheckConfig
+" ------------------------------------------------
 autocmd VimEnter * call CheckConfig()
+" ------------------------------------------------
+" Vim-Syntax
+" ------------------------------------------------
+autocmd BufWritePost * :syntax sync fromstart
 
 " ============================================================================
 " Function for Debug
@@ -1318,10 +1399,9 @@ endfunction
 " ============================================================================
 " Vim-Cheerful
 " ============================================================================
-let g:cheerful_neatly_enable = 1
+let g:cheerful_struct_enable = 1
 let g:cheerful_reopen_enable = 1
-let g:cheerful_reopen_lastplace = 1
-let g:cheerful_reopen_dir = g:config_dir_data.'cheerful'
+let g:cheerful_reopen_last = 2
 
 " ============================================================================
 " AsyncRun
@@ -1342,7 +1422,7 @@ let g:NERDTreeShowLineNumbers = 1
 let g:NERDTreeCaseSensitiveSort = 1
 let g:NERDTreeSortOrder = ['\/$', '*', '\.swp$',  '\.bak$', '\~$']
 let g:NERDTreeIgnore = []
-let g:NERDTreeStatusline = '%{StatuslineDetect(''statusline_filelist'')}'
+let g:NERDTreeStatusline = '%{StatuslineDetect(''Filelist'')}'
 let g:NERDTreeChDirMode = 2
 let g:NERDTreeWinPos = 'left'
 let g:NERDTreeWinSize = g:cheerful_set_size['nerdtree']
@@ -1392,7 +1472,7 @@ let g:miniBufExplHideWhenDiff = 1
 let g:miniBufExplUseSingleClick = 1
 let g:miniBufExplCloseOnSelect = 0
 let g:miniBufExplShowBufNumbers = 1
-let g:miniBufExplStatusLineText = '%{StatuslineDetect(''statusline_bufferlist'')}'
+let g:miniBufExplStatusLineText = '%{StatuslineDetect(''Bufferlist'')}'
 let g:did_minibufexplorer_syntax_inits = 1
 let g:miniBufExplBRSplit = 0
 let g:miniBufExplMinSize = g:cheerful_set_size['minibufexpl']
@@ -1409,48 +1489,13 @@ map  <C-S-Tab> :call BufferSwitch('prev')<CR>
 vmap <C-S-Tab> <Esc><C-S-Tab>
 
 " ============================================================================
-" Unite & Unite-Neomru
+" Vim-Minimap
 " ============================================================================
-" ------------------------------------------------
-" Unite
-" ------------------------------------------------
-let g:unite_force_overwrite_statusline = 0
-let g:unite_ignore_source_files = []
-let g:unite_data_directory = g:config_dir_data.'unite'
-let g:unite_no_default_keymappings = 0
-let g:unite_redraw_hold_candidates = 10000
-let g:unite_enable_auto_select = 1
-let g:unite_restore_alternate_file = 1
-let g:unite_source_buffer_time_format = '(%Y/%m/%d %H:%M:%S) '
-let g:unite_source_file_async_command = 'ls -a'
-let g:unite_source_rec_min_cache_files = 100
-let g:unite_source_rec_max_cache_files = 10000
-let g:unite_source_rec_unit = 1000
-let g:unite_source_line_enable_highlight = 0
-let g:unite_source_process_enable_confirm = 1
-let g:unite_kind_jump_list_after_jump_scroll = 25
-let g:unite_kind_file_preview_max_filesize = 1000000
-let g:unite_kind_openable_persist_open_blink_time = '250m'
-let g:unite_converter_file_directory_width = 45
-let g:unite_matcher_fuzzy_max_input_length = 20
-call unite#custom#profile('default', 'context', {
-    \   'start_insert'  : 0,
-    \   'direction'     : 'botright',
-    \   'winheight'     : g:cheerful_set_size['unite'],
-    \ })
-
-" ------------------------------------------------
-" Unite-Neomru
-" ------------------------------------------------
-let g:neomru#time_format = ''
-let g:neomru#filename_format = ''
-let g:neomru#do_validate = 1
-let g:neomru#update_interval = 60
-let g:neomru#follow_links = 0
-let g:neomru#file_mru_limit = 1000
-let g:neomru#file_mru_path = g:config_dir_data.'neomru/neomru_file'
-let g:neomru#directory_mru_limit = 1000
-let g:neomru#directory_mru_path = g:config_dir_data.'neomru/neomru_directory'
+let g:minimap_show = '<leader>ms'
+let g:minimap_update = '<leader>mu'
+let g:minimap_close = '<leader>gc'
+let g:minimap_toggle = '<leader>gt'
+let g:minimap_highlight = 'Visual'
 
 " ============================================================================
 " FencView
@@ -1522,6 +1567,73 @@ set shortmess+=c
 " ------------------------------------------------
 let g:vim_dict_config = {'html':'html,css,javascript', 'php':'php,html,css,javascript'}
 
+" ============================================================================
+" Vim-Markdown
+" ============================================================================
+hi link mkdString           htmlString
+hi link mkdCode             htmlString
+hi link mkdCodeDelimiter    htmlString
+hi link mkdCodeStart        htmlString
+hi link mkdCodeEnd          htmlString
+hi link mkdFootnote         htmlNormal
+hi link mkdBlockquote       htmlNormal
+hi link mkdListItem         htmlArg
+hi link mkdListItemCheckbox htmlArg
+hi link mkdRule             htmlArg
+hi link mkdLineBreak        htmlSpecialChar
+hi link mkdFootnotes        htmlArg
+hi link mkdLink             htmlArg
+hi link mkdURL              htmlString
+hi link mkdInlineURL        htmlString
+hi link mkdID               htmlScriptTag
+hi link mkdLinkDef          htmlScriptTag
+hi link mkdLinkDefTarget    htmlString
+hi link mkdLinkTitle        htmlString
+hi link mkdDelimiter        htmlScriptTag
+
+" ============================================================================
+" Vim-Markdown-Toc
+" ============================================================================
+let g:vmt_auto_update_on_save = 1
+let g:vmt_dont_insert_fence = 0
+let g:vmt_fence_text = 'MARKDOWN_DIRECTORY'
+let g:vmt_fence_closing_text = 'MARKDOWN_DIRECTORY'
+let g:vmt_cycle_list_item_markers = 0
+let g:vmt_list_item_char = '*'
+let g:vmt_include_headings_before = 0
+let g:vmt_list_indent_text = ''
+let g:vmt_link = 1
+let g:vmt_min_level = 1
+let g:vmt_max_level = 4
+" ------------------------------------------------
+function! MarkdownAnchor(...)
+    let l:conget = getline(0, '$')
+    let l:conlen = len(l:conget)
+    let l:i = 0
+    while l:i < l:conlen
+        let l:conline = ''
+        if l:conget[l:i] =~ '\v\$[0-9]{4}\-[0-9]{2}\-[0-9]{2} [0-9]{2}\:[0-9]{2}\:[0-9]{2}\c'
+            let l:conline = substitute(l:conget[l:i], '\v\$[0-9]{4}\-[0-9]{2}\-[0-9]{2} [0-9]{2}\:[0-9]{2}\:[0-9]{2}\c', '$'.strftime("%Y-%m-%d %H:%M:%S"), 'g')
+            call setline(l:i+1, l:conline)
+        endif
+        let l:i = l:i+1
+    endwhile
+    " replace time
+    "let l:conres = substitute(l:conres, '\v\$[0-9]{4}\-[0-9]{2}\-[0-9]{2} [0-9]{2}\:[0-9]{2}\:[0-9]{2}\c', '$'.strftime("%Y-%m-%d %H:%M:%S"), 'g')
+    " replace anchor
+    "let l:conres = substitute(l:conres, '\v\<span id\=\"[^"]*\"\>\<\/span\>\n\n\c', '', 'g')
+    "let l:conres = substitute(l:conres, '\v[\n]+([^\n]+)\n([\-]+)\c', '\="\n\n<span id=\"".substitute(substitute(tolower(submatch(1)), "[\:\.]", "", "g"), "[ ]", "-", "g")."\"></span>\n\n".submatch(1)."\n".submatch(2)', 'g')
+    "let l:conres = substitute(l:conres, '\v[\n]+([\#]+ )([^\n]+)\c',  '\="\n\n<span id=\"".substitute(substitute(tolower(submatch(2)), "[\:\.]", "", "g"), "[ ]", "-", "g")."\"></span>\n\n".submatch(1).submatch(2)', 'g')
+    " write content
+    "let l:conres = split(l:conres, '\n')
+    "let l:i = 0
+    "while l:i < len(l:conres)
+    "    call setline(l:i+1, l:conres[l:i])
+    "    let l:i = l:i+1
+    "endwhile
+endfunction
+" ------------------------------------------------
+
 " ############################################################################
 " Other Setting by Bleakwind
 " ############################################################################
@@ -1533,6 +1645,14 @@ let g:vim_dict_config = {'html':'html,css,javascript', 'php':'php,html,css,javas
 " Keyboard
 " ============================================================================
 let g:mapleader = ','
+
+" ------------------------------------------------
+" Shift-Insert
+" ------------------------------------------------
+function! ParseRegister(...)
+    return exists('a:1') ? substitute(ProceSlashes('string', a:1), '\v\n\c', '\\r', 'g') : ''
+endfunction
+cmap <S-Insert> <C-r>=ParseRegister(@+)<CR>
 
 " ------------------------------------------------
 " <Leader>/
@@ -1571,6 +1691,18 @@ function! AutoReplace(...)
 endfunction
 map  <Leader>h :<C-\>eAutoReplace()<CR>
 vmap <Leader>h :<C-\>eAutoReplace('v')<CR>
+
+" ------------------------------------------------
+" <Leader>g
+" ------------------------------------------------
+function! BufReplace(...)
+    let l:select_visual = exists('a:1') && a:1 == 'v' ? '\v'.substitute(ProceSlashes('string', ReturnVisual()), '\v\n\c', '\\n', 'g').'\C' : ''
+    let l:set_pos = empty(l:select_visual) ? 10 : 11
+    call setcmdpos(l:set_pos+strlen(l:select_visual))
+    return 'bufdo %s/'.l:select_visual.'//gc | update'
+endfunction
+map  <Leader>g :<C-\>eBufReplace()<CR>
+vmap <Leader>g :<C-\>eBufReplace('v')<CR>
 
 " ------------------------------------------------
 " <Leader>r
@@ -1620,10 +1752,11 @@ map <F2>    :call QuickfixPrev()<CR>
 map <F3>    :call QuickfixNext()<CR>
 map <F4>    :call FileLocate()<CR>
 
-map <F5>    :call ResetTree()<CR>
-map <F6>    :call ResetEdit()<CR>
-map <F7>    :call OperateTool('unite','open')<CR>
-map <F8>    :call OperateTool('quickfix','open')<CR>
+map <F5>    :call CheerfulStructTree()<CR>
+map <F6>    :call CheerfulStructOutput()<CR>
+map <F7>    :call CheerfulStructInfo()<CR>
+map <F8>    :call CheerfulStructClear()<CR>
+map <C-F8>  :call CheerfulStructDebug()<CR>
 
 map <F9>    :call MakeDebug()<CR>
 map <F12>   :call MakeBrowser('chrome')<CR>
