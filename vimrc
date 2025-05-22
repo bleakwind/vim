@@ -116,7 +116,7 @@ endif
 " https://github.com/skywind3000/asyncrun.vim
 " ============================================================================
 " NERDtree
-" https://github.com/scrooloose/nerdtree
+" https://github.com/preservim/nerdtree
 " ============================================================================
 " MiniBufferExplorer
 " https://github.com/fholgado/minibufexpl.vim
@@ -300,7 +300,7 @@ Plugin 'bleakwind/vim-viewmap'
 " ----------------------------------------------------------------------------
 Plugin 'skywind3000/asyncrun.vim'
 " ----------------------------------------------------------------------------
-Plugin 'scrooloose/nerdtree'
+Plugin 'preservim/nerdtree'
 Plugin 'fholgado/minibufexpl.vim'
 " ----------------------------------------------------------------------------
 Plugin 'adah1972/fencview'
