@@ -109,6 +109,9 @@ endif
 " Vim-Cheerful
 " https://github.com/bleakwind/vim-cheerful
 " ============================================================================
+" Vim-Viewmap
+" https://github.com/bleakwind/vim-viewmap
+" ============================================================================
 " AsyncRun
 " https://github.com/skywind3000/asyncrun.vim
 " ============================================================================
@@ -117,9 +120,6 @@ endif
 " ============================================================================
 " MiniBufferExplorer
 " https://github.com/fholgado/minibufexpl.vim
-" ============================================================================
-" Vim-Minimap
-" https://github.com/severin-lemaignan/vim-minimap
 " ============================================================================
 " FencView
 " https://github.com/adah1972/fencview
@@ -296,13 +296,12 @@ Plugin 'VundleVim/Vundle.vim'
 " ----------------------------------------------------------------------------
 Plugin 'bleakwind/vim-colorful'
 Plugin 'bleakwind/vim-cheerful'
+Plugin 'bleakwind/vim-viewmap'
 " ----------------------------------------------------------------------------
 Plugin 'skywind3000/asyncrun.vim'
 " ----------------------------------------------------------------------------
 Plugin 'scrooloose/nerdtree'
 Plugin 'fholgado/minibufexpl.vim'
-" ----------------------------------------------------------------------------
-Plugin 'severin-lemaignan/vim-minimap'
 " ----------------------------------------------------------------------------
 Plugin 'adah1972/fencview'
 Plugin 'ap/vim-css-color'
@@ -552,7 +551,7 @@ let g:cheerful_set_name['nerdtree']             = 'Filelist'
 let g:cheerful_set_type['nerdtree']             = 'nerdtree'
 let g:cheerful_set_part['nerdtree']             = 'tree'
 let g:cheerful_set_buff['nerdtree']             = ''
-let g:cheerful_set_coth['nerdtree']             = ''
+let g:cheerful_set_coth['nerdtree']             = []
 let g:cheerful_set_size['nerdtree']             = 30
 let g:cheerful_set_open['nerdtree']             = 'NERDTree'
 let g:cheerful_set_clse['nerdtree']             = 'NERDTreeClose'
@@ -564,7 +563,7 @@ let g:cheerful_set_name['minibufexpl']          = 'Bufferlist'
 let g:cheerful_set_type['minibufexpl']          = 'minibufexpl'
 let g:cheerful_set_part['minibufexpl']          = 'tab'
 let g:cheerful_set_buff['minibufexpl']          = ''
-let g:cheerful_set_coth['minibufexpl']          = ''
+let g:cheerful_set_coth['minibufexpl']          = []
 let g:cheerful_set_size['minibufexpl']          = 1
 let g:cheerful_set_open['minibufexpl']          = 'MBEOpen'
 let g:cheerful_set_clse['minibufexpl']          = 'MBEClose'
@@ -576,7 +575,7 @@ let g:cheerful_set_name['quickfix']             = 'Quickfix'
 let g:cheerful_set_type['quickfix']             = 'qf'
 let g:cheerful_set_part['quickfix']             = 'output'
 let g:cheerful_set_buff['quickfix']             = ''
-let g:cheerful_set_coth['quickfix']             = ['minimap']
+let g:cheerful_set_coth['quickfix']             = []
 let g:cheerful_set_size['quickfix']             = 10
 let g:cheerful_set_open['quickfix']             = 'botright copen '.g:cheerful_set_size['quickfix']
 let g:cheerful_set_clse['quickfix']             = 'cclose'
@@ -584,17 +583,17 @@ let g:cheerful_set_nohi['quickfix']             = 0
 let g:cheerful_set_stat['quickfix']             = 1
 let g:cheerful_set_show['quickfix']             = 0
 
-let g:cheerful_set_name['minimap']              = 'Minimap'
-let g:cheerful_set_type['minimap']              = 'minimap'
-let g:cheerful_set_part['minimap']              = 'info'
-let g:cheerful_set_buff['minimap']              = 'vim-minimap'
-let g:cheerful_set_coth['minimap']              = ''
-let g:cheerful_set_size['minimap']              = 20
-let g:cheerful_set_open['minimap']              = 'Minimap'
-let g:cheerful_set_clse['minimap']              = 'MinimapClose'
-let g:cheerful_set_nohi['minimap']              = 1
-let g:cheerful_set_stat['minimap']              = 1
-let g:cheerful_set_show['minimap']              = 0
+let g:cheerful_set_name['viewmap']              = 'Viewmap'
+let g:cheerful_set_type['viewmap']              = 'viewmap'
+let g:cheerful_set_part['viewmap']              = 'info'
+let g:cheerful_set_buff['viewmap']              = 'vim-viewmap'
+let g:cheerful_set_coth['viewmap']              = []
+let g:cheerful_set_size['viewmap']              = 20
+let g:cheerful_set_open['viewmap']              = 'ViewmapOpen'
+let g:cheerful_set_clse['viewmap']              = 'ViewmapClose'
+let g:cheerful_set_nohi['viewmap']              = 1
+let g:cheerful_set_stat['viewmap']              = 1
+let g:cheerful_set_show['viewmap']              = 0
 
 " ============================================================================
 " g:set_xxx
@@ -1317,9 +1316,9 @@ function! StatuslineDetect(...)
         setlocal statusline+=%#StatusLine_0#\ %12.(%l,%c%V%)\ %#StatusLine_0#
         setlocal statusline+=%#StatusLine_0#\ %8.P\ %#StatusLine_0#
         setlocal statusline+=%#StatusLine_0#
-    elseif (exists('a:1') && a:1 == 'Minimap')
+    elseif (exists('a:1') && a:1 == 'Viewmap')
         setlocal  statusline=%#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#[Minimap]%#StatusLine_0#
+        setlocal statusline+=%#StatusLine_0#[Viewmap]%#StatusLine_0#
         setlocal statusline+=%#StatusLine_0#%<
 
         setlocal statusline+=%#StatusLine_0#\ %{(has_key(g:set_status_list['modelist'],mode())?g:set_status_list['modelist'][mode()]:mode())}\ %#StatusLine_0#
@@ -1489,13 +1488,12 @@ map  <C-S-Tab> :call BufferSwitch('prev')<CR>
 vmap <C-S-Tab> <Esc><C-S-Tab>
 
 " ============================================================================
-" Vim-Minimap
+" Vim-Viewmap
 " ============================================================================
-let g:minimap_show = '<leader>ms'
-let g:minimap_update = '<leader>mu'
-let g:minimap_close = '<leader>gc'
-let g:minimap_toggle = '<leader>gt'
-let g:minimap_highlight = 'Visual'
+let g:viewmap_enabled = 1
+let g:viewmap_width = 20
+let g:viewmap_updelay = 200
+let g:viewmap_highlight = 'Visual'
 
 " ============================================================================
 " FencView
