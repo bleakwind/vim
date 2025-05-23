@@ -1493,7 +1493,8 @@ vmap <C-S-Tab> <Esc><C-S-Tab>
 let g:viewmap_enabled = 1
 let g:viewmap_width = 20
 let g:viewmap_updelay = 200
-let g:viewmap_highlight = 'Visual'
+let g:viewmap_highlight = 'ViewmapHighlight'
+hi ViewmapHighlight ctermfg=White ctermbg=Brown cterm=NONE guifg=#FFFFFF guibg=#696C71 gui=NONE
 
 " ============================================================================
 " FencView
