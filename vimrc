@@ -503,23 +503,27 @@ colorscheme colorful
 " Color detail: StatusLine
 " ============================================================================
 hi link StatusLine_0                    StatusLine
-hi StatusLine_1                         ctermfg=Green       ctermbg=DarkGreen   cterm=NONE        guifg=#A3D97D   guibg=#467623   gui=NONE
-hi StatusLine_2                         ctermfg=Black       ctermbg=DarkGray    cterm=NONE        guifg=#59647A   guibg=#171c22   gui=NONE
-hi StatusLine_3                         ctermfg=DarkGreen   ctermbg=Gray        cterm=NONE        guifg=#006400   guibg=#1D2228   gui=NONE
-hi StatusLine_4                         ctermfg=Blue        ctermbg=LightGray   cterm=NONE        guifg=#1E5791   guibg=#21252b   gui=NONE
-hi StatusLine_5                         ctermfg=Red         ctermbg=LightGray   cterm=NONE        guifg=#A2000C   guibg=#171C22   gui=NONE
-hi StatusLine_6                         ctermfg=DarkGreen   ctermbg=LightGray   cterm=NONE        guifg=#006400   guibg=#171C22   gui=NONE
-hi StatusLine_7                         ctermfg=Blue        ctermbg=LightGray   cterm=NONE        guifg=#1E5791   guibg=#171C22   gui=NONE
-hi StatusLine_8                         ctermfg=Red         ctermbg=LightGray   cterm=NONE        guifg=#A2000C   guibg=#171C22   gui=NONE
+hi StatusLine_1                         ctermfg=Green       ctermbg=DarkGreen   cterm=NONE      guifg=#A3D97D   guibg=#467623   gui=NONE
+hi StatusLine_2                         ctermfg=Black       ctermbg=DarkGray    cterm=NONE      guifg=#59647A   guibg=#171c22   gui=NONE
+hi StatusLine_3                         ctermfg=DarkGreen   ctermbg=Gray        cterm=NONE      guifg=#006400   guibg=#1D2228   gui=NONE
+hi StatusLine_4                         ctermfg=Blue        ctermbg=LightGray   cterm=NONE      guifg=#1E5791   guibg=#21252b   gui=NONE
+hi StatusLine_5                         ctermfg=Red         ctermbg=LightGray   cterm=NONE      guifg=#A2000C   guibg=#171C22   gui=NONE
+hi StatusLine_6                         ctermfg=DarkGreen   ctermbg=LightGray   cterm=NONE      guifg=#006400   guibg=#171C22   gui=NONE
+hi StatusLine_7                         ctermfg=Blue        ctermbg=LightGray   cterm=NONE      guifg=#1E5791   guibg=#171C22   gui=NONE
+hi StatusLine_8                         ctermfg=Red         ctermbg=LightGray   cterm=NONE      guifg=#A2000C   guibg=#171C22   gui=NONE
 " ============================================================================
-" Color detail: Buffer
+" Color detail: Bufferlist
 " ============================================================================
-hi BufferNormal                         ctermfg=Black       ctermbg=DarkGray    cterm=NONE        guifg=#DDDDDD   guibg=#59647A   gui=NONE
-hi BufferChanged                        ctermfg=DarkRed     ctermbg=DarkGray    cterm=NONE        guifg=#FF4D5B   guibg=#59647A   gui=NONE
-hi BufferVisibleNormal                  ctermfg=Black       ctermbg=LightGray   cterm=NONE        guifg=#DDDDDD   guibg=#21252b   gui=NONE
-hi BufferVisibleChanged                 ctermfg=DarkRed     ctermbg=LightGray   cterm=NONE        guifg=#FF939C   guibg=#21252b   gui=NONE
-hi BufferVisibleActiveNormal            ctermfg=Black       ctermbg=White       cterm=NONE        guifg=#A3D97D   guibg=#171C22   gui=NONE
-hi BufferVisibleActiveChanged           ctermfg=Red         ctermbg=White       cterm=NONE        guifg=#FF939C   guibg=#171C22   gui=NONE
+hi BufferlistNormal                     ctermfg=Black       ctermbg=DarkGray    cterm=NONE      guifg=#DDDDDD   guibg=#59647A   gui=NONE
+hi BufferlistChanged                    ctermfg=DarkRed     ctermbg=DarkGray    cterm=NONE      guifg=#FF4D5B   guibg=#59647A   gui=NONE
+hi BufferlistVisibleNormal              ctermfg=Black       ctermbg=LightGray   cterm=NONE      guifg=#DDDDDD   guibg=#21252b   gui=NONE
+hi BufferlistVisibleChanged             ctermfg=DarkRed     ctermbg=LightGray   cterm=NONE      guifg=#FF939C   guibg=#21252b   gui=NONE
+hi BufferlistVisibleActiveNormal        ctermfg=Black       ctermbg=White       cterm=NONE      guifg=#A3D97D   guibg=#171C22   gui=NONE
+hi BufferlistVisibleActiveChanged       ctermfg=Red         ctermbg=White       cterm=NONE      guifg=#FF939C   guibg=#171C22   gui=NONE
+" ============================================================================
+" Color detail: Codemap
+" ============================================================================
+hi CodemapHighlight                     ctermfg=White       ctermbg=Blue        cterm=NONE      guifg=#FFFFFF   guibg=#6A5ACD   gui=NONE
 
 " ############################################################################
 " --- Plugin Manage Begin ---
@@ -583,7 +587,7 @@ let g:cheerful_set_nohi['quickfix']             = 0
 let g:cheerful_set_stat['quickfix']             = 1
 let g:cheerful_set_show['quickfix']             = 0
 
-let g:cheerful_set_name['viewmap']              = 'Viewmap'
+let g:cheerful_set_name['viewmap']              = 'Codemap'
 let g:cheerful_set_type['viewmap']              = 'viewmap'
 let g:cheerful_set_part['viewmap']              = 'info'
 let g:cheerful_set_buff['viewmap']              = 'vim-viewmap'
@@ -1288,8 +1292,7 @@ function! StatuslineDetect(...)
         setlocal statusline+=%#StatusLine_0#%<
 
         setlocal statusline+=%#StatusLine_0#\ %=\ %#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#\ %12.(%l,%c%V%)\ %#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#\ %8.P\ %#StatusLine_0#
+        setlocal statusline+=%#StatusLine_0#\ %5.P\ %#StatusLine_0#
         setlocal statusline+=%#StatusLine_0#
         return &statusline
     elseif (exists('a:1') && a:1 == 'Bufferlist')
@@ -1301,8 +1304,7 @@ function! StatuslineDetect(...)
         setlocal statusline+=%#StatusLine_8#%{len(filter(range(1,bufnr('$')),'getbufvar(v:val,''&modified'')'))>0?'\ [+:'.len(filter(range(1,bufnr('$')),'getbufvar(v:val,''&modified'')')).']':''}%#StatusLine_8#
 
         setlocal statusline+=%#StatusLine_0#\ %=\ %#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#\ %12.(%l,%c%V%)\ %#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#\ %8.P\ %#StatusLine_0#
+        setlocal statusline+=%#StatusLine_0#\ %5.P\ %#StatusLine_0#
         setlocal statusline+=%#StatusLine_0#
         return &statusline
     elseif (exists('a:1') && a:1 == 'Quickfix')
@@ -1313,19 +1315,15 @@ function! StatuslineDetect(...)
         setlocal statusline+=%#StatusLine_7#%{exists('w:quickfix_title')?'\ ['.w:quickfix_title.']':''}%#StatusLine_7#
 
         setlocal statusline+=%#StatusLine_0#\ %=\ %#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#\ %12.(%l,%c%V%)\ %#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#\ %8.P\ %#StatusLine_0#
+        setlocal statusline+=%#StatusLine_0#\ %5.P\ %#StatusLine_0#
         setlocal statusline+=%#StatusLine_0#
-    elseif (exists('a:1') && a:1 == 'Viewmap')
+    elseif (exists('a:1') && a:1 == 'Codemap')
         setlocal  statusline=%#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#[Viewmap]%#StatusLine_0#
+        setlocal statusline+=%#StatusLine_0#[Codemap]%#StatusLine_0#
         setlocal statusline+=%#StatusLine_0#%<
 
-        setlocal statusline+=%#StatusLine_0#\ %{(has_key(g:set_status_list['modelist'],mode())?g:set_status_list['modelist'][mode()]:mode())}\ %#StatusLine_0#
-
         setlocal statusline+=%#StatusLine_0#\ %=\ %#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#\ %12.(%l,%c%V%)\ %#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#\ %8.P\ %#StatusLine_0#
+        setlocal statusline+=%#StatusLine_0#\ %5.P\ %#StatusLine_0#
         setlocal statusline+=%#StatusLine_0#
     elseif (exists('a:1') && a:1 == 'Other')
         setlocal  statusline=%#StatusLine_0#
@@ -1334,7 +1332,7 @@ function! StatuslineDetect(...)
 
         setlocal statusline+=%#StatusLine_0#\ %=\ %#StatusLine_0#
         setlocal statusline+=%#StatusLine_0#\ %12.(%l,%c%V%)\ %#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#\ %8.P\ %#StatusLine_0#
+        setlocal statusline+=%#StatusLine_0#\ %5.P\ %#StatusLine_0#
         setlocal statusline+=%#StatusLine_0#
     elseif (exists('a:1') && a:1 == 'Main')
         setlocal  statusline=%#StatusLine_0#
@@ -1349,7 +1347,7 @@ function! StatuslineDetect(...)
         setlocal statusline+=%#StatusLine_0#\ %=\ %#StatusLine_0#
         setlocal statusline+=%#StatusLine_0#\ %([%b\ 0x%B]%)\ %#StatusLine_0#
         setlocal statusline+=%#StatusLine_0#\ %12.(%l,%c%V%)\ %#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#\ %8.P\ %#StatusLine_0#
+        setlocal statusline+=%#StatusLine_0#\ %5.P\ %#StatusLine_0#
         setlocal statusline+=%#StatusLine_0#
     endif
 endfunction
@@ -1429,33 +1427,33 @@ let g:NERDTreeMinimalUI = 1
 let g:NERDTreeBookmarksFile = g:config_dir_data.'nerdtree/bookmark'
 let g:NERDTreeDirArrowExpandable = '+'
 let g:NERDTreeDirArrowCollapsible = '-'
-hi def link NERDTreePart Special
-hi def link NERDTreePartFile Identifier
-hi def link NERDTreeExecFile Identifier
-hi def link NERDTreeDirSlash Delimiter
-hi def link NERDTreeBookmarksHeader Statement
-hi def link NERDTreeBookmarksLeader Delimiter
-hi def link NERDTreeBookmarkName Function
-hi def link NERDTreeBookmark Identifier
-hi def link NERDTreeHelp Normal
-hi def link NERDTreeHelpKey Identifier
-hi def link NERDTreeHelpCommand Identifier
-hi def link NERDTreeHelpTitle Function
-hi def link NERDTreeToggleOn String
-hi def link NERDTreeToggleOff String
-hi def link NERDTreeLinkTarget Identifier
-hi def link NERDTreeLinkFile PreProc
-hi def link NERDTreeLinkDir PreProc
-hi def link NERDTreeDir Function
-hi def link NERDTreeUp Function
-hi def link NERDTreeFile Normal
-hi def link NERDTreeCWD Statement
-hi def link NERDTreeOpenable Delimiter
-hi def link NERDTreeClosable Delimiter
-hi def link NERDTreeIgnore Comment
-hi def link NERDTreeRO Comment
-hi def link NERDTreeFlags PreProc
-hi def link NERDTreeCurrentNode Function
+hi! link NERDTreePart Special
+hi! link NERDTreePartFile Identifier
+hi! link NERDTreeExecFile Identifier
+hi! link NERDTreeDirSlash Delimiter
+hi! link NERDTreeBookmarksHeader Statement
+hi! link NERDTreeBookmarksLeader Delimiter
+hi! link NERDTreeBookmarkName Function
+hi! link NERDTreeBookmark Identifier
+hi! link NERDTreeHelp Normal
+hi! link NERDTreeHelpKey Identifier
+hi! link NERDTreeHelpCommand Identifier
+hi! link NERDTreeHelpTitle Function
+hi! link NERDTreeToggleOn String
+hi! link NERDTreeToggleOff String
+hi! link NERDTreeLinkTarget Identifier
+hi! link NERDTreeLinkFile PreProc
+hi! link NERDTreeLinkDir PreProc
+hi! link NERDTreeDir Function
+hi! link NERDTreeUp Function
+hi! link NERDTreeFile Normal
+hi! link NERDTreeCWD Statement
+hi! link NERDTreeOpenable Delimiter
+hi! link NERDTreeClosable Delimiter
+hi! link NERDTreeIgnore Comment
+hi! link NERDTreeRO Comment
+hi! link NERDTreeFlags PreProc
+hi! link NERDTreeCurrentNode Function
 
 " Autocmd
 autocmd VimEnter * exe 'NERDTree '.g:config_dir_tree
@@ -1476,12 +1474,12 @@ let g:did_minibufexplorer_syntax_inits = 1
 let g:miniBufExplBRSplit = 0
 let g:miniBufExplMinSize = g:cheerful_set_size['minibufexpl']
 let g:miniBufExplMaxSize = 2
-hi def link MBENormal BufferNormal
-hi def link MBEChanged BufferChanged
-hi def link MBEVisibleNormal BufferVisibleNormal
-hi def link MBEVisibleChanged BufferVisibleChanged
-hi def link MBEVisibleActiveNormal BufferVisibleActiveNormal
-hi def link MBEVisibleActiveChanged BufferVisibleActiveChanged
+hi! link MBENormal BufferlistNormal
+hi! link MBEChanged BufferlistChanged
+hi! link MBEVisibleNormal BufferlistVisibleNormal
+hi! link MBEVisibleChanged BufferlistVisibleChanged
+hi! link MBEVisibleActiveNormal BufferlistVisibleActiveNormal
+hi! link MBEVisibleActiveChanged BufferlistVisibleActiveChanged
 map  <C-Tab>   :call BufferSwitch('next')<CR>
 vmap <C-Tab> <Esc><C-Tab>
 map  <C-S-Tab> :call BufferSwitch('prev')<CR>
@@ -1493,8 +1491,8 @@ vmap <C-S-Tab> <Esc><C-S-Tab>
 let g:viewmap_enabled = 1
 let g:viewmap_width = 20
 let g:viewmap_updelay = 200
-let g:viewmap_highlight = 'ViewmapHighlight'
-hi ViewmapHighlight ctermfg=White ctermbg=Brown cterm=NONE guifg=#FFFFFF guibg=#696C71 gui=NONE
+let g:viewmap_hlalpha = 0.3
+"hi! link ViewmapHighlight CodemapHighlight
 
 " ============================================================================
 " FencView
@@ -1569,26 +1567,26 @@ let g:vim_dict_config = {'html':'html,css,javascript', 'php':'php,html,css,javas
 " ============================================================================
 " Vim-Markdown
 " ============================================================================
-hi link mkdString           htmlString
-hi link mkdCode             htmlString
-hi link mkdCodeDelimiter    htmlString
-hi link mkdCodeStart        htmlString
-hi link mkdCodeEnd          htmlString
-hi link mkdFootnote         htmlNormal
-hi link mkdBlockquote       htmlNormal
-hi link mkdListItem         htmlArg
-hi link mkdListItemCheckbox htmlArg
-hi link mkdRule             htmlArg
-hi link mkdLineBreak        htmlSpecialChar
-hi link mkdFootnotes        htmlArg
-hi link mkdLink             htmlArg
-hi link mkdURL              htmlString
-hi link mkdInlineURL        htmlString
-hi link mkdID               htmlScriptTag
-hi link mkdLinkDef          htmlScriptTag
-hi link mkdLinkDefTarget    htmlString
-hi link mkdLinkTitle        htmlString
-hi link mkdDelimiter        htmlScriptTag
+hi! link mkdString           htmlString
+hi! link mkdCode             htmlString
+hi! link mkdCodeDelimiter    htmlString
+hi! link mkdCodeStart        htmlString
+hi! link mkdCodeEnd          htmlString
+hi! link mkdFootnote         htmlNormal
+hi! link mkdBlockquote       htmlNormal
+hi! link mkdListItem         htmlArg
+hi! link mkdListItemCheckbox htmlArg
+hi! link mkdRule             htmlArg
+hi! link mkdLineBreak        htmlSpecialChar
+hi! link mkdFootnotes        htmlArg
+hi! link mkdLink             htmlArg
+hi! link mkdURL              htmlString
+hi! link mkdInlineURL        htmlString
+hi! link mkdID               htmlScriptTag
+hi! link mkdLinkDef          htmlScriptTag
+hi! link mkdLinkDefTarget    htmlString
+hi! link mkdLinkTitle        htmlString
+hi! link mkdDelimiter        htmlScriptTag
 
 " ============================================================================
 " Vim-Markdown-Toc
