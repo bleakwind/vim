@@ -1384,6 +1384,7 @@ let g:viewmap_hlalpha = 0.3
 " Vim-Specialcolor
 " ============================================================================
 let g:specialcolor_matchtag_enabled = 1
+let g:specialcolor_matchtag_updelay = 200
 let g:specialcolor_csscolor_enabled = 1
 
 " ============================================================================
