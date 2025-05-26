@@ -161,6 +161,7 @@ set wildmenu
 set laststatus=2
 set shortmess=atI
 set completeopt=menuone
+set matchpairs=(:),{:},[:]
 set fillchars=stl:\ ,stlnc:\ ,vert:\ ,fold:-,diff:-
 
 " Set Term
