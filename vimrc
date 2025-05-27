@@ -1381,6 +1381,7 @@ let g:viewmap_hlalpha = 0.3
 let g:specialcolor_matchtag_enabled = 1
 let g:specialcolor_matchtag_updelay = 200
 let g:specialcolor_csscolor_enabled = 1
+let g:specialcolor_csscolor_updelay = 1000
 
 " ============================================================================
 " AsyncRun
