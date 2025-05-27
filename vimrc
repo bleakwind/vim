@@ -118,7 +118,7 @@ endif
 " NERDtree
 " https://github.com/preservim/nerdtree
 " ============================================================================
-" MiniBufferExplorer
+" MiniBufExpl
 " https://github.com/fholgado/minibufexpl.vim
 " ============================================================================
 " FencView
@@ -1365,9 +1365,7 @@ endfunction
 " ============================================================================
 let g:cheerful_struct_enabled = 1
 let g:cheerful_reopen_enabled = 1
-let g:cheerful_reopen_lastfile = 2
 let g:cheerful_reopen_setpath = g:config_dir_data.'cheerful'
-
 
 " ============================================================================
 " Vim-Viewmap
@@ -1443,7 +1441,7 @@ hi! link NERDTreeCurrentNode Function
 autocmd VimEnter * exe 'NERDTree '.g:config_dir_tree
 
 " ============================================================================
-" MiniBufferExplorer
+" MiniBufExpl
 " ============================================================================
 let g:miniBufExplAutoStart = 1
 let g:miniBufExplSplitToEdge = 1
@@ -1691,4 +1689,3 @@ endif
 " ############################################################################
 " === End ===
 " ############################################################################
-
