@@ -481,24 +481,24 @@ colorscheme colorful
 " ============================================================================
 " Color detail: StatusLine
 " ============================================================================
-hi link StatusLine_0                    StatusLine
-hi StatusLine_1                         ctermfg=Green       ctermbg=DarkGreen   cterm=NONE      guifg=#A3D97D   guibg=#467623   gui=NONE
-hi StatusLine_2                         ctermfg=Black       ctermbg=DarkGray    cterm=NONE      guifg=#59647A   guibg=#171c22   gui=NONE
-hi StatusLine_3                         ctermfg=DarkGreen   ctermbg=Gray        cterm=NONE      guifg=#006400   guibg=#1D2228   gui=NONE
-hi StatusLine_4                         ctermfg=Blue        ctermbg=LightGray   cterm=NONE      guifg=#1E5791   guibg=#21252b   gui=NONE
-hi StatusLine_5                         ctermfg=Red         ctermbg=LightGray   cterm=NONE      guifg=#A2000C   guibg=#171C22   gui=NONE
-hi StatusLine_6                         ctermfg=DarkGreen   ctermbg=LightGray   cterm=NONE      guifg=#006400   guibg=#171C22   gui=NONE
-hi StatusLine_7                         ctermfg=Blue        ctermbg=LightGray   cterm=NONE      guifg=#1E5791   guibg=#171C22   gui=NONE
-hi StatusLine_8                         ctermfg=Red         ctermbg=LightGray   cterm=NONE      guifg=#A2000C   guibg=#171C22   gui=NONE
+hi StatusLine_0                     ctermfg=Black       ctermbg=LightGray   cterm=NONE      guifg=#59647A   guibg=#171C22   gui=NONE
+hi StatusLine_1                     ctermfg=Green       ctermbg=DarkGreen   cterm=NONE      guifg=#A3D97D   guibg=#467623   gui=NONE
+hi StatusLine_2                     ctermfg=Black       ctermbg=DarkGray    cterm=NONE      guifg=#59647A   guibg=#171c22   gui=NONE
+hi StatusLine_3                     ctermfg=DarkGreen   ctermbg=Gray        cterm=NONE      guifg=#006400   guibg=#1D2228   gui=NONE
+hi StatusLine_4                     ctermfg=Blue        ctermbg=LightGray   cterm=NONE      guifg=#1E5791   guibg=#21252b   gui=NONE
+hi StatusLine_5                     ctermfg=Red         ctermbg=LightGray   cterm=NONE      guifg=#A2000C   guibg=#171C22   gui=NONE
+hi StatusLine_6                     ctermfg=DarkGreen   ctermbg=LightGray   cterm=NONE      guifg=#006400   guibg=#171C22   gui=NONE
+hi StatusLine_7                     ctermfg=Blue        ctermbg=LightGray   cterm=NONE      guifg=#1E5791   guibg=#171C22   gui=NONE
+hi StatusLine_8                     ctermfg=Red         ctermbg=LightGray   cterm=NONE      guifg=#A2000C   guibg=#171C22   gui=NONE
 " ============================================================================
 " Color detail: Bufferlist
 " ============================================================================
-hi BufferlistNormal                     ctermfg=Black       ctermbg=DarkGray    cterm=NONE      guifg=#DDDDDD   guibg=#59647A   gui=NONE
-hi BufferlistChanged                    ctermfg=DarkRed     ctermbg=DarkGray    cterm=NONE      guifg=#FF4D5B   guibg=#59647A   gui=NONE
-hi BufferlistVisibleNormal              ctermfg=Black       ctermbg=LightGray   cterm=NONE      guifg=#DDDDDD   guibg=#21252b   gui=NONE
-hi BufferlistVisibleChanged             ctermfg=DarkRed     ctermbg=LightGray   cterm=NONE      guifg=#FF939C   guibg=#21252b   gui=NONE
-hi BufferlistVisibleActiveNormal        ctermfg=Black       ctermbg=White       cterm=NONE      guifg=#A3D97D   guibg=#171C22   gui=NONE
-hi BufferlistVisibleActiveChanged       ctermfg=Red         ctermbg=White       cterm=NONE      guifg=#FF939C   guibg=#171C22   gui=NONE
+hi BufferlistNormal                 ctermfg=Black       ctermbg=DarkGray    cterm=NONE      guifg=#DDDDDD   guibg=#59647A   gui=NONE
+hi BufferlistChanged                ctermfg=DarkRed     ctermbg=DarkGray    cterm=NONE      guifg=#FF4D5B   guibg=#59647A   gui=NONE
+hi BufferlistVisibleNormal          ctermfg=Black       ctermbg=LightGray   cterm=NONE      guifg=#DDDDDD   guibg=#21252b   gui=NONE
+hi BufferlistVisibleChanged         ctermfg=DarkRed     ctermbg=LightGray   cterm=NONE      guifg=#FF939C   guibg=#21252b   gui=NONE
+hi BufferlistVisibleActiveNormal    ctermfg=Black       ctermbg=White       cterm=NONE      guifg=#A3D97D   guibg=#171C22   gui=NONE
+hi BufferlistVisibleActiveChanged   ctermfg=Red         ctermbg=White       cterm=NONE      guifg=#FF939C   guibg=#171C22   gui=NONE
 
 " ############################################################################
 " --- Plugin Manage Begin ---
@@ -1250,82 +1250,13 @@ command! -nargs=? RphpPregReplace :call RphpPregReplace(<q-args>)
 autocmd VimEnter * call RunPHPBuildfun()
 
 " ============================================================================
-" Function for Statusline
-" ============================================================================
-function! StatuslineDetect(...)
-    if (exists('a:1') && a:1 == 'Filelist')
-        setlocal  statusline=%#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#[Filelist]%#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#%<
-
-        setlocal statusline+=%#StatusLine_0#\ %=\ %#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#\ %5.P\ %#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#
-        return &statusline
-    elseif (exists('a:1') && a:1 == 'Bufferlist')
-        setlocal  statusline=%#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#[Bufferlist]%#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#%<
-
-        setlocal statusline+=%#StatusLine_7#\ [*:%{len(filter(range(1,bufnr('$')),'buflisted(v:val)'))}]%#StatusLine_7#
-        setlocal statusline+=%#StatusLine_8#%{len(filter(range(1,bufnr('$')),'getbufvar(v:val,''&modified'')'))>0?'\ [+:'.len(filter(range(1,bufnr('$')),'getbufvar(v:val,''&modified'')')).']':''}%#StatusLine_8#
-
-        setlocal statusline+=%#StatusLine_0#\ %=\ %#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#\ %5.P\ %#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#
-        return &statusline
-    elseif (exists('a:1') && a:1 == 'Quickfix')
-        setlocal  statusline=%#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#[Quickfix]%#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#%<
-
-        setlocal statusline+=%#StatusLine_7#%{exists('w:quickfix_title')?'\ ['.w:quickfix_title.']':''}%#StatusLine_7#
-
-        setlocal statusline+=%#StatusLine_0#\ %=\ %#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#\ %5.P\ %#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#
-    elseif (exists('a:1') && a:1 == 'Codemap')
-        setlocal  statusline=%#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#[Codemap]%#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#%<
-
-        setlocal statusline+=%#StatusLine_0#\ %=\ %#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#\ %5.P\ %#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#
-    elseif (exists('a:1') && a:1 == 'Other')
-        setlocal  statusline=%#StatusLine_0#
-        setlocal statusline+=%#StatusLine_2#%F%#StatusLine_2#
-        setlocal statusline+=%#StatusLine_0#%<
-
-        setlocal statusline+=%#StatusLine_0#\ %=\ %#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#\ %12.(%l,%c%V%)\ %#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#\ %5.P\ %#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#
-    elseif (exists('a:1') && a:1 == 'Main')
-        setlocal  statusline=%#StatusLine_0#
-        setlocal statusline+=%#StatusLine_1#\ %{(has_key(g:set_status_list['modelist'],mode())?g:set_status_list['modelist'][mode()]:mode())}\ %#StatusLine_1#
-        setlocal statusline+=%#StatusLine_2#\ %F\ %#StatusLine_2#
-        setlocal statusline+=%#StatusLine_0#%<
-
-        setlocal statusline+=%#StatusLine_3#\ %{(!empty(&filetype)?&filetype:'unkonw')}\ %#StatusLine_3#
-        setlocal statusline+=%#StatusLine_4#\ %{(&fileencoding).(&bomb?',BOM':'').(':'.&fileformat)}\ %#StatusLine_4#
-        setlocal statusline+=%#StatusLine_5#\ %r%m\ %#StatusLine_5#
-
-        setlocal statusline+=%#StatusLine_0#\ %=\ %#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#\ %([%b\ 0x%B]%)\ %#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#\ %12.(%l,%c%V%)\ %#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#\ %5.P\ %#StatusLine_0#
-        setlocal statusline+=%#StatusLine_0#
-    endif
-endfunction
-
-" ============================================================================
 " Command
 " ============================================================================
 " ------------------------------------------------
 " Vim-CheckConfig
 " ------------------------------------------------
 autocmd VimEnter * call CheckConfig()
+
 " ------------------------------------------------
 " Vim-Syntax
 " ------------------------------------------------
@@ -1402,7 +1333,7 @@ let g:NERDTreeShowLineNumbers = 1
 let g:NERDTreeCaseSensitiveSort = 1
 let g:NERDTreeSortOrder = ['\/$', '*', '\.swp$',  '\.bak$', '\~$']
 let g:NERDTreeIgnore = []
-let g:NERDTreeStatusline = '%{StatuslineDetect(''Filelist'')}'
+let g:NERDTreeStatusline = '%{cheerful#StructStatusline(''tree'')}'
 let g:NERDTreeChDirMode = 2
 let g:NERDTreeWinPos = 'left'
 let g:NERDTreeWinSize = g:cheerful_struct_setsize['nerdtree']
@@ -1452,7 +1383,7 @@ let g:miniBufExplHideWhenDiff = 1
 let g:miniBufExplUseSingleClick = 1
 let g:miniBufExplCloseOnSelect = 0
 let g:miniBufExplShowBufNumbers = 1
-let g:miniBufExplStatusLineText = '%{StatuslineDetect(''Bufferlist'')}'
+let g:miniBufExplStatusLineText = '%{cheerful#StructStatusline(''tab'')}'
 let g:did_minibufexplorer_syntax_inits = 1
 let g:miniBufExplBRSplit = 0
 let g:miniBufExplMinSize = g:cheerful_struct_setsize['minibufexpl']
