@@ -633,20 +633,20 @@ let g:config_builddata['nerdtree_bookmark']         = g:config_nerdtree_bookmark
 " ============================================================================
 function! CheckConfig()
     if exists('g:config_builddir')
-        for l:key in keys(g:config_builddir)
-            if filewritable(g:config_builddir[l:key]) != 2
-                call mkdir(g:config_builddir[l:key], 'p', 0777)
+        for il in keys(g:config_builddir)
+            if filewritable(g:config_builddir[il]) != 2
+                call mkdir(g:config_builddir[il], 'p', 0777)
             endif
         endfor
     endif
     if exists('g:config_buildfile')
-        for l:key in keys(g:config_buildfile)
-            if filewritable(g:config_buildfile[l:key]) != 1
-                call writefile([], g:config_buildfile[l:key], 'b')
-                if has_key(g:config_builddata, l:key)
-                    call writefile(g:config_builddata[l:key], g:config_buildfile[l:key], 'b')
+        for il in keys(g:config_buildfile)
+            if filewritable(g:config_buildfile[il]) != 1
+                call writefile([], g:config_buildfile[il], 'b')
+                if has_key(g:config_builddata, il)
+                    call writefile(g:config_builddata[il], g:config_buildfile[il], 'b')
                 endif
-                call setfperm(g:config_buildfile[l:key], 'rwxrwxrwx')
+                call setfperm(g:config_buildfile[il], 'rwxrwxrwx')
             endif
         endfor
     endif
@@ -767,8 +767,8 @@ function! FileEncoding()
         call add(l:encoding_select, l:i.': '.l:encoding_list[l:i-1])
         let l:i = l:i+1
     endwhile
-    for l:item in values(l:other_select)
-        call add(l:encoding_select, l:item)
+    for il in values(l:other_select)
+        call add(l:encoding_select, il)
     endfor
     let l:input_list = inputlist(l:encoding_select)
     if l:input_list > 0 && l:input_list <= l:encoding_list_len
@@ -1019,15 +1019,15 @@ endfunction
 function! QuickfixHi()
     let g:env_qfmatch = []
     let l:qflist = getqflist()
-    for l:val in l:qflist
-       call add(g:env_qfmatch, matchadd('Error', '\%'.l:val['lnum'].'l'))
+    for il in l:qflist
+       call add(g:env_qfmatch, matchadd('Error', '\%'.il['lnum'].'l'))
     endfor
 endfunction
 
 function! QuickfixNohi()
     if exists('g:env_qfmatch') && !empty(g:env_qfmatch)
-        for l:val in g:env_qfmatch
-           call matchdelete(l:val)
+        for il in g:env_qfmatch
+           call matchdelete(il)
         endfor
         let g:env_qfmatch = []
     endif
@@ -1120,16 +1120,16 @@ endfunction
 
 function! RunPHPBuildfun()
     call ReturnVimrc()
-    for l:item in g:set_php_list['funlist']
+    for il in g:set_php_list['funlist']
         let l:script_content = []
         call add(l:script_content, '<?php')
-        let l:script_add = substitute(g:set_php_list['vimrc'], '\v.*function\s*'.l:item.'\(\.\.\.\)\s*\n(.{-})\n\s*endfunction.*\c', '\=submatch(1)', 'g')
+        let l:script_add = substitute(g:set_php_list['vimrc'], '\v.*function\s*'.il.'\(\.\.\.\)\s*\n(.{-})\n\s*endfunction.*\c', '\=submatch(1)', 'g')
         let l:script_add = substitute(l:script_add, '\v.*\"\s*php\s*\<\<\s*EOF\s*(.{-})\s*\"\s*EOF.*\c', '\=submatch(1)', 'g')
         let l:script_add = substitute(l:script_add, '\v(\n)\s*\"\c', '\=submatch(1)', 'g')
         let l:script_add = split(l:script_add, '\n')
         call extend(l:script_content, l:script_add)
         call add(l:script_content, '?>')
-        let g:set_php_list['fundata'][l:item] = l:script_content
+        let g:set_php_list['fundata'][il] = l:script_content
     endfor
 endfunction
 
