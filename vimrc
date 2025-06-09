@@ -777,7 +777,7 @@ function! FileSave(...)
     " ------------------------------------------------
     " operate other
     " ------------------------------------------------
-    call MakeBuild()
+    call MakeBuild('auto')
 endfunction
 command! -nargs=? FileSave :call FileSave(<q-args>)
 
@@ -966,7 +966,7 @@ function! MakeNohi()
     endif
 endfunction
 
-function! MakeBuild()
+function! MakeBuild(type)
     if &filetype == 'c'
         setlocal makeprg=cc
         setlocal errorformat=%+G%.%#
@@ -985,7 +985,15 @@ function! MakeBuild()
         setlocal makeprg=
         setlocal errorformat=
     endif
-    autocmd QuickFixCmdPost [^l]* if !empty(getqflist()) | call neatview#StructOperate('quickfix', 'open') | call neatview#StructOutput('open') | endif
+    if a:type == 'open'
+        call neatview#StructOperate('quickfix', 'open')
+        call neatview#StructOutput('open')
+    elseif a:type == 'close'
+        call neatview#StructOperate('quickfix', 'close')
+        call neatview#StructOutput('close')
+    elseif a:type == 'auto'
+        "...
+    endif
     "call MakeDohi()
 endfunction
 
@@ -993,8 +1001,7 @@ function! MakeDebug()
     if empty(bufname('%'))
         echohl ErrorMsg | echo "Warning: Please save this file first..." | echohl None
     else
-        call neatview#StructOperate('quickfix', 'open')
-        call MakeBuild()
+        call MakeBuild('open')
         if &filetype == 'c'
             let l:work_file = substitute(expand("%:p:r"), '\v[\/\\]+\c', '/', 'g')
             if filewritable(l:work_file) == 1
