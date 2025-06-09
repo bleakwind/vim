@@ -674,15 +674,16 @@ endfunction
 " ============================================================================
 " Function for File
 " ============================================================================
-function! FileLocate()
+function! FileLocate(...)
     if empty(bufname('%'))
         echohl ErrorMsg | echo "Error: This file is not save yet..." | echohl None
     else
         exe g:config_commlist['file_locate']
     endif
 endfunction
+command! -nargs=? FileLocate :call FileLocate(<q-args>)
 
-function! FileSave()
+function! FileSave(...)
     let l:result_winview = winsaveview()
 
     " ------------------------------------------------
@@ -778,6 +779,7 @@ function! FileSave()
     " ------------------------------------------------
     call MakeBuild()
 endfunction
+command! -nargs=? FileSave :call FileSave(<q-args>)
 
 function! FileEncoding(...)
     let l:enc_sub  = ["Please select your encoding for this file..."]
