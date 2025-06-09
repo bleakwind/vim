@@ -981,6 +981,7 @@ function! MakeBuild()
         setlocal makeprg=
         setlocal errorformat=
     endif
+    autocmd QuickFixCmdPost [^l]* if !empty(getqflist()) | call neatview#StructOperate('quickfix', 'open') | call neatview#StructOutput('open') | endif
     "call MakeDohi()
 endfunction
 
