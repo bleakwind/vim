@@ -275,7 +275,7 @@ set showtabline=1
 
 " Set Character Encoding
 set fileencoding=utf-8
-set fileencodings=utf-8,utf-16,gbk,gb2312,gb18030,big5,latin1
+set fileencodings=utf-8,utf-16,gb2312,gbk,gb18030,big5,Unicode
 set fileformat=unix
 set fileformats=unix
 set ambiwidth=double
@@ -780,31 +780,33 @@ function! FileSave()
 endfunction
 
 function! FileEncoding(...)
-    let l:encoding_list             = split(&fileencodings, ',')
-    let l:encoding_list_len         = len(l:encoding_list)
-    let l:encoding_select           = ["Please select your encoding for this file..."]
-    let l:other_list                = {}
-    let l:other_select              = {}
-    let l:other_list['del_bom']     = l:encoding_list_len+1
-    let l:other_select['del_bom']   = l:other_list['del_bom'].": > Delete BOM"
-    let l:other_list['add_bom']     = l:encoding_list_len+2
-    let l:other_select['add_bom']   = l:other_list['add_bom'].": > Add BOM"
-    let l:i = 1
-    while l:i <= l:encoding_list_len
-        call add(l:encoding_select, l:i.': '.l:encoding_list[l:i-1])
-        let l:i = l:i+1
+    let l:enc_sub  = ["Please select your encoding for this file..."]
+    " setting encoding
+    let l:enc_list = split(&fileencodings, ',')
+    let l:enc_len  = len(l:enc_list)
+    " setting other
+    let i = 0 | let l:oth_list = [] | let l:oth_len  = {}
+    let l:name = 'add_bom' | let i = i + 1 | call add(l:oth_list, l:name) | let l:oth_len[l:name] = l:enc_len + i
+    let l:name = 'del_bom' | let i = i + 1 | call add(l:oth_list, l:name) | let l:oth_len[l:name] = l:enc_len + i
+    " menu encoding
+    let il = 1
+    while il <= l:enc_len
+        call add(l:enc_sub, '  '.il.': enc - '.l:enc_list[il-1])
+        let il = il+1
     endwhile
-    for il in values(l:other_select)
-        call add(l:encoding_select, il)
+    " menu other
+    for il in l:oth_list
+        call add(l:enc_sub, '  '.l:oth_len[il].": ope > ".il)
     endfor
-    let l:input_list = inputlist(l:encoding_select)
-    if l:input_list > 0 && l:input_list <= l:encoding_list_len
-        exe 'edit ++enc='.l:encoding_list[l:input_list-1].' '.fnameescape(substitute(expand("%:p"), '\v[\/\\]+\c', '/', 'g'))
+    " show menu
+    let l:input_list = inputlist(l:enc_sub)
+    if l:input_list > 0 && l:input_list <= l:enc_len
+        exe 'edit ++enc='.l:enc_list[l:input_list-1].' '.fnameescape(substitute(expand("%:p"), '\v[\/\\]+\c', '/', 'g'))
         exe 'setlocal noreadonly'
-    elseif l:input_list == l:other_list['del_bom']
-        exe 'setlocal nobomb'
-    elseif l:input_list == l:other_list['add_bom']
+    elseif l:input_list == l:oth_len['add_bom']
         exe 'setlocal bomb'
+    elseif l:input_list == l:oth_len['del_bom']
+        exe 'setlocal nobomb'
     endif
 endfunction
 command! -nargs=? FileEncoding :call FileEncoding(<q-args>)
