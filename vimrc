@@ -190,7 +190,6 @@ endif
 set nocompatible
 set tags=./.tags;,.tags
 set wildignore+=*/.svn/*,*/.git/*
-set guifontset=
 if has('unix')
     set termencoding=utf-8
     set encoding=utf-8
