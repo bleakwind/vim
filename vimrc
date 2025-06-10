@@ -192,18 +192,21 @@ set tags=./.tags;,.tags
 set wildignore+=*/.svn/*,*/.git/*
 set guifontset=
 if has('unix')
+    set termencoding=utf-8
     set encoding=utf-8
     set backupdir=/pub/_program/vim/data/vim/backupdir/
     set viewdir=/pub/_program/vim/data/vim/viewdir/
     set undodir=/pub/_program/vim/data/vim/undodir/
     set directory=/pub/_program/vim/data/vim/swapdir//
 elseif has('mac')
+    set termencoding=utf-8
     set encoding=utf-8
     set backupdir=/pub/_program/vim/data/vim/backupdir/
     set viewdir=/pub/_program/vim/data/vim/viewdir/
     set undodir=/pub/_program/vim/data/vim/undodir/
     set directory=/pub/_program/vim/data/vim/swapdir//
 elseif has('win64') || has('win32')
+    set termencoding=cp936
     set encoding=cp936
     set backupdir=D:/Program\ Files/vim/data/vim/backupdir/
     set viewdir=D:/Program\ Files/vim/data/vim/viewdir/
@@ -275,7 +278,7 @@ set showtabline=1
 
 " Set Character Encoding
 set fileencoding=utf-8
-set fileencodings=utf-8,utf-16,gb2312,gbk,gb18030,big5,Unicode
+set fileencodings=utf-8,utf-16,gb2312,gbk,gb18030,big5,latin1,Unicode
 set fileformat=unix
 set fileformats=unix
 set ambiwidth=double
@@ -793,12 +796,12 @@ function! FileEncoding(...)
     " menu encoding
     let il = 1
     while il <= l:enc_len
-        call add(l:enc_sub, '  '.il.': enc - '.l:enc_list[il-1])
+        call add(l:enc_sub, printf("%4s: enc - %s", il, l:enc_list[il-1]))
         let il = il+1
     endwhile
     " menu other
     for il in l:oth_list
-        call add(l:enc_sub, '  '.l:oth_len[il].": ope > ".il)
+        call add(l:enc_sub, printf("%4s: ope > %s", l:oth_len[il], il))
     endfor
     " show menu
     let l:input_list = inputlist(l:enc_sub)
