@@ -419,7 +419,7 @@ let g:config_debug_browser2 = substitute(g:config_debug_browser2, '\v[\/\\]+\c',
 " ############################################################################
 " Syntax Color by Bleakwind
 " ############################################################################
-" ----------------------------------------------------------------------------
+" ============================================================================
 " Red         LightRed        DarkRed
 " Green       LightGreen      DarkGreen       SeaGreen
 " Blue        LightBlue       DarkBlue        SlateBlue
@@ -430,10 +430,10 @@ let g:config_debug_browser2 = substitute(g:config_debug_browser2, '\v[\/\\]+\c',
 " Black       White
 " Orange      Purple          Violet
 " Bold, Underline, Undercurl, Reverse, Italic, Standout, NONE
-" ----------------------------------------------------------------------------
+" ============================================================================
 " $str = '...'; preg_match_all('/(c[A-Z][a-zA-Z0-9_]*)[^a-zA-Z0-9_]/', $str, $matches); print_r(array_unique($matches[1]));
 " $str = '...'; preg_match_all('/\s(hi|highlight)\s+(def\s+|default\s+|link\s+)*([a-zA-Z0-9_]*)\s/', $str, $matches); sort($matches[3]); print_r(array_values(array_unique($matches[3])));
-" ----------------------------------------------------------------------------
+" ============================================================================
 syntax enable
 syntax on
 colorscheme colorful
@@ -643,36 +643,36 @@ endfunction
 " Function for Buffer
 " ============================================================================
 function! BufferNew()
-    " ------------------------------------------------
+    " --------------------------------------------------
     " cursor place
-    " ------------------------------------------------
+    " --------------------------------------------------
     if exists("g:neatview_struct_mainwin") && g:neatview_struct_mainwin > 0
-        let l:winid_original = bufwinid('%')
+        let l:winidn_original = bufwinid('%')
         call win_gotoid(g:neatview_struct_mainwin)
     endif
-    " ------------------------------------------------
+    " --------------------------------------------------
     " process
-    " ------------------------------------------------
+    " --------------------------------------------------
     exe 'ene'
-    " ------------------------------------------------
+    " --------------------------------------------------
     " cursor place
-    " ------------------------------------------------
+    " --------------------------------------------------
     if exists("g:neatview_struct_mainwin") && g:neatview_struct_mainwin > 0
-        call win_gotoid(l:winid_original)
+        call win_gotoid(l:winidn_original)
     endif
 endfunction
 
 function! BufferClose()
-    " ------------------------------------------------
+    " --------------------------------------------------
     " cursor place
-    " ------------------------------------------------
+    " --------------------------------------------------
     if exists("g:neatview_struct_mainwin") && g:neatview_struct_mainwin > 0
-        let l:winid_original = bufwinid('%')
+        let l:winidn_original = bufwinid('%')
         call win_gotoid(g:neatview_struct_mainwin)
     endif
-    " ------------------------------------------------
+    " --------------------------------------------------
     " process
-    " ------------------------------------------------
+    " --------------------------------------------------
     if count(g:neatview_struct_settype, &filetype) > 0
         echohl ErrorMsg | echo "Error: You can't close this window..." | echohl None
     elseif &modified == 1
@@ -690,35 +690,35 @@ function! BufferClose()
             exe l:bufnbr.' bw'
         endif
     endif
-    " ------------------------------------------------
+    " --------------------------------------------------
     " cursor place
-    " ------------------------------------------------
+    " --------------------------------------------------
     if exists("g:neatview_struct_mainwin") && g:neatview_struct_mainwin > 0
-        call win_gotoid(l:winid_original)
+        call win_gotoid(l:winidn_original)
     endif
 endfunction
 
 function! BufferSwitch(ope)
-    " ------------------------------------------------
+    " --------------------------------------------------
     " cursor place
-    " ------------------------------------------------
+    " --------------------------------------------------
     if exists("g:neatview_struct_mainwin") && g:neatview_struct_mainwin > 0
-        let l:winid_original = bufwinid('%')
+        let l:winidn_original = bufwinid('%')
         call win_gotoid(g:neatview_struct_mainwin)
     endif
-    " ------------------------------------------------
+    " --------------------------------------------------
     " process
-    " ------------------------------------------------
+    " --------------------------------------------------
     if (a:ope == 'next')
         exe g:config_commlist['tab_next']
     elseif (a:ope == 'prev')
         exe g:config_commlist['tab_prev']
     endif
-    " ------------------------------------------------
+    " --------------------------------------------------
     " cursor place
-    " ------------------------------------------------
+    " --------------------------------------------------
     if exists("g:neatview_struct_mainwin") && g:neatview_struct_mainwin > 0
-        call win_gotoid(l:winid_original)
+        call win_gotoid(l:winidn_original)
     endif
 endfunction
 
@@ -726,9 +726,9 @@ endfunction
 " Function for File
 " ============================================================================
 function! FileLocate(...)
-    " ------------------------------------------------
+    " --------------------------------------------------
     " process
-    " ------------------------------------------------
+    " --------------------------------------------------
     if empty(bufname('%'))
         echohl ErrorMsg | echo "Error: This file is not save yet..." | echohl None
     else
@@ -738,16 +738,16 @@ endfunction
 command! -nargs=? FileLocate :call FileLocate(<q-args>)
 
 function! FileSave(...)
-    " ------------------------------------------------
+    " --------------------------------------------------
     " cursor place
-    " ------------------------------------------------
+    " --------------------------------------------------
     if exists("g:neatview_struct_mainwin") && g:neatview_struct_mainwin > 0
-        let l:winid_original = bufwinid('%')
+        let l:winidn_original = bufwinid('%')
         call win_gotoid(g:neatview_struct_mainwin)
     endif
-    " ------------------------------------------------
+    " --------------------------------------------------
     " process wrap
-    " ------------------------------------------------
+    " --------------------------------------------------
     " delete last blank line
     while getline(line('$')) =~ '\v^[\s\r\n]*$\c' && getline(line('$')-1) =~ '\v^[\s\r\n]*$\c'
         call deletebufline('%', line('$'))
@@ -777,9 +777,9 @@ function! FileSave(...)
     else
         set fileformat=unix
     endif
-    " ------------------------------------------------
+    " --------------------------------------------------
     " process space
-    " ------------------------------------------------
+    " --------------------------------------------------
     " ^[if|for|foreach|while] (
     exe '%s/\v^(\s*)(if|for|foreach|while)(|\s{2,})\(\c/\1\2 (/ge'
     " ^} [elseif|while|catch] (
@@ -794,9 +794,9 @@ function! FileSave(...)
     exe '%s/\v^(\s*)\}(\s*)(else)(|\s{2,})\{\c/\1}\2\3 {/ge'
     " ) {$
     exe '%s/\v\)(|\s{2,})\{$\c/) {/ge'
-    " ------------------------------------------------
+    " --------------------------------------------------
     " process save
-    " ------------------------------------------------
+    " --------------------------------------------------
     let l:file_copyright = FileCopyright()
     if empty(bufname('%'))
         let l:input_prompt_default  = "Please input path and filename for this file...\nFilename: "
@@ -826,30 +826,30 @@ function! FileSave(...)
             silent exe 'w'
         endif
     endif
-    " ------------------------------------------------
+    " --------------------------------------------------
     " process other
-    " ------------------------------------------------
+    " --------------------------------------------------
     call MakeBuild('auto')
-    " ------------------------------------------------
+    " --------------------------------------------------
     " cursor place
-    " ------------------------------------------------
+    " --------------------------------------------------
     if exists("g:neatview_struct_mainwin") && g:neatview_struct_mainwin > 0
-        call win_gotoid(l:winid_original)
+        call win_gotoid(l:winidn_original)
     endif
 endfunction
 command! -nargs=? FileSave :call FileSave(<q-args>)
 
 function! FileEncoding(...)
-    " ------------------------------------------------
+    " --------------------------------------------------
     " cursor place
-    " ------------------------------------------------
+    " --------------------------------------------------
     if exists("g:neatview_struct_mainwin") && g:neatview_struct_mainwin > 0
-        let l:winid_original = bufwinid('%')
+        let l:winidn_original = bufwinid('%')
         call win_gotoid(g:neatview_struct_mainwin)
     endif
-    " ------------------------------------------------
+    " --------------------------------------------------
     " process
-    " ------------------------------------------------
+    " --------------------------------------------------
     let l:enc_sub  = ["Please select your encoding for this file..."]
     " setting encoding
     let l:enc_list = split(&fileencodings, ',')
@@ -878,26 +878,26 @@ function! FileEncoding(...)
     elseif l:input_list == l:oth_len['del_bom']
         exe 'setlocal nobomb'
     endif
-    " ------------------------------------------------
+    " --------------------------------------------------
     " cursor place
-    " ------------------------------------------------
+    " --------------------------------------------------
     if exists("g:neatview_struct_mainwin") && g:neatview_struct_mainwin > 0
-        call win_gotoid(l:winid_original)
+        call win_gotoid(l:winidn_original)
     endif
 endfunction
 command! -nargs=? FileEncoding :call FileEncoding(<q-args>)
 
 function! FileCopyright(...)
-    " ------------------------------------------------
+    " --------------------------------------------------
     " cursor place
-    " ------------------------------------------------
+    " --------------------------------------------------
     if exists("g:neatview_struct_mainwin") && g:neatview_struct_mainwin > 0
-        let l:winid_original = bufwinid('%')
+        let l:winidn_original = bufwinid('%')
         call win_gotoid(g:neatview_struct_mainwin)
     endif
-    " ------------------------------------------------
+    " --------------------------------------------------
     " process
-    " ------------------------------------------------
+    " --------------------------------------------------
     let l:nickname              = 'Bleakwind'
     let l:fullname              = 'Rick Wu'
     let l:mailaddr              = 'bleakwind@qq.com'
@@ -1017,11 +1017,11 @@ function! FileCopyright(...)
         endif
     endif
     call cursor(l:original_line, l:original_col)
-    " ------------------------------------------------
+    " --------------------------------------------------
     " cursor place
-    " ------------------------------------------------
+    " --------------------------------------------------
     if exists("g:neatview_struct_mainwin") && g:neatview_struct_mainwin > 0
-        call win_gotoid(l:winid_original)
+        call win_gotoid(l:winidn_original)
     endif
     return l:result_prompt
 endfunction
@@ -1031,105 +1031,105 @@ command! -nargs=? FileCopyright :call FileCopyright(<q-args>)
 " Function for Make
 " ============================================================================
 function! MakePrev()
-    " ------------------------------------------------
+    " --------------------------------------------------
     " cursor place
-    " ------------------------------------------------
+    " --------------------------------------------------
     if exists("g:neatview_struct_mainwin") && g:neatview_struct_mainwin > 0
-        let l:winid_original = bufwinid('%')
+        let l:winidn_original = bufwinid('%')
         call win_gotoid(g:neatview_struct_mainwin)
     endif
-    " ------------------------------------------------
+    " --------------------------------------------------
     " process
-    " ------------------------------------------------
+    " --------------------------------------------------
     exe 'cp'
-    " ------------------------------------------------
+    " --------------------------------------------------
     " cursor place
-    " ------------------------------------------------
+    " --------------------------------------------------
     if exists("g:neatview_struct_mainwin") && g:neatview_struct_mainwin > 0
-        call win_gotoid(l:winid_original)
+        call win_gotoid(l:winidn_original)
     endif
 endfunction
 
 function! MakeNext()
-    " ------------------------------------------------
+    " --------------------------------------------------
     " cursor place
-    " ------------------------------------------------
+    " --------------------------------------------------
     if exists("g:neatview_struct_mainwin") && g:neatview_struct_mainwin > 0
-        let l:winid_original = bufwinid('%')
+        let l:winidn_original = bufwinid('%')
         call win_gotoid(g:neatview_struct_mainwin)
     endif
-    " ------------------------------------------------
+    " --------------------------------------------------
     " process
-    " ------------------------------------------------
+    " --------------------------------------------------
     exe 'cn'
-    " ------------------------------------------------
+    " --------------------------------------------------
     " cursor place
-    " ------------------------------------------------
+    " --------------------------------------------------
     if exists("g:neatview_struct_mainwin") && g:neatview_struct_mainwin > 0
-        call win_gotoid(l:winid_original)
+        call win_gotoid(l:winidn_original)
     endif
 endfunction
 
 function! MakeDohi()
-    " ------------------------------------------------
+    " --------------------------------------------------
     " cursor place
-    " ------------------------------------------------
+    " --------------------------------------------------
     if exists("g:neatview_struct_mainwin") && g:neatview_struct_mainwin > 0
-        let l:winid_original = bufwinid('%')
+        let l:winidn_original = bufwinid('%')
         call win_gotoid(g:neatview_struct_mainwin)
     endif
-    " ------------------------------------------------
+    " --------------------------------------------------
     " process
-    " ------------------------------------------------
+    " --------------------------------------------------
     let g:env_qfmatch = []
     let l:qflist = getqflist()
     for il in l:qflist
        call add(g:env_qfmatch, matchadd('Error', '\%'.il['lnum'].'l'))
     endfor
-    " ------------------------------------------------
+    " --------------------------------------------------
     " cursor place
-    " ------------------------------------------------
+    " --------------------------------------------------
     if exists("g:neatview_struct_mainwin") && g:neatview_struct_mainwin > 0
-        call win_gotoid(l:winid_original)
+        call win_gotoid(l:winidn_original)
     endif
 endfunction
 
 function! MakeNohi()
-    " ------------------------------------------------
+    " --------------------------------------------------
     " cursor place
-    " ------------------------------------------------
+    " --------------------------------------------------
     if exists("g:neatview_struct_mainwin") && g:neatview_struct_mainwin > 0
-        let l:winid_original = bufwinid('%')
+        let l:winidn_original = bufwinid('%')
         call win_gotoid(g:neatview_struct_mainwin)
     endif
-    " ------------------------------------------------
+    " --------------------------------------------------
     " process
-    " ------------------------------------------------
+    " --------------------------------------------------
     if exists('g:env_qfmatch') && !empty(g:env_qfmatch)
         for il in g:env_qfmatch
            call matchdelete(il)
         endfor
         let g:env_qfmatch = []
     endif
-    " ------------------------------------------------
+    " --------------------------------------------------
     " cursor place
-    " ------------------------------------------------
+    " --------------------------------------------------
     if exists("g:neatview_struct_mainwin") && g:neatview_struct_mainwin > 0
-        call win_gotoid(l:winid_original)
+        call win_gotoid(l:winidn_original)
     endif
 endfunction
 
 function! MakeBuild(type)
-    " ------------------------------------------------
+    " --------------------------------------------------
     " cursor place
-    " ------------------------------------------------
+    " --------------------------------------------------
     if exists("g:neatview_struct_mainwin") && g:neatview_struct_mainwin > 0
-        let l:winid_original = bufwinid('%')
+        let l:winidn_original = bufwinid('%')
         call win_gotoid(g:neatview_struct_mainwin)
     endif
-    " ------------------------------------------------
+    " --------------------------------------------------
     " process
-    " ------------------------------------------------
+    " --------------------------------------------------
     if &filetype == 'c'
         setlocal makeprg=cc
         setlocal errorformat=%+G%.%#
@@ -1158,25 +1158,25 @@ function! MakeBuild(type)
         "...
     endif
     "call MakeDohi()
-    " ------------------------------------------------
+    " --------------------------------------------------
     " cursor place
-    " ------------------------------------------------
+    " --------------------------------------------------
     if exists("g:neatview_struct_mainwin") && g:neatview_struct_mainwin > 0
-        call win_gotoid(l:winid_original)
+        call win_gotoid(l:winidn_original)
     endif
 endfunction
 
 function! MakeDebug()
-    " ------------------------------------------------
+    " --------------------------------------------------
     " cursor place
-    " ------------------------------------------------
+    " --------------------------------------------------
     if exists("g:neatview_struct_mainwin") && g:neatview_struct_mainwin > 0
-        let l:winid_original = bufwinid('%')
+        let l:winidn_original = bufwinid('%')
         call win_gotoid(g:neatview_struct_mainwin)
     endif
-    " ------------------------------------------------
+    " --------------------------------------------------
     " process
-    " ------------------------------------------------
+    " --------------------------------------------------
     if empty(bufname('%'))
         echohl ErrorMsg | echo "Warning: Please save this file first..." | echohl None
     else
@@ -1192,25 +1192,25 @@ function! MakeDebug()
             echohl ErrorMsg | echo "Error: This file type debug is not supported..." | echohl None
         endif
     endif
-    " ------------------------------------------------
+    " --------------------------------------------------
     " cursor place
-    " ------------------------------------------------
+    " --------------------------------------------------
     if exists("g:neatview_struct_mainwin") && g:neatview_struct_mainwin > 0
-        call win_gotoid(l:winid_original)
+        call win_gotoid(l:winidn_original)
     endif
 endfunction
 
 function! MakeBrowser(type)
-    " ------------------------------------------------
+    " --------------------------------------------------
     " cursor place
-    " ------------------------------------------------
+    " --------------------------------------------------
     if exists("g:neatview_struct_mainwin") && g:neatview_struct_mainwin > 0
-        let l:winid_original = bufwinid('%')
+        let l:winidn_original = bufwinid('%')
         call win_gotoid(g:neatview_struct_mainwin)
     endif
-    " ------------------------------------------------
+    " --------------------------------------------------
     " process
-    " ------------------------------------------------
+    " --------------------------------------------------
     if empty(bufname('%'))
         echohl ErrorMsg | echo "Warning: Please save this file first..." | echohl None
     else
@@ -1232,11 +1232,11 @@ function! MakeBrowser(type)
         endif
         setlocal shellslash<
     endif
-    " ------------------------------------------------
+    " --------------------------------------------------
     " cursor place
-    " ------------------------------------------------
+    " --------------------------------------------------
     if exists("g:neatview_struct_mainwin") && g:neatview_struct_mainwin > 0
-        call win_gotoid(l:winid_original)
+        call win_gotoid(l:winidn_original)
     endif
 endfunction
 
@@ -1260,14 +1260,14 @@ endfunction
 " ============================================================================
 " Command
 " ============================================================================
-" ------------------------------------------------
+" --------------------------------------------------
 " check config
-" ------------------------------------------------
+" --------------------------------------------------
 autocmd VimEnter * call CheckConfig()
 
-" ------------------------------------------------
+" --------------------------------------------------
 " syntax sync
-" ------------------------------------------------
+" --------------------------------------------------
 autocmd BufWritePost,FileChangedShellPost * :syntax sync fromstart
 
 " ############################################################################
@@ -1449,17 +1449,17 @@ autocmd VimEnter * call MinibufexplHlcolor()
 " ============================================================================
 let g:mapleader = ','
 
-" ------------------------------------------------
+" --------------------------------------------------
 " Shift-Insert
-" ------------------------------------------------
+" --------------------------------------------------
 function! ParseRegister(...)
     return exists('a:1') ? substitute(CheckSlash('string', a:1), '\v\n\c', '\\r', 'g') : ''
 endfunction
 cmap <S-Insert> <C-r>=ParseRegister(@+)<CR>
 
-" ------------------------------------------------
+" --------------------------------------------------
 " <Leader>/
-" ------------------------------------------------
+" --------------------------------------------------
 function! AutoSearch(...)
     let l:select_visual = exists('a:1') && a:1 == 'v' ? '\v'.substitute(CheckSlash('string', CheckVisual()), '\v\n\c', '\\n', 'g').'\C' : ''
     let l:set_pos = 0
@@ -1469,9 +1469,9 @@ endfunction
 map  <Leader>/ :<C-\>eAutoSearch()<CR>
 vmap <Leader>/ :<C-\>eAutoSearch('v')<CR>
 
-" ------------------------------------------------
+" --------------------------------------------------
 " <Leader>f
-" ------------------------------------------------
+" --------------------------------------------------
 function! AutoSearchFiles(...)
     let l:select_visual = exists('a:1') && a:1 == 'v' ? '\v'.substitute(CheckSlash('string', CheckVisual()), '\v\n\c', '\\n', 'g').'\C' : ''
     let l:current_dir = fnameescape(substitute(getcwd(), '\v[\/\\]+\c', '/', 'g'))
@@ -1483,9 +1483,9 @@ endfunction
 map  <Leader>f :<C-\>eAutoSearchFiles()<CR>
 vmap <Leader>f :<C-\>eAutoSearchFiles('v')<CR>
 
-" ------------------------------------------------
+" --------------------------------------------------
 " <Leader>h
-" ------------------------------------------------
+" --------------------------------------------------
 function! AutoReplace(...)
     let l:select_visual = exists('a:1') && a:1 == 'v' ? '\v'.substitute(CheckSlash('string', CheckVisual()), '\v\n\c', '\\n', 'g').'\C' : ''
     let l:set_pos = empty(l:select_visual) ? 6 : 7
@@ -1495,9 +1495,9 @@ endfunction
 map  <Leader>h :<C-\>eAutoReplace()<CR>
 vmap <Leader>h :<C-\>eAutoReplace('v')<CR>
 
-" ------------------------------------------------
+" --------------------------------------------------
 " <Leader>g
-" ------------------------------------------------
+" --------------------------------------------------
 function! BufReplace(...)
     let l:select_visual = exists('a:1') && a:1 == 'v' ? '\v'.substitute(CheckSlash('string', CheckVisual()), '\v\n\c', '\\n', 'g').'\C' : ''
     let l:set_pos = empty(l:select_visual) ? 10 : 11
@@ -1507,45 +1507,45 @@ endfunction
 map  <Leader>g :<C-\>eBufReplace()<CR>
 vmap <Leader>g :<C-\>eBufReplace('v')<CR>
 
-" ------------------------------------------------
+" --------------------------------------------------
 " <Leader>r
-" ------------------------------------------------
+" --------------------------------------------------
 map  <Leader>r :<C-\>erunscript#ReadyComm()<CR>
 vmap <Leader>r :<C-\>erunscript#ReadyComm()<CR>
 
-" ------------------------------------------------
+" --------------------------------------------------
 " <Leader>n
-" ------------------------------------------------
+" --------------------------------------------------
 map  <Leader>n :call BufferNew()<CR>
 vmap <Leader>n <Esc><Leader>n
 
-" ------------------------------------------------
+" --------------------------------------------------
 " <Leader>s
-" ------------------------------------------------
+" --------------------------------------------------
 map  <Leader>s :call FileSave()<CR>
 vmap <Leader>s <Esc><Leader>s
 
-" ------------------------------------------------
+" --------------------------------------------------
 " <Leader>c
-" ------------------------------------------------
+" --------------------------------------------------
 map  <Leader>c :call BufferClose()<CR>
 vmap <Leader>c <Esc><Leader>c
 
-" ------------------------------------------------
+" --------------------------------------------------
 " <Leader>\
-" ------------------------------------------------
+" --------------------------------------------------
 map  <Leader>\ :nohlsearch<CR>
 vmap <Leader>\ <Esc><Leader>\
 
-" ------------------------------------------------
+" --------------------------------------------------
 "<Leader>]
-" ------------------------------------------------
+" --------------------------------------------------
 map  <Leader>] :call MakeNohi()<CR>
 vmap <Leader>] <Esc><Leader>]
 
-" ------------------------------------------------
+" --------------------------------------------------
 " Fx
-" ------------------------------------------------
+" --------------------------------------------------
 map <F2>    :call MakePrev()<CR>
 map <F3>    :call MakeNext()<CR>
 map <F4>    :call FileLocate()<CR>
