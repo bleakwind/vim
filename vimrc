@@ -727,6 +727,13 @@ endfunction
 " ============================================================================
 function! FileLocate(...)
     " --------------------------------------------------
+    " cursor place
+    " --------------------------------------------------
+    if exists("g:neatview_struct_mainwin") && g:neatview_struct_mainwin > 0
+        let l:winidn_original = bufwinid('%')
+        call win_gotoid(g:neatview_struct_mainwin)
+    endif
+    " --------------------------------------------------
     " process
     " --------------------------------------------------
     if empty(bufname('%'))
@@ -1302,9 +1309,11 @@ let g:viewmap_hlalpha = 0.3
 " Vim-Specialcolor
 " ============================================================================
 let g:specialcolor_matchtag_enabled = 1
-let g:specialcolor_matchtag_updelay = 200
+let g:specialcolor_matchtag_range   = 100
+let g:specialcolor_matchtag_updelay = 100
 let g:specialcolor_csscolor_enabled = 1
-let g:specialcolor_csscolor_updelay = 1000
+let g:specialcolor_csscolor_range   = 100
+let g:specialcolor_csscolor_updelay = 200
 
 " ============================================================================
 " Vim-Runscript
