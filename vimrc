@@ -399,7 +399,7 @@ colorscheme colorful
 " ############################################################################
 " --- Plugin Manage Begin ---
 " ############################################################################
-if g:config_plugin_on == 'on'
+if g:config_plugin_on ==# 'on'
 
 " ############################################################################
 " Function List Define by Bleakwind
@@ -514,7 +514,7 @@ endfunction
 
 function! CheckVisual(...)
     let l:if_wrap = 2
-    let l:check_selection   = &selection == 'exclusive' ? 2 : 1
+    let l:check_selection   = &selection ==# 'exclusive' ? 2 : 1
     let l:content           = []
     let [l:lnum1, l:col1]   = getpos("'<")[1:2]
     let [l:lnum2, l:col2]   = getpos("'>")[1:2]
@@ -529,7 +529,7 @@ function! CheckVisual(...)
         if l:char_get < 32 || l:char_get >126
             let l:char_add = l:char_add + 2
         endif
-        if l:lnum1 == l:lnum2
+        if l:lnum1 ==# l:lnum2
             let l:content[0]    = l:content[0][l:col1-1:l:col2-l:check_selection+l:char_add]
         else
             let l:content[0]    = l:content[0][l:col1-1:]
@@ -537,7 +537,7 @@ function! CheckVisual(...)
         endif
     endif
     let l:result = join(l:content, "\n")
-    if l:if_wrap == 1
+    if l:if_wrap ==# 1
         let l:result = l:result."\n"
     endif
     return l:result
@@ -546,15 +546,15 @@ endfunction
 function! CheckSlash(...)
     let l:result_str = ''
     if exists('a:1')
-        if a:1 == 'retstr'
+        if a:1 ==# 'retstr'
             let l:result_str = '\`\~\!\@\#\$\%\^\&\+\-\=\(\)\[\]\{\}\,\.\;\''\/\:\|\\\"\*\?\<\>'
-        elseif a:1 == 'retfile'
+        elseif a:1 ==# 'retfile'
             let l:result_str = '\`\~\!\@\#\$\%\^\&\+\-\=\(\)\[\]\{\}\,\.\;\'''
-        elseif a:1 == 'string'
+        elseif a:1 ==# 'string'
             if exists('a:2')
                 let l:result_str = escape(a:2, '`~!@#$%^&+-=()[]{},.;''/:|\"*?<>')
             endif
-        elseif a:1 == 'filename'
+        elseif a:1 ==# 'filename'
             if exists('a:2')
                 let l:result_str = escape(a:2, '`~!@#$%^&+-=()[]{},.;''')
             endif
@@ -650,14 +650,14 @@ function! FileSave(...)
     execute '%s/\v\r\n\c/\r/ge'
     execute '%s/\v[\r]+\c//ge'
     " replace config file to r style
-    if &filetype ==# "php" && expand("%:t") ==? "config"
-        set fileformat=dos | update
-    elseif &filetype ==# "text" && expand("%:t") ==? "readme"
-        set fileformat=dos | update
+    if &filetype ==# "php" && expand("%:t") =~? "config"
+        set fileformat=dos
+    elseif &filetype ==# "text" && expand("%:t") =~? "readme"
+        set fileformat=dos
     elseif &filetype =~# '\v^(dosini|dosbatch)$'
-        set fileformat=dos | update
+        set fileformat=dos
     else
-        set fileformat=unix | update
+        set fileformat=unix
     endif
     " delete last blank line
     execute '%s/\v(\r?\n)+%$\c//e'
@@ -760,9 +760,9 @@ function! FileEncoding(...)
     if l:input_list > 0 && l:input_list <= l:enc_len
         execute 'edit ++enc='.l:enc_list[l:input_list-1].' '.fnameescape(substitute(expand("%:p"), '\v[\/\\]+\c', '/', 'g'))
         execute 'setlocal noreadonly'
-    elseif l:input_list == l:oth_len['add_bom']
+    elseif l:input_list ==# l:oth_len['add_bom']
         execute 'setlocal bomb'
-    elseif l:input_list == l:oth_len['del_bom']
+    elseif l:input_list ==# l:oth_len['del_bom']
         execute 'setlocal nobomb'
     endif
     " --------------------------------------------------
@@ -824,7 +824,7 @@ function! FileCopyright(...)
             let l:if_copyright = 1
             let l:i = l:i+1
         elseif l:content =~ '\v^\s*('.join(l:progtype, "|").').*$\c'
-            if l:line_program == 0
+            if l:line_program ==# 0
                 let l:line_program = l:i
             endif
             let l:i = l:i+1
@@ -838,7 +838,7 @@ function! FileCopyright(...)
         let l:line_copyright = l:i-1
     endif
 
-    if exists('a:1') && (a:1 == 'add' || a:1 == 1)
+    if exists('a:1') && (a:1 ==# 'add' || a:1 ==# 1)
         if l:if_copyright != 1
             if l:line_program > 0
                 call cursor(l:line_program+1, 1)
@@ -869,7 +869,7 @@ function! FileCopyright(...)
             echohl ErrorMsg | echo "Ignored: Already have copyright..." | echohl None
         endif
     else
-        if l:if_copyright == 1 && l:if_mine == 1
+        if l:if_copyright ==# 1 && l:if_mine ==# 1
             call cursor(1, 1)
             let l:i = 1
             while l:i < l:line_copyright
@@ -898,7 +898,7 @@ function! FileCopyright(...)
                 endif
                 let l:i = l:i+1
             endwhile
-            if l:if_update_datetime == 1 || l:if_update_filename == 1 || l:if_update_copydate == 1
+            if l:if_update_datetime ==# 1 || l:if_update_filename ==# 1 || l:if_update_copydate ==# 1
                 let l:result_prompt = "Successful: Update ".join(l:prompt_item, ",")." successful..."
             endif
         endif
@@ -1035,13 +1035,13 @@ function! MakeBuild(...)
         setlocal makeprg=
         setlocal errorformat=
     endif
-    if a:0 > 0 && a:1 == 'open'
+    if a:0 > 0 && a:1 ==# 'open'
         call neatview#OperateWin('quickfix', 'open')
         call neatview#StructOutput('open')
-    elseif a:0 > 0 && a:1 == 'close'
+    elseif a:0 > 0 && a:1 ==# 'close'
         call neatview#OperateWin('quickfix', 'close')
         call neatview#StructOutput('close')
-    elseif a:0 > 0 && a:1 == 'auto'
+    elseif a:0 > 0 && a:1 ==# 'auto'
         "...
     endif
     "call MakeDohi()
@@ -1070,7 +1070,7 @@ function! MakeDebug(...)
         call MakeBuild('open')
         if &filetype ==# 'c'
             let l:work_file = substitute(expand("%:p:r"), '\v[\/\\]+\c', '/', 'g')
-            if filewritable(l:work_file) == 1
+            if filewritable(l:work_file) ==# 1
                 execute '!time '.shellescape(l:work_file)
             endif
         elseif &filetype ==# 'php'
@@ -1110,7 +1110,7 @@ function! MakeBrowser(...)
         if a:0 > 0 && &filetype ==# "markdown"
             silent execute '!'.l:system_browser[a:1].' '.shellescape(g:config_markdown_script.'?f='.l:work_file)
         elseif a:0 > 0
-            if stridx(l:work_file, g:config_dir_work) == -1
+            if stridx(l:work_file, g:config_dir_work) ==# -1
                 silent execute '!'.l:system_browser[a:1].' '.shellescape('file:///'.l:work_file)
             else
                 let l:work_file = substitute(l:work_file, '\v'.CheckSlash('string', g:config_dir_work).'\c', g:config_debug_url, '')
@@ -1304,7 +1304,7 @@ cmap <S-Insert> <C-r>=KeyCommParse(@+)<CR>
 " <Leader>/
 " --------------------------------------------------
 function! KeySearchComm(...)
-    let l:select_visual = exists('a:1') && a:1 == 'v' ? '\v'.substitute(CheckSlash('string', CheckVisual()), '\v\n\c', '\\n', 'g').'\C' : ''
+    let l:select_visual = exists('a:1') && a:1 ==# 'v' ? '\v'.substitute(CheckSlash('string', CheckVisual()), '\v\n\c', '\\n', 'g').'\C' : ''
     let l:set_pos = 0
     call setcmdpos(l:set_pos+strlen(l:select_visual))
     return '/'.l:select_visual.''
@@ -1316,7 +1316,7 @@ vmap <Leader>/ :<C-\>eKeySearchComm('v')<CR>
 " <Leader>f
 " --------------------------------------------------
 function! KeySearchFile(...)
-    let l:select_visual = exists('a:1') && a:1 == 'v' ? '\v'.substitute(CheckSlash('string', CheckVisual()), '\v\n\c', '\\n', 'g').'\C' : ''
+    let l:select_visual = exists('a:1') && a:1 ==# 'v' ? '\v'.substitute(CheckSlash('string', CheckVisual()), '\v\n\c', '\\n', 'g').'\C' : ''
     let l:current_dir = fnameescape(substitute(getcwd(), '\v[\/\\]+\c', '/', 'g'))
     let l:current_dir = empty(l:current_dir) ? '~' : l:current_dir
     let l:set_pos = empty(l:select_visual) ? 10 : 8
@@ -1330,7 +1330,7 @@ vmap <Leader>f :<C-\>eKeySearchFile('v')<CR>
 " <Leader>h
 " --------------------------------------------------
 function! KeyReplaceBuf(...)
-    let l:select_visual = exists('a:1') && a:1 == 'v' ? '\v'.substitute(CheckSlash('string', CheckVisual()), '\v\n\c', '\\n', 'g').'\C' : ''
+    let l:select_visual = exists('a:1') && a:1 ==# 'v' ? '\v'.substitute(CheckSlash('string', CheckVisual()), '\v\n\c', '\\n', 'g').'\C' : ''
     let l:set_pos = empty(l:select_visual) ? 6 : 7
     call setcmdpos(l:set_pos+strlen(l:select_visual))
     return '.,$s/'.l:select_visual.'//gc'
@@ -1342,7 +1342,7 @@ vmap <Leader>h :<C-\>eKeyReplaceBuf('v')<CR>
 " <Leader>g
 " --------------------------------------------------
 function! KeyReplaceFile(...)
-    let l:select_visual = exists('a:1') && a:1 == 'v' ? '\v'.substitute(CheckSlash('string', CheckVisual()), '\v\n\c', '\\n', 'g').'\C' : ''
+    let l:select_visual = exists('a:1') && a:1 ==# 'v' ? '\v'.substitute(CheckSlash('string', CheckVisual()), '\v\n\c', '\\n', 'g').'\C' : ''
     let l:set_pos = empty(l:select_visual) ? 10 : 11
     call setcmdpos(l:set_pos+strlen(l:select_visual))
     return 'bufdo %s/'.l:select_visual.'//gc | update'
