@@ -572,7 +572,7 @@ endfunction
 " ============================================================================
 function! BufferNew(...)
     " --------------------------------------------------
-    " cursor place
+    " save env
     " --------------------------------------------------
     if exists('g:basic_mainwin') && g:basic_mainwin > 0
         let l:winidn_original = bufwinid('%')
@@ -583,7 +583,7 @@ function! BufferNew(...)
     " --------------------------------------------------
     execute 'BufferlistTabnew'
     " --------------------------------------------------
-    " cursor place
+    " restore env
     " --------------------------------------------------
     if exists('g:basic_mainwin') && g:basic_mainwin > 0
         call win_gotoid(l:winidn_original)
@@ -592,7 +592,7 @@ endfunction
 
 function! BufferClose(...)
     " --------------------------------------------------
-    " cursor place
+    " save env
     " --------------------------------------------------
     if exists('g:basic_mainwin') && g:basic_mainwin > 0
         let l:winidn_original = bufwinid('%')
@@ -603,7 +603,7 @@ function! BufferClose(...)
     " --------------------------------------------------
     execute 'BufferlistTabClose'
     " --------------------------------------------------
-    " cursor place
+    " restore env
     " --------------------------------------------------
     if exists('g:basic_mainwin') && g:basic_mainwin > 0
         call win_gotoid(l:winidn_original)
@@ -615,7 +615,7 @@ endfunction
 " ============================================================================
 function! FileLocate(...)
     " --------------------------------------------------
-    " cursor place
+    " save env
     " --------------------------------------------------
     if exists('g:basic_mainwin') && g:basic_mainwin > 0
         let l:winidn_original = bufwinid('%')
@@ -634,12 +634,13 @@ command! -nargs=? FileLocate :call FileLocate(<q-args>)
 
 function! FileSave(...)
     " --------------------------------------------------
-    " cursor place
+    " save env
     " --------------------------------------------------
     if exists('g:basic_mainwin') && g:basic_mainwin > 0
         let l:winidn_original = bufwinid('%')
         call win_gotoid(g:basic_mainwin)
     endif
+    let l:orig_cursor = getpos('.')
     " --------------------------------------------------
     " process wrap
     " --------------------------------------------------
@@ -649,20 +650,14 @@ function! FileSave(...)
     execute '%s/\v\r\n\c/\r/ge'
     execute '%s/\v[\r]+\c//ge'
     " replace config file to r style
-    if &filetype == "php" && substitute(expand("%:t"), '\v([^\.]*)\..*\c', '\=submatch(1)', 'g') ==? "config"
-        set fileformat=dos
-        execute '%s/\v\r\c/\r\n/ge'
-    elseif &filetype == "text" && substitute(expand("%:t"), '\v([^\.]*)\..*\c', '\=submatch(1)', 'g') ==? "readme"
-        set fileformat=dos
-        execute '%s/\v\r\c/\r\n/ge'
-    elseif &filetype == "dosini"
-        set fileformat=dos
-        execute '%s/\v\r\c/\r\n/ge'
-    elseif &filetype == "dosbatch"
-        set fileformat=dos
-        execute '%s/\v\r\c/\r\n/ge'
+    if &filetype ==# "php" && expand("%:t") ==? "config"
+        set fileformat=dos | update
+    elseif &filetype ==# "text" && expand("%:t") ==? "readme"
+        set fileformat=dos | update
+    elseif &filetype =~# '\v^(dosini|dosbatch)$'
+        set fileformat=dos | update
     else
-        set fileformat=unix
+        set fileformat=unix | update
     endif
     " delete last blank line
     execute '%s/\v(\r?\n)+%$\c//e'
@@ -720,8 +715,11 @@ function! FileSave(...)
     " --------------------------------------------------
     call MakeBuild('auto')
     " --------------------------------------------------
-    " cursor place
+    " restore env
     " --------------------------------------------------
+    let l:safe_line = max([1, min([l:orig_cursor[1], line('$')])])
+    let l:safe_colm = max([1, min([l:orig_cursor[2], col([l:safe_line, '$'])])])
+    keepjumps call setpos('.', [l:orig_cursor[0], l:safe_line, l:safe_colm, l:orig_cursor[3]])
     if exists('g:basic_mainwin') && g:basic_mainwin > 0
         call win_gotoid(l:winidn_original)
     endif
@@ -730,7 +728,7 @@ command! -nargs=? FileSave :call FileSave(<q-args>)
 
 function! FileEncoding(...)
     " --------------------------------------------------
-    " cursor place
+    " save env
     " --------------------------------------------------
     if exists('g:basic_mainwin') && g:basic_mainwin > 0
         let l:winidn_original = bufwinid('%')
@@ -768,7 +766,7 @@ function! FileEncoding(...)
         execute 'setlocal nobomb'
     endif
     " --------------------------------------------------
-    " cursor place
+    " restore env
     " --------------------------------------------------
     if exists('g:basic_mainwin') && g:basic_mainwin > 0
         call win_gotoid(l:winidn_original)
@@ -778,7 +776,7 @@ command! -nargs=? FileEncoding :call FileEncoding(<q-args>)
 
 function! FileCopyright(...)
     " --------------------------------------------------
-    " cursor place
+    " save env
     " --------------------------------------------------
     if exists('g:basic_mainwin') && g:basic_mainwin > 0
         let l:winidn_original = bufwinid('%')
@@ -907,7 +905,7 @@ function! FileCopyright(...)
     endif
     call cursor(l:original_line, l:original_col)
     " --------------------------------------------------
-    " cursor place
+    " restore env
     " --------------------------------------------------
     if exists('g:basic_mainwin') && g:basic_mainwin > 0
         call win_gotoid(l:winidn_original)
@@ -921,7 +919,7 @@ command! -nargs=? FileCopyright :call FileCopyright(<q-args>)
 " ============================================================================
 function! MakePrev(...)
     " --------------------------------------------------
-    " cursor place
+    " save env
     " --------------------------------------------------
     if exists('g:basic_mainwin') && g:basic_mainwin > 0
         let l:winidn_original = bufwinid('%')
@@ -932,7 +930,7 @@ function! MakePrev(...)
     " --------------------------------------------------
     execute 'cp'
     " --------------------------------------------------
-    " cursor place
+    " restore env
     " --------------------------------------------------
     if exists('g:basic_mainwin') && g:basic_mainwin > 0
         call win_gotoid(l:winidn_original)
@@ -941,7 +939,7 @@ endfunction
 
 function! MakeNext(...)
     " --------------------------------------------------
-    " cursor place
+    " save env
     " --------------------------------------------------
     if exists('g:basic_mainwin') && g:basic_mainwin > 0
         let l:winidn_original = bufwinid('%')
@@ -952,7 +950,7 @@ function! MakeNext(...)
     " --------------------------------------------------
     execute 'cn'
     " --------------------------------------------------
-    " cursor place
+    " restore env
     " --------------------------------------------------
     if exists('g:basic_mainwin') && g:basic_mainwin > 0
         call win_gotoid(l:winidn_original)
@@ -961,7 +959,7 @@ endfunction
 
 function! MakeDohi(...)
     " --------------------------------------------------
-    " cursor place
+    " save env
     " --------------------------------------------------
     if exists('g:basic_mainwin') && g:basic_mainwin > 0
         let l:winidn_original = bufwinid('%')
@@ -976,7 +974,7 @@ function! MakeDohi(...)
        call add(g:env_qfmatch, matchadd('Error', '\%'.il['lnum'].'l'))
     endfor
     " --------------------------------------------------
-    " cursor place
+    " restore env
     " --------------------------------------------------
     if exists('g:basic_mainwin') && g:basic_mainwin > 0
         call win_gotoid(l:winidn_original)
@@ -985,7 +983,7 @@ endfunction
 
 function! MakeNohi(...)
     " --------------------------------------------------
-    " cursor place
+    " save env
     " --------------------------------------------------
     if exists('g:basic_mainwin') && g:basic_mainwin > 0
         let l:winidn_original = bufwinid('%')
@@ -1001,7 +999,7 @@ function! MakeNohi(...)
         let g:env_qfmatch = []
     endif
     " --------------------------------------------------
-    " cursor place
+    " restore env
     " --------------------------------------------------
     if exists('g:basic_mainwin') && g:basic_mainwin > 0
         call win_gotoid(l:winidn_original)
@@ -1010,7 +1008,7 @@ endfunction
 
 function! MakeBuild(...)
     " --------------------------------------------------
-    " cursor place
+    " save env
     " --------------------------------------------------
     if exists('g:basic_mainwin') && g:basic_mainwin > 0
         let l:winidn_original = bufwinid('%')
@@ -1019,13 +1017,13 @@ function! MakeBuild(...)
     " --------------------------------------------------
     " process
     " --------------------------------------------------
-    if &filetype == 'c'
+    if &filetype ==# 'c'
         setlocal makeprg=cc
         setlocal errorformat=%+G%.%#
         silent make -o %< %
         setlocal makeprg=
         setlocal errorformat=
-    elseif &filetype == 'php'
+    elseif &filetype ==# 'php'
         setlocal makeprg=php\ -d\ html_errors=Off\ -l
         setlocal errorformat=%+E%.%#Parse\ error:\ %m\ in\ %f\ on\ line\ %l%.%#,
                     \%+W%.%#Fatal\ error:\ %m\ in\ %f\ on\ line\ %l%.%#,
@@ -1048,7 +1046,7 @@ function! MakeBuild(...)
     endif
     "call MakeDohi()
     " --------------------------------------------------
-    " cursor place
+    " restore env
     " --------------------------------------------------
     if exists('g:basic_mainwin') && g:basic_mainwin > 0
         call win_gotoid(l:winidn_original)
@@ -1057,7 +1055,7 @@ endfunction
 
 function! MakeDebug(...)
     " --------------------------------------------------
-    " cursor place
+    " save env
     " --------------------------------------------------
     if exists('g:basic_mainwin') && g:basic_mainwin > 0
         let l:winidn_original = bufwinid('%')
@@ -1070,19 +1068,19 @@ function! MakeDebug(...)
         echohl ErrorMsg | echo "Warning: Please save this file first..." | echohl None
     else
         call MakeBuild('open')
-        if &filetype == 'c'
+        if &filetype ==# 'c'
             let l:work_file = substitute(expand("%:p:r"), '\v[\/\\]+\c', '/', 'g')
             if filewritable(l:work_file) == 1
                 execute '!time '.shellescape(l:work_file)
             endif
-        elseif &filetype == 'php'
+        elseif &filetype ==# 'php'
             "...
         else
             echohl ErrorMsg | echo "Error: This file type debug is not supported..." | echohl None
         endif
     endif
     " --------------------------------------------------
-    " cursor place
+    " restore env
     " --------------------------------------------------
     if exists('g:basic_mainwin') && g:basic_mainwin > 0
         call win_gotoid(l:winidn_original)
@@ -1091,7 +1089,7 @@ endfunction
 
 function! MakeBrowser(...)
     " --------------------------------------------------
-    " cursor place
+    " save env
     " --------------------------------------------------
     if exists('g:basic_mainwin') && g:basic_mainwin > 0
         let l:winidn_original = bufwinid('%')
@@ -1109,7 +1107,7 @@ function! MakeBrowser(...)
             \ }
         let l:work_file = substitute(expand("%:p"), '\v[\/\\]+\c', '/', 'g')
         setlocal noshellslash
-        if a:0 > 0 && &filetype == "markdown"
+        if a:0 > 0 && &filetype ==# "markdown"
             silent execute '!'.l:system_browser[a:1].' '.shellescape(g:config_markdown_script.'?f='.l:work_file)
         elseif a:0 > 0
             if stridx(l:work_file, g:config_dir_work) == -1
@@ -1122,7 +1120,7 @@ function! MakeBrowser(...)
         setlocal shellslash<
     endif
     " --------------------------------------------------
-    " cursor place
+    " restore env
     " --------------------------------------------------
     if exists('g:basic_mainwin') && g:basic_mainwin > 0
         call win_gotoid(l:winidn_original)
@@ -1241,10 +1239,10 @@ let g:viewmap_hlalpha   = 0.3
 " ============================================================================
 let g:specialcolor_matchtag_enabled = 1
 let g:specialcolor_matchtag_range   = 100
-let g:specialcolor_matchtag_updelay = 100
+let g:specialcolor_matchtag_updelay = 1000
 let g:specialcolor_csscolor_enabled = 1
 let g:specialcolor_csscolor_range   = 100
-let g:specialcolor_csscolor_updelay = 200
+let g:specialcolor_csscolor_updelay = 3000
 
 " ============================================================================
 " Vim-Runscript
