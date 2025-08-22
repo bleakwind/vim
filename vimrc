@@ -1211,7 +1211,7 @@ let g:bufferlist_enabled   = 1
 let g:bufferlist_autostart = 0
 let g:bufferlist_position  = 'top'
 let g:bufferlist_reopen    = 1
-let g:bufferlist_filepath  = g:config_dir_data.'/bufferlist'
+let g:bufferlist_datapath  = g:config_dir_data.'/bufferlist'
 
 " ============================================================================
 " Vim-Filelist
@@ -1222,7 +1222,7 @@ let g:filelist_position  = 'left'
 let g:filelist_winwidth  = 30
 let g:filelist_mainpath  = g:config_dir_tree
 let g:filelist_showhide  = 0
-let g:filelist_bmpath    = g:config_dir_data.'/filelist'
+let g:filelist_datapath  = g:config_dir_data.'/filelist'
 
 " ============================================================================
 " Vim-Viewmap
