@@ -396,6 +396,13 @@ syntax enable
 syntax on
 colorscheme colorful
 
+" prompt message
+hi! HlPmtDef ctermfg=Gray   ctermbg=NONE cterm=Bold guifg=#B1B3B8 guibg=NONE gui=Bold
+hi! HlPmtNor ctermfg=Blue   ctermbg=NONE cterm=Bold guifg=#79BBFF guibg=NONE gui=Bold
+hi! HlPmtSuc ctermfg=Green  ctermbg=NONE cterm=Bold guifg=#95D475 guibg=NONE gui=Bold
+hi! HlPmtWar ctermfg=Yellow ctermbg=NONE cterm=Bold guifg=#EEBE77 guibg=NONE gui=Bold
+hi! HlPmtErr ctermfg=Red    ctermbg=NONE cterm=Bold guifg=#F56C6C guibg=NONE gui=Bold
+
 " ############################################################################
 " --- Plugin Manage Begin ---
 " ############################################################################
@@ -495,7 +502,7 @@ function! CheckConfig(...)
     if exists('g:config_builddir')
         for il in keys(g:config_builddir)
             if filewritable(g:config_builddir[il]) != 2
-                call mkdir(g:config_builddir[il], 'p', 0777)
+                call mkdir(g:config_builddir[il], 'p', 0755)
             endif
         endfor
     endif
@@ -581,7 +588,7 @@ function! BufferNew(...)
     " --------------------------------------------------
     " process
     " --------------------------------------------------
-    execute 'BufferlistTabnew'
+    call bufferlist#TabNew()
     " --------------------------------------------------
     " restore env
     " --------------------------------------------------
@@ -601,7 +608,7 @@ function! BufferClose(...)
     " --------------------------------------------------
     " process
     " --------------------------------------------------
-    execute 'BufferlistTabClose'
+    call bufferlist#TabClose()
     " --------------------------------------------------
     " restore env
     " --------------------------------------------------
@@ -625,7 +632,7 @@ function! FileLocate(...)
     " process
     " --------------------------------------------------
     if !filereadable(expand('%:p'))
-        echohl ErrorMsg | echo "Error: This file is not save yet..." | echohl None
+        echohl HlPmtErr | echo "This file is not save yet..." | echohl None
     else
         execute 'FilelistLocateFile'
     endif
@@ -650,9 +657,9 @@ function! FileSave(...)
     execute '%s/\v\r\n\c/\r/ge'
     execute '%s/\v[\r]+\c//ge'
     " replace config file to r style
-    if &filetype ==# "php" && expand("%:t") =~? "config"
+    if &filetype ==# "php" && expand("%:t") =~? "^config"
         set fileformat=dos
-    elseif &filetype ==# "text" && expand("%:t") =~? "readme"
+    elseif &filetype ==# "text" && expand("%:t") =~? "^readme"
         set fileformat=dos
     elseif &filetype =~# '\v^(dosini|dosbatch)$'
         set fileformat=dos
@@ -681,34 +688,12 @@ function! FileSave(...)
     " --------------------------------------------------
     " process save
     " --------------------------------------------------
-    let l:file_copyright = FileCopyright()
-    if !filereadable(expand('%:p'))
-        let l:prompt_default    = "Please input path and filename for this file...\nFilename: "
-        let l:prompt_again      = "\nFilename error, please input path and filename again...\nFilename: "
-        let l:prompt_mkdir      = "\nCan't create dir, please check your path and try again..."
-        let l:path_default      = substitute(expand("%:p:h").'/', '\v[\/\\]+\c', '/', 'g')
-        let l:input_content     = input(l:prompt_default, l:path_default, 'file')
-        while l:input_content !~ '\v^[a-zA-Z0-9_'.CheckSlash('retfile').'\/\:]+$\c'
-            let l:input_content = input(l:prompt_again, l:path_default, 'file')
-        endwhile
-        let l:input_content     = substitute(l:input_content, '\v[\/\\]+\c', '/', 'g')
-        let l:input_realpath    = strpart(l:input_content, 0, strridx(l:input_content, '/'))
-        let l:result_mkdir      = 1
-        if filewritable(l:input_realpath) != 2
-            let l:result_mkdir  = mkdir(l:input_realpath, 'p', 0755)
-        endif
-        if l:result_mkdir != 1
-            echohl ErrorMsg | echo l:prompt_mkdir | echohl None
-        else
-            execute 'w '.fnameescape(l:input_content)
-        endif
-    else
-        if empty(l:file_copyright)
-            execute 'w'
-        else
-            echohl WarningMsg | echo l:file_copyright | echohl None
-            silent execute 'w'
-        endif
+    let l:res_copyright = FileCopyright()
+    let l:res_tabsave   = bufferlist#TabSave()
+    if !empty(l:res_copyright)
+        echohl HlPmtSuc | echo l:res_copyright | echohl None
+    elseif !empty(l:res_tabsave)
+        echohl HlPmtSuc | echo l:res_tabsave | echohl None
     endif
     " --------------------------------------------------
     " process other
@@ -805,7 +790,7 @@ function! FileCopyright(...)
     let l:line_copyright        = 0
     let l:line_program          = 0
     let l:prompt_item           = []
-    let l:result_prompt         = ''
+    let l:res_prompt            = ''
 
     if l:cpywidth < 75
         let l:cpywidth = 78
@@ -845,7 +830,6 @@ function! FileCopyright(...)
             else
                 call cursor(1, 1)
             endif
-            echohl WarningMsg | echo l:filename.l:datetime.l:nickname | echohl None
             let l:add_copyright = []
             call add(l:add_copyright, "/* vim: set expandtab tabstop=4 softtabstop=4 shiftwidth=4: */")
             call add(l:add_copyright, "/**")
@@ -864,9 +848,9 @@ function! FileCopyright(...)
             call add(l:add_copyright, " */")
             call add(l:add_copyright, "")
             call append(l:line_program, l:add_copyright)
-            echohl WarningMsg | echo "Successful: Add Copyright successful..." | echohl None
+            echohl HlPmtSuc | echo "Add Copyright successful..." | echohl None
         else
-            echohl ErrorMsg | echo "Ignored: Already have copyright..." | echohl None
+            echohl HlPmtErr | echo "Already have copyright..." | echohl None
         endif
     else
         if l:if_copyright ==# 1 && l:if_mine ==# 1
@@ -899,7 +883,7 @@ function! FileCopyright(...)
                 let l:i = l:i+1
             endwhile
             if l:if_update_datetime ==# 1 || l:if_update_filename ==# 1 || l:if_update_copydate ==# 1
-                let l:result_prompt = "Successful: Update ".join(l:prompt_item, ",")." successful..."
+                let l:res_prompt = "Successful: Update ".join(l:prompt_item, ",")." successful..."
             endif
         endif
     endif
@@ -910,7 +894,7 @@ function! FileCopyright(...)
     if exists('g:basic_mainwin') && g:basic_mainwin > 0
         call win_gotoid(l:winidn_original)
     endif
-    return l:result_prompt
+    return l:res_prompt
 endfunction
 command! -nargs=? FileCopyright :call FileCopyright(<q-args>)
 
@@ -1065,7 +1049,7 @@ function! MakeDebug(...)
     " process
     " --------------------------------------------------
     if !filereadable(expand('%:p'))
-        echohl ErrorMsg | echo "Warning: Please save this file first..." | echohl None
+        echohl HlPmtErr | echo "Please save this file first..." | echohl None
     else
         call MakeBuild('open')
         if &filetype ==# 'c'
@@ -1076,7 +1060,7 @@ function! MakeDebug(...)
         elseif &filetype ==# 'php'
             "...
         else
-            echohl ErrorMsg | echo "Error: This file type debug is not supported..." | echohl None
+            echohl HlPmtErr | echo "This file type debug is not supported..." | echohl None
         endif
     endif
     " --------------------------------------------------
@@ -1099,7 +1083,7 @@ function! MakeBrowser(...)
     " process
     " --------------------------------------------------
     if !filereadable(expand('%:p'))
-        echohl ErrorMsg | echo "Warning: Please save this file first..." | echohl None
+        echohl HlPmtErr | echo "Please save this file first..." | echohl None
     else
         let l:system_browser = {
             \   'chrome'    : g:config_debug_browser1,
@@ -1131,7 +1115,7 @@ endfunction
 " Function for _Debug
 " ============================================================================
 function! _Debug(...)
-    echohl WarningMsg | echo "========= Start  =========" | echohl None
+    echohl HlPmtSuc | echo "========= Start  =========" | echohl None
     echo "> bufnr('%')    : ".bufnr('%')
     echo "> bufname('%')  : ".bufname('%')
     echo "> bufwinnr('%') : ".bufwinnr('%')
@@ -1139,9 +1123,9 @@ function! _Debug(...)
     echo "> winnr()       : ".winnr()
     echo "> win_getid()   : ".win_getid()
     echo "> &modified     : ".&modified
-    echohl WarningMsg | echo "========= Finish =========" | echohl None
+    echohl HlPmtSuc | echo "========= Finish =========" | echohl None
 
-    echohl WarningMsg | echo "========= Start  =========" | echohl None
+    echohl HlPmtSuc | echo "========= Start  =========" | echohl None
     echo printf("= %-8s = %-8s = %-8s = %-16s = %-16s = %-16s", 'bufnr', 'winnr', 'winid', 'filetype', 'buftype', 'bufname')
     let buflist = getbufinfo()
     for il in buflist
@@ -1153,9 +1137,9 @@ function! _Debug(...)
         let l:bufname = bufname(il.bufnr)
         echo printf("> %-8d > %-8d > %-8d > %-16s > %-16s > %-16s", l:bufnbr, l:winnbr, l:winidn, l:filtype, l:buftype, l:bufname)
     endfor
-    echohl WarningMsg | echo "========= Finish =========" | echohl None
+    echohl HlPmtSuc | echo "========= Finish =========" | echohl None
 
-    echohl WarningMsg | echo "========= Start  =========" | echohl None
+    echohl HlPmtSuc | echo "========= Start  =========" | echohl None
     echo printf("= %-8s = %-8s = %-8s = %-16s = %-16s = %-16s", 'bufnr', 'winnr', 'winid', 'filetype', 'buftype', 'bufname')
     let l:winlist = getwininfo()
     for il in l:winlist
@@ -1167,7 +1151,7 @@ function! _Debug(...)
         let l:bufname = bufname(il.bufnr)
         echo printf("> %-8d > %-8d > %-8d > %-16s > %-16s > %-16s", l:bufnbr, l:winnbr, l:winidn, l:filtype, l:buftype, l:bufname)
     endfor
-    echohl WarningMsg | echo "========= Finish =========" | echohl None
+    echohl HlPmtSuc | echo "========= Finish =========" | echohl None
 endfunction
 
 " ============================================================================
