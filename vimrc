@@ -232,7 +232,7 @@ set showtabline=1
 
 " Set Character Encoding
 set fileencoding=utf-8
-set fileencodings=utf-8,utf-16,gb2312,gbk,gb18030,big5,latin1,Unicode
+set fileencodings=utf-8,gb2312,gbk,gb18030,big5,latin1,Unicode
 set fileformat=unix
 set fileformats=unix
 set ambiwidth=double
@@ -655,7 +655,7 @@ function! FileSave(...)
     execute '%s/\v\t\c/    /ge'
     execute '%s/\v\s+$\c//ge'
     execute '%s/\v\r\n\c/\r/ge'
-    execute '%s/\v[\r]+\c//ge'
+    execute '%s/\v\r+\c//ge'
     " replace config file to r style
     if &filetype ==# "php" && expand("%:t") =~? "^config"
         set fileformat=dos
@@ -669,23 +669,6 @@ function! FileSave(...)
     " delete last blank line
     execute '%s/\v(\r?\n)+%$\c//e'
     " --------------------------------------------------
-    " process space
-    " --------------------------------------------------
-    " ^[if|for|foreach|while] (
-    execute '%s/\v^(\s*)(if|for|foreach|while)(|\s{2,})\(\c/\1\2 (/ge'
-    " ^} [elseif|while|catch] (
-    execute '%s/\v^(\s*)\}(|\s{2,})(elseif|while|catch)(\s*)\(\c/\1} \3\4(/ge'
-    execute '%s/\v^(\s*)\}(\s*)(elseif|while|catch)(|\s{2,})\(\c/\1}\2\3 (/ge'
-    " ^} else if (
-    execute '%s/\v^(\s*)\}(|\s{2,})(else)(\s*)(if)(\s*)\(\c/\1} \3\4\5\6(/ge'
-    execute '%s/\v^(\s*)\}(\s*)(else)(\s{2,})(if)(\s*)\(\c/\1}\2\3 \5\6(/ge'
-    execute '%s/\v^(\s*)\}(\s*)(else)(\s*)(if)(|\s{2,})\(\c/\1}\2\3\4\5 (/ge'
-    " ^} else {
-    execute '%s/\v^(\s*)\}(|\s{2,})(else)(\s*)\{\c/\1} \3\4{/ge'
-    execute '%s/\v^(\s*)\}(\s*)(else)(|\s{2,})\{\c/\1}\2\3 {/ge'
-    " ) {$
-    execute '%s/\v\)(|\s{2,})\{$\c/) {/ge'
-    " --------------------------------------------------
     " process save
     " --------------------------------------------------
     let l:res_copyright = FileCopyright()
@@ -696,7 +679,7 @@ function! FileSave(...)
         echohl HlPmtSuc | echo l:res_tabsave | echohl None
     endif
     " --------------------------------------------------
-    " process other
+    " process make
     " --------------------------------------------------
     call MakeBuild('auto')
     " --------------------------------------------------
@@ -711,6 +694,34 @@ function! FileSave(...)
 endfunction
 command! -nargs=? FileSave :call FileSave(<q-args>)
 
+function! FileFormat(...)
+    " --------------------------------------------------
+    " save env
+    " --------------------------------------------------
+    if exists('g:basic_mainwin') && g:basic_mainwin > 0
+        let l:winidn_original = bufwinid('%')
+        call win_gotoid(g:basic_mainwin)
+    endif
+    " --------------------------------------------------
+    " process
+    " --------------------------------------------------
+    if &filetype ==# "php"
+        silent !php-cs-fixer fix --config=/pub/project/phptool/php-cs-fixer/.php-cs-fixer.php %
+        if v:shell_error == 0
+            checktime
+        endif
+    else
+        "...
+    endif
+    " --------------------------------------------------
+    " restore env
+    " --------------------------------------------------
+    if exists('g:basic_mainwin') && g:basic_mainwin > 0
+        call win_gotoid(l:winidn_original)
+    endif
+endfunction
+command! -nargs=? FileFormat :call FileFormat(<q-args>)
+
 function! FileEncoding(...)
     " --------------------------------------------------
     " save env
@@ -722,33 +733,43 @@ function! FileEncoding(...)
     " --------------------------------------------------
     " process
     " --------------------------------------------------
-    let l:enc_sub  = ["Please select your encoding for this file..."]
-    " setting encoding
-    let l:enc_list = split(&fileencodings, ',')
-    let l:enc_len  = len(l:enc_list)
-    " setting other
-    let i = 0 | let l:oth_list = [] | let l:oth_len  = {}
-    let l:name = 'add_bom' | let i = i + 1 | call add(l:oth_list, l:name) | let l:oth_len[l:name] = l:enc_len + i
-    let l:name = 'del_bom' | let i = i + 1 | call add(l:oth_list, l:name) | let l:oth_len[l:name] = l:enc_len + i
+    let l:title  = "Please select your encoding for this file..."
+    let l:mnu_list = ['Encoding list:']
+    " set encoding
+    let l:enc_list = split(&fileencodings, ',') | let l:enc_len = len(l:enc_list)
+    " set other
+    let l:oth_list = [] | let l:oth_len = {}
+    let l:i = 0
+    let l:name = 'add_bom' | let l:i += 1 | call add(l:oth_list, l:name) | let l:oth_len[l:name] = l:enc_len + l:i
+    let l:name = 'del_bom' | let l:i += 1 | call add(l:oth_list, l:name) | let l:oth_len[l:name] = l:enc_len + l:i
     " menu encoding
-    let il = 1
-    while il <= l:enc_len
-        call add(l:enc_sub, printf("%4s: enc - %s", il, l:enc_list[il-1]))
-        let il = il+1
-    endwhile
+    for l:sc in range(len(l:enc_list))
+        call add(l:mnu_list, printf("%4s: enc - %s", l:sc + 1, l:enc_list[l:sc]))
+    endfor
     " menu other
-    for il in l:oth_list
-        call add(l:enc_sub, printf("%4s: ope > %s", l:oth_len[il], il))
+    for l:sc in l:oth_list
+        call add(l:mnu_list, printf("%4s: ope > %s", l:oth_len[l:sc], l:sc))
     endfor
     " show menu
-    let l:input_list = inputlist(l:enc_sub)
+    echohl HlPmtWar | echo l:title | echohl None
+    let l:input_list = inputlist(l:mnu_list)
     if l:input_list > 0 && l:input_list <= l:enc_len
-        execute 'edit ++enc='.l:enc_list[l:input_list-1].' '.fnameescape(substitute(expand("%:p"), '\v[\/\\]+\c', '/', 'g'))
+        execute 'edit ++enc='.l:enc_list[l:input_list - 1].' '.fnameescape(substitute(expand("%:p"), '\v[\/\\]+\c', '/', 'g'))
         execute 'setlocal noreadonly'
+        execute 'setlocal nobomb'
+        silent execute 'w'
+        redraw
+        echohl HlPmtSuc | echo "Converted to ".l:enc_list[l:input_list - 1]." successful..." | echohl None
     elseif l:input_list ==# l:oth_len['add_bom']
         execute 'setlocal bomb'
+        silent execute 'w'
+        redraw
+        echohl HlPmtSuc | echo "Add bomb successful..." | echohl None
     elseif l:input_list ==# l:oth_len['del_bom']
         execute 'setlocal nobomb'
+        silent execute 'w'
+        redraw
+        echohl HlPmtSuc | echo "Delete bomb successful..." | echohl None
     endif
     " --------------------------------------------------
     " restore env
@@ -1160,13 +1181,27 @@ endfunction
 " --------------------------------------------------
 " check config
 " --------------------------------------------------
-autocmd VimEnter,WinNew,WinClosed,WinScrolled * call CheckMainwin()
-autocmd VimEnter * call CheckConfig()
+augroup vim_cmd_check
+    autocmd!
+    autocmd VimEnter,WinNew,WinClosed,WinScrolled * call CheckMainwin()
+    autocmd VimEnter * call CheckConfig()
+augroup END
 
 " --------------------------------------------------
 " syntax sync
 " --------------------------------------------------
-autocmd BufWritePost,FileChangedShellPost * :syntax sync fromstart
+augroup vim_cmd_syntax
+    autocmd!
+    autocmd BufWritePost,FileChangedShellPost * :syntax sync fromstart
+augroup END
+
+" --------------------------------------------------
+" code format
+" --------------------------------------------------
+augroup vim_cmd_codeformat
+    autocmd!
+    autocmd BufWritePost * call FileFormat()
+augroup END
 
 " ############################################################################
 " Plugin List Setting by Bleakwind
@@ -1186,7 +1221,7 @@ autocmd BufWritePost,FileChangedShellPost * :syntax sync fromstart
 " ============================================================================
 let g:neatview_enabled   = 1
 let g:neatview_autostart = 1
-let g:neatview_initfun   = 'NeatviewStructTree'
+let g:neatview_initfun   = 'neatview#StructTree()'
 
 " ============================================================================
 " Vim-Bufferlist
