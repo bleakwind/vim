@@ -232,7 +232,7 @@ set showtabline=1
 
 " Set Character Encoding
 set fileencoding=utf-8
-set fileencodings=utf-8,gb2312,gbk,gb18030,big5,latin1,Unicode
+set fileencodings=utf-8,gb2312,gbk,gb18030,latin1,Unicode,utf-16
 set fileformat=unix
 set fileformats=unix
 set ambiwidth=double
@@ -722,7 +722,7 @@ function! FileFormat(...)
 endfunction
 command! -nargs=? FileFormat :call FileFormat(<q-args>)
 
-function! FileEncoding(...)
+function! FileEncopen(...)
     " --------------------------------------------------
     " save env
     " --------------------------------------------------
@@ -733,7 +733,7 @@ function! FileEncoding(...)
     " --------------------------------------------------
     " process
     " --------------------------------------------------
-    let l:title  = "Please select your encoding for this file..."
+    let l:title  = "Please select your encoding reopen this file..."
     let l:mnu_list = ['Encoding list:']
     " set encoding
     let l:enc_list = split(&fileencodings, ',') | let l:enc_len = len(l:enc_list)
@@ -756,18 +756,16 @@ function! FileEncoding(...)
     if l:input_list > 0 && l:input_list <= l:enc_len
         execute 'edit ++enc='.l:enc_list[l:input_list - 1].' '.fnameescape(substitute(expand("%:p"), '\v[\/\\]+\c', '/', 'g'))
         execute 'setlocal noreadonly'
-        execute 'setlocal nobomb'
-        silent execute 'w'
         redraw
-        echohl HlPmtSuc | echo "Converted to ".l:enc_list[l:input_list - 1]." successful..." | echohl None
+        echohl HlPmtSuc | echo "Reopen with ".l:enc_list[l:input_list - 1]." successful..." | echohl None
     elseif l:input_list ==# l:oth_len['add_bom']
         execute 'setlocal bomb'
-        silent execute 'w'
+        silent execute 'write'
         redraw
         echohl HlPmtSuc | echo "Add bomb successful..." | echohl None
     elseif l:input_list ==# l:oth_len['del_bom']
         execute 'setlocal nobomb'
-        silent execute 'w'
+        silent execute 'write'
         redraw
         echohl HlPmtSuc | echo "Delete bomb successful..." | echohl None
     endif
@@ -778,7 +776,45 @@ function! FileEncoding(...)
         call win_gotoid(l:winidn_original)
     endif
 endfunction
-command! -nargs=? FileEncoding :call FileEncoding(<q-args>)
+command! -nargs=? FileEncopen :call FileEncopen(<q-args>)
+
+function! FileEncsave(...)
+    " --------------------------------------------------
+    " save env
+    " --------------------------------------------------
+    if exists('g:basic_mainwin') && g:basic_mainwin > 0
+        let l:winidn_original = bufwinid('%')
+        call win_gotoid(g:basic_mainwin)
+    endif
+    " --------------------------------------------------
+    " process
+    " --------------------------------------------------
+    let l:title  = "Please select your encoding save this file..."
+    let l:mnu_list = ['Encoding list:']
+    " set encoding
+    let l:enc_list = split(&fileencodings, ',') | let l:enc_len = len(l:enc_list)
+    " menu encoding
+    for l:sc in range(len(l:enc_list))
+        call add(l:mnu_list, printf("%4s: enc - %s", l:sc + 1, l:enc_list[l:sc]))
+    endfor
+    " show menu
+    echohl HlPmtWar | echo l:title | echohl None
+    let l:input_list = inputlist(l:mnu_list)
+    if l:input_list > 0 && l:input_list <= l:enc_len
+        execute 'write ++enc='.l:enc_list[l:input_list - 1].' '.fnameescape(substitute(expand("%:p"), '\v[\/\\]+\c', '/', 'g'))
+        execute 'set fileencoding='.l:enc_list[l:input_list - 1].''
+        silent execute 'write'
+        redraw
+        echohl HlPmtSuc | echo "Converted to ".l:enc_list[l:input_list - 1]." successful..." | echohl None
+    endif
+    " --------------------------------------------------
+    " restore env
+    " --------------------------------------------------
+    if exists('g:basic_mainwin') && g:basic_mainwin > 0
+        call win_gotoid(l:winidn_original)
+    endif
+endfunction
+command! -nargs=? FileEncsave :call FileEncsave(<q-args>)
 
 function! FileCopyright(...)
     " --------------------------------------------------
