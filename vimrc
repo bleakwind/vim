@@ -648,15 +648,22 @@ function! FileSave(...)
         call win_gotoid(g:basic_mainwin)
     endif
     let l:orig_cursor = getpos('.')
+    let l:orig_view = winsaveview()
     " --------------------------------------------------
-    " process wrap
+    " process
     " --------------------------------------------------
-    " replace char
+    " code format
+    call FileFormat()
+    " vim format
     execute '%s/\v\t\c/    /ge'
     execute '%s/\v\s+$\c//ge'
     execute '%s/\v\r\n\c/\r/ge'
     execute '%s/\v\r+\c//ge'
-    " replace config file to r style
+    if search('\v\n\n%$', 'nw') > 0
+        execute '%s/\v(\n){2,}%$/\r/e'
+    elseif search('\v\n%$', 'nw') == 0
+        call append(line('$'), '')
+    endif
     if &filetype ==# "php" && expand("%:t") =~? "^config"
         set fileformat=dos
     elseif &filetype ==# "text" && expand("%:t") =~? "^readme"
@@ -666,28 +673,27 @@ function! FileSave(...)
     else
         set fileformat=unix
     endif
-    " delete last blank line
-    execute '%s/\v(\r?\n)+%$\c//e'
-    " --------------------------------------------------
-    " process save
-    " --------------------------------------------------
+    " update copyright
     let l:res_copyright = FileCopyright()
+    " handle tabsave
     let l:res_tabsave   = bufferlist#TabSave()
+    " handle build
+    call MakeBuild('auto')
+    " --------------------------------------------------
+    " prompt message
+    " --------------------------------------------------
     if !empty(l:res_copyright)
         echohl HlPmtSuc | echo l:res_copyright | echohl None
     elseif !empty(l:res_tabsave)
         echohl HlPmtSuc | echo l:res_tabsave | echohl None
     endif
     " --------------------------------------------------
-    " process make
-    " --------------------------------------------------
-    call MakeBuild('auto')
-    " --------------------------------------------------
     " restore env
     " --------------------------------------------------
     let l:safe_line = max([1, min([l:orig_cursor[1], line('$')])])
     let l:safe_colm = max([1, min([l:orig_cursor[2], col([l:safe_line, '$'])])])
-    keepjumps call setpos('.', [l:orig_cursor[0], l:safe_line, l:safe_colm, l:orig_cursor[3]])
+    call setpos('.', [l:orig_cursor[0], l:safe_line, l:safe_colm, l:orig_cursor[3]])
+    call winrestview(l:orig_view)
     if exists('g:basic_mainwin') && g:basic_mainwin > 0
         call win_gotoid(l:winidn_original)
     endif
@@ -705,9 +711,11 @@ function! FileFormat(...)
     " --------------------------------------------------
     " process
     " --------------------------------------------------
+    let l:res = 0
     if &filetype ==# "php"
         silent !php-cs-fixer fix --config=/pub/project/phptool/php-cs-fixer/.php-cs-fixer.php %
-        if v:shell_error == 0
+        let l:res = v:shell_error
+        if l:res == 0
             checktime
         endif
     else
@@ -719,6 +727,7 @@ function! FileFormat(...)
     if exists('g:basic_mainwin') && g:basic_mainwin > 0
         call win_gotoid(l:winidn_original)
     endif
+    return l:res
 endfunction
 command! -nargs=? FileFormat :call FileFormat(<q-args>)
 
@@ -1231,14 +1240,6 @@ augroup vim_cmd_syntax
     autocmd BufWritePost,FileChangedShellPost * :syntax sync fromstart
 augroup END
 
-" --------------------------------------------------
-" code format
-" --------------------------------------------------
-augroup vim_cmd_codeformat
-    autocmd!
-    autocmd BufWritePost * call FileFormat()
-augroup END
-
 " ############################################################################
 " Plugin List Setting by Bleakwind
 " ############################################################################
@@ -1466,3 +1467,4 @@ endif
 " ############################################################################
 " === End ===
 " ############################################################################
+
