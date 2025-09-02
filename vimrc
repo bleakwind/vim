@@ -653,7 +653,9 @@ function! FileSave(...)
     " process
     " --------------------------------------------------
     " code format
-    call FileFormat()
+    if filereadable(expand('%:p'))
+        silent call FileFormat()
+    endif
     " vim format
     execute '%s/\v\t\c/    /ge'
     execute '%s/\v\s+$\c//ge'
@@ -713,7 +715,7 @@ function! FileFormat(...)
     " --------------------------------------------------
     let l:res = 0
     if &filetype ==# "php"
-        silent !php-cs-fixer fix --config=/pub/project/phptool/php-cs-fixer/.php-cs-fixer.php %
+        silent !php-cs-fixer --config=/pub/project/phptool/php-cs-fixer/.php-cs-fixer.php fix %
         let l:res = v:shell_error
         if l:res == 0
             checktime
