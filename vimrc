@@ -724,13 +724,13 @@ function! FileFormat(...)
         silent execute '!clang-format20 -style=file:'.g:config_dir_tool.'/clang-format/.clang-format -i %'
         let l:res = v:shell_error
         if l:res == 0
-            checktime
+            edit!
         endif
     elseif index(["php"], &filetype) >= 0
         silent execute '!'.g:config_dir_tool.'/php-cs-fixer/php-cs-fixer --config='.g:config_dir_tool.'/php-cs-fixer/.php-cs-fixer.php fix %'
         let l:res = v:shell_error
         if l:res == 0
-            checktime
+            edit!
         endif
     else
         "...
