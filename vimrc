@@ -73,9 +73,12 @@ endif
 " Plugin List by Bleakwind
 " ############################################################################
 " ============================================================================
+" Codeformat
+" php - wget https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/releases/download/v3.87.2/php-cs-fixer.phar -O php-cs-fixer && chmod a+x php-cs-fixer
+" c   - pkg install llvm20
+" ============================================================================
 " Vundle
-" git clone https://github.com/VundleVim/Vundle.vim.git \
-"       /pub/_program/vim/vimfiles/bundle/Vundle.vim
+" git clone https://github.com/VundleVim/Vundle.vim.git /pub/_program/vim/vimfiles/bundle/Vundle.vim
 " ============================================================================
 " Vim-Colorful
 " https://github.com/bleakwind/vim-colorful
@@ -118,6 +121,7 @@ if has('unix')
     let g:config_dir_tree                   = '/pub'
     let g:config_dir_work                   = '/pub/project'
     let g:config_dir_data                   = '/pub/_program/vim/data'
+    let g:config_dir_tool                   = '/pub/_program/vim/_tool'
     let g:config_debug_url                  = 'http://127.0.0.1:88'
     let g:config_debug_browser1             = 'chrome'
     let g:config_debug_browser2             = 'firefox'
@@ -126,6 +130,7 @@ elseif has('mac')
     let g:config_dir_tree                   = '/pub'
     let g:config_dir_work                   = '/pub/project'
     let g:config_dir_data                   = '/pub/_program/vim/data'
+    let g:config_dir_tool                   = '/pub/_program/vim/_tool'
     let g:config_debug_url                  = 'http://127.0.0.1:88'
     let g:config_debug_browser1             = 'chrome'
     let g:config_debug_browser2             = 'firefox'
@@ -134,6 +139,7 @@ elseif has('win64') || has('win32')
     let g:config_dir_tree                   = 'E:/project'
     let g:config_dir_work                   = 'E:/project'
     let g:config_dir_data                   = 'D:/Program Files/vim/data'
+    let g:config_dir_tool                   = 'D:/Program Files/vim/_tool'
     let g:config_debug_url                  = 'http://127.0.0.1:88'
     let g:config_debug_browser1             = 'start '.shellescape('C:/Program Files (x86)/Google/Chrome/Application/chrome.exe')
     let g:config_debug_browser2             = 'start '.shellescape('D:/Program Files/Firefox/firefox.exe')
@@ -714,8 +720,14 @@ function! FileFormat(...)
     " process
     " --------------------------------------------------
     let l:res = 0
-    if &filetype ==# "php"
-        silent !php-cs-fixer --config=/pub/project/phptool/php-cs-fixer/.php-cs-fixer.php fix %
+    if index(["c", "cpp", "objc", "objcpp", "h", "hpp"], &filetype) >= 0
+        silent execute '!clang-format20 -style=file -assume-filename='.g:config_dir_tool.'/clang-format/.clang-format -i %'
+        let l:res = v:shell_error
+        if l:res == 0
+            checktime
+        endif
+    elseif index(["php"], &filetype) >= 0
+        silent execute '!'.g:config_dir_tool.'/php-cs-fixer/php-cs-fixer --config='.g:config_dir_tool.'/php-cs-fixer/.php-cs-fixer.php fix %'
         let l:res = v:shell_error
         if l:res == 0
             checktime
@@ -1069,13 +1081,14 @@ function! MakeBuild(...)
     " --------------------------------------------------
     " process
     " --------------------------------------------------
-    if &filetype ==# 'c'
-        setlocal makeprg=cc
-        setlocal errorformat=%+G%.%#
-        silent make -o %< %
-        setlocal makeprg=
-        setlocal errorformat=
-    elseif &filetype ==# 'php'
+    " if &filetype ==# 'c'
+    "     setlocal makeprg=cc
+    "     setlocal errorformat=%+G%.%#
+    "     silent make -o %< %
+    "     setlocal makeprg=
+    "     setlocal errorformat=
+    " endif
+    if &filetype ==# 'php'
         setlocal makeprg=php\ -d\ html_errors=Off\ -l
         setlocal errorformat=%+E%.%#Parse\ error:\ %m\ in\ %f\ on\ line\ %l%.%#,
                     \%+W%.%#Fatal\ error:\ %m\ in\ %f\ on\ line\ %l%.%#,
