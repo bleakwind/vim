@@ -721,7 +721,7 @@ function! FileFormat(...)
     " --------------------------------------------------
     let l:res = 0
     if index(["c", "cpp", "objc", "objcpp", "h", "hpp"], &filetype) >= 0
-        silent execute '!clang-format20 -style=file -assume-filename='.g:config_dir_tool.'/clang-format/.clang-format -i %'
+        silent execute '!clang-format20 -style=file:'.g:config_dir_tool.'/clang-format/.clang-format -i %'
         let l:res = v:shell_error
         if l:res == 0
             checktime
