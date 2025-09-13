@@ -658,10 +658,6 @@ function! FileSave(...)
     " --------------------------------------------------
     " process
     " --------------------------------------------------
-    " code format
-    if filereadable(expand('%:p'))
-        silent call FileFormat()
-    endif
     " vim format
     execute '%s/\v\t\c/    /ge'
     execute '%s/\v\s+$\c//ge'
@@ -685,6 +681,10 @@ function! FileSave(...)
     let l:res_copyright = FileCopyright()
     " handle tabsave
     let l:res_tabsave   = bufferlist#TabSave()
+    " code format
+    if filereadable(expand('%:p'))
+        silent call FileFormat()
+    endif
     " handle build
     call MakeBuild('auto')
     " --------------------------------------------------
