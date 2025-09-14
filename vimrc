@@ -115,31 +115,41 @@ endif
 " Global Config
 " ============================================================================
 let g:config_plugin_on                      = 'on'
-let g:skip_defaults_vim                     = 1
-let g:skip_loading_mswin                    = 1
 if has('unix')
-    let g:config_dir_tree                   = '/pub'
-    let g:config_dir_work                   = '/pub/project'
-    let g:config_dir_data                   = '/pub/_program/vim/data'
-    let g:config_dir_tool                   = '/pub/_program/vim/_tool'
+    let g:config_set_encode                 = 'utf-8'
+    let g:config_set_enclist                = 'utf-8,gb2312,gbk,gb18030,latin1,Unicode,utf-16'
+    let g:config_set_font                   = 'DejaVu Sans Mono 9'
+    let g:config_path_tree                  = '/pub/project'
+    let g:config_path_work                  = '/pub/project'
+    let g:config_path_plug                  = '/pub/_program/vim/vimfiles'
+    let g:config_path_data                  = '/pub/_program/vim/data'
+    let g:config_path_tool                  = '/pub/_program/vim/_tool'
     let g:config_debug_url                  = 'http://127.0.0.1:88'
     let g:config_debug_browser1             = 'chrome'
     let g:config_debug_browser2             = 'firefox'
     let g:config_markdown_script            = 'http://127.0.0.1:88/project/markdown/markdown/markdown.php'
 elseif has('mac')
-    let g:config_dir_tree                   = '/pub'
-    let g:config_dir_work                   = '/pub/project'
-    let g:config_dir_data                   = '/pub/_program/vim/data'
-    let g:config_dir_tool                   = '/pub/_program/vim/_tool'
+    let g:config_set_encode                 = 'utf-8'
+    let g:config_set_enclist                = 'utf-8,gb2312,gbk,gb18030,latin1,Unicode,utf-16'
+    let g:config_set_font                   = 'DejaVu Sans Mono:h9'
+    let g:config_path_tree                  = '/pub/project'
+    let g:config_path_work                  = '/pub/project'
+    let g:config_path_plug                  = '/pub/_program/vim/vimfiles'
+    let g:config_path_data                  = '/pub/_program/vim/data'
+    let g:config_path_tool                  = '/pub/_program/vim/_tool'
     let g:config_debug_url                  = 'http://127.0.0.1:88'
     let g:config_debug_browser1             = 'chrome'
     let g:config_debug_browser2             = 'firefox'
     let g:config_markdown_script            = 'http://127.0.0.1:88/project/markdown/markdown/markdown.php'
 elseif has('win64') || has('win32')
-    let g:config_dir_tree                   = 'E:/project'
-    let g:config_dir_work                   = 'E:/project'
-    let g:config_dir_data                   = 'D:/Program Files/vim/data'
-    let g:config_dir_tool                   = 'D:/Program Files/vim/_tool'
+    let g:config_set_encode                 = 'cp936'
+    let g:config_set_enclist                = 'utf-8,gb2312,gbk,gb18030,latin1,Unicode,utf-16'
+    let g:config_set_font                   = 'DejaVu Sans Mono:h9'
+    let g:config_path_tree                  = 'E:/project'
+    let g:config_path_work                  = 'E:/project'
+    let g:config_path_plug                  = 'D:/Program Files/vim/vimfiles'
+    let g:config_path_data                  = 'D:/Program Files/vim/data'
+    let g:config_path_tool                  = 'D:/Program Files/vim/_tool'
     let g:config_debug_url                  = 'http://127.0.0.1:88'
     let g:config_debug_browser1             = 'start '.shellescape('C:/Program Files (x86)/Google/Chrome/Application/chrome.exe')
     let g:config_debug_browser2             = 'start '.shellescape('D:/Program Files/Firefox/firefox.exe')
@@ -149,59 +159,32 @@ endif
 " ============================================================================
 " Global Setting
 " ============================================================================
-set nocompatible
-set tags=./.tags;,.tags
-set wildignore+=*/.svn/*,*/.git/*
-if has('unix')
-    set termencoding=utf-8
-    set encoding=utf-8
-    set backupdir=/pub/_program/vim/data/vim/backupdir/
-    set viewdir=/pub/_program/vim/data/vim/viewdir/
-    set undodir=/pub/_program/vim/data/vim/undodir/
-    set directory=/pub/_program/vim/data/vim/swapdir//
-elseif has('mac')
-    set termencoding=utf-8
-    set encoding=utf-8
-    set backupdir=/pub/_program/vim/data/vim/backupdir/
-    set viewdir=/pub/_program/vim/data/vim/viewdir/
-    set undodir=/pub/_program/vim/data/vim/undodir/
-    set directory=/pub/_program/vim/data/vim/swapdir//
-elseif has('win64') || has('win32')
-    set termencoding=cp936
-    set encoding=cp936
-    set backupdir=D:/Program\ Files/vim/data/vim/backupdir/
-    set viewdir=D:/Program\ Files/vim/data/vim/viewdir/
-    set undodir=D:/Program\ Files/vim/data/vim/undodir/
-    set directory=D:/Program\ Files/vim/data/vim/swapdir//
-endif
-if has('gui_running')
-    if has('unix')
-        set guifont=DejaVu\ Sans\ Mono\ 9
-        set guifontwide=
-    elseif has('mac')
-        set guifont=DejaVu\ Sans\ Mono:h9
-        set guifontwide=
-    elseif has('win64') || has('win32')
-        set guifont=DejaVu\ Sans\ Mono:h9
-        set guifontwide=
-    endif
-endif
+let g:skip_defaults_vim  = 1
+let g:skip_loading_mswin = 1
+
+let &compatible          = 0
+let &tags                = './.tags;,.tags'
+let &wildignore         .= '*/.svn/**,*/.git/**'
+
+let &encoding            = g:config_set_encode
+let &termencoding        = g:config_set_encode
+let &fileencoding        = g:config_set_encode
+let &fileencodings       = g:config_set_enclist
+let &guifont             = g:config_set_font
+let &guifontwide         = ''
+
+let &backupdir           = g:config_path_data.'/vim/backupdir/'
+let &viewdir             = g:config_path_data.'/vim/viewdir/'
+let &undodir             = g:config_path_data.'/vim/undodir/'
+let &directory           = g:config_path_data.'/vim/swapdir/'
 
 " ============================================================================
 " Plugin List
 " ============================================================================
 " ----------------------------------------------------------------------------
 filetype off
-if has('unix')
-    set runtimepath+=/pub/_program/vim/vimfiles/bundle/Vundle.vim
-    call vundle#begin('/pub/_program/vim/vimfiles/bundle')
-elseif has('mac')
-    set runtimepath+=/pub/_program/vim/vimfiles/bundle/Vundle.vim
-    call vundle#begin('/pub/_program/vim/vimfiles/bundle')
-elseif has('win64') || has('win32')
-    set runtimepath+=D:/Program\ Files/vim/vimfiles/bundle/Vundle.vim
-    call vundle#begin('D:/Program Files/vim/vimfiles/bundle')
-endif
+let &runtimepath .= ','.g:config_path_plug.'/bundle/Vundle.vim'
+call vundle#begin(g:config_path_plug.'/bundle')
 " ----------------------------------------------------------------------------
 Plugin 'VundleVim/Vundle.vim'
 " ----------------------------------------------------------------------------
@@ -237,8 +220,6 @@ set guioptions+=b
 set showtabline=1
 
 " Set Character Encoding
-set fileencoding=utf-8
-set fileencodings=utf-8,gb2312,gbk,gb18030,latin1,Unicode,utf-16
 set fileformat=unix
 set fileformats=unix
 set ambiwidth=double
@@ -369,16 +350,20 @@ if has("gui_running")
     endif
 endif
 
-" Check env
-let g:basic_mainwin         = 0
+" Set global
+let g:global_mainwin            = 0
+let g:global_default_wildignore = &wildignore
+let g:global_default_directory  = getcwd()
 
-" Check dir
-let g:config_vimrc          = substitute(expand('<sfile>:p'), '\v[\/\\]+\c', '/', 'g')
-let g:config_dir_tree       = substitute(g:config_dir_tree, '\v[\/\\]+\c', '/', 'g')
-let g:config_dir_work       = substitute(g:config_dir_work, '\v[\/\\]+\c', '/', 'g')
-let g:config_dir_data       = substitute(g:config_dir_data, '\v[\/\\]+\c', '/', 'g')
-let g:config_debug_browser1 = substitute(g:config_debug_browser1, '\v[\/\\]+\c', '/', 'g')
-let g:config_debug_browser2 = substitute(g:config_debug_browser2, '\v[\/\\]+\c', '/', 'g')
+" Set config
+let g:config_vimrc              = substitute(expand('<sfile>:p'), '\v[\/\\]+\c', '/', 'g')
+let g:config_path_tree          = substitute(g:config_path_tree, '\v[\/\\]+\c', '/', 'g')
+let g:config_path_work          = substitute(g:config_path_work, '\v[\/\\]+\c', '/', 'g')
+let g:config_path_plug          = substitute(g:config_path_plug, '\v[\/\\]+\c', '/', 'g')
+let g:config_path_data          = substitute(g:config_path_data, '\v[\/\\]+\c', '/', 'g')
+let g:config_path_tool          = substitute(g:config_path_tool, '\v[\/\\]+\c', '/', 'g')
+let g:config_debug_browser1     = substitute(g:config_debug_browser1, '\v[\/\\]+\c', '/', 'g')
+let g:config_debug_browser2     = substitute(g:config_debug_browser2, '\v[\/\\]+\c', '/', 'g')
 
 " ############################################################################
 " Syntax Color by Bleakwind
@@ -421,12 +406,12 @@ if g:config_plugin_on ==# 'on'
 " Setting
 " ============================================================================
 let g:config_builddir                       = {}
-let g:config_builddir['root']               = g:config_dir_data
-let g:config_builddir['vim']                = g:config_dir_data.'/vim'
-let g:config_builddir['vim_backupdir']      = g:config_dir_data.'/vim/backupdir'
-let g:config_builddir['vim_viewdir']        = g:config_dir_data.'/vim/viewdir'
-let g:config_builddir['vim_undodir']        = g:config_dir_data.'/vim/undodir'
-let g:config_builddir['vim_swapdir']        = g:config_dir_data.'/vim/swapdir'
+let g:config_builddir['root']               = g:config_path_data
+let g:config_builddir['vim']                = g:config_path_data.'/vim'
+let g:config_builddir['vim_backupdir']      = g:config_path_data.'/vim/backupdir'
+let g:config_builddir['vim_viewdir']        = g:config_path_data.'/vim/viewdir'
+let g:config_builddir['vim_undodir']        = g:config_path_data.'/vim/undodir'
+let g:config_builddir['vim_swapdir']        = g:config_path_data.'/vim/swapdir'
 let g:config_buildfile                      = {}
 let g:config_builddata                      = {}
 
@@ -492,16 +477,16 @@ let g:neatview_setshow['viewmap']           = 0
 " Function for Check
 " ============================================================================
 function! CheckMainwin(...)
-    let g:basic_mainwin = 0
+    let g:global_mainwin = 0
     for l:winnbr in range(1, winnr('$'))
         let l:winidn = win_getid(l:winnbr)
         let l:bufnbr = winbufnr(l:winnbr)
         let l:buftype = getbufvar(l:bufnbr, '&buftype')
         if empty(l:buftype) || l:buftype ==# 'help'
-            let g:basic_mainwin = l:winidn
+            let g:global_mainwin = l:winidn
         endif
     endfor
-    return g:basic_mainwin
+    return g:global_mainwin
 endfunction
 
 function! CheckConfig(...)
@@ -522,6 +507,18 @@ function! CheckConfig(...)
                 call setfperm(g:config_buildfile[il], 'rwxrwxrwx')
             endif
         endfor
+    endif
+endfunction
+
+function! CheckProconf(...)
+    let l:curr_path = getcwd()
+    if l:curr_path != g:global_default_directory
+        let &wildignore = g:global_default_wildignore
+        if filereadable(l:curr_path."/.vimrc")
+            " let &wildignore .= ','.getcwd().'/build/**'
+            execute "source ".l:curr_path."/.vimrc"
+        endif
+        let g:global_default_directory = l:curr_path
     endif
 endfunction
 
@@ -587,9 +584,9 @@ function! BufferNew(...)
     " --------------------------------------------------
     " save env
     " --------------------------------------------------
-    if exists('g:basic_mainwin') && g:basic_mainwin > 0
+    if exists('g:global_mainwin') && g:global_mainwin > 0
         let l:winidn_original = bufwinid('%')
-        call win_gotoid(g:basic_mainwin)
+        call win_gotoid(g:global_mainwin)
     endif
     " --------------------------------------------------
     " process
@@ -598,7 +595,7 @@ function! BufferNew(...)
     " --------------------------------------------------
     " restore env
     " --------------------------------------------------
-    if exists('g:basic_mainwin') && g:basic_mainwin > 0
+    if exists('g:global_mainwin') && g:global_mainwin > 0
         call win_gotoid(l:winidn_original)
     endif
 endfunction
@@ -607,9 +604,9 @@ function! BufferClose(...)
     " --------------------------------------------------
     " save env
     " --------------------------------------------------
-    if exists('g:basic_mainwin') && g:basic_mainwin > 0
+    if exists('g:global_mainwin') && g:global_mainwin > 0
         let l:winidn_original = bufwinid('%')
-        call win_gotoid(g:basic_mainwin)
+        call win_gotoid(g:global_mainwin)
     endif
     " --------------------------------------------------
     " process
@@ -618,7 +615,7 @@ function! BufferClose(...)
     " --------------------------------------------------
     " restore env
     " --------------------------------------------------
-    if exists('g:basic_mainwin') && g:basic_mainwin > 0
+    if exists('g:global_mainwin') && g:global_mainwin > 0
         call win_gotoid(l:winidn_original)
     endif
 endfunction
@@ -630,9 +627,9 @@ function! FileLocate(...)
     " --------------------------------------------------
     " save env
     " --------------------------------------------------
-    if exists('g:basic_mainwin') && g:basic_mainwin > 0
+    if exists('g:global_mainwin') && g:global_mainwin > 0
         let l:winidn_original = bufwinid('%')
-        call win_gotoid(g:basic_mainwin)
+        call win_gotoid(g:global_mainwin)
     endif
     " --------------------------------------------------
     " process
@@ -649,9 +646,9 @@ function! FileSave(...)
     " --------------------------------------------------
     " save env
     " --------------------------------------------------
-    if exists('g:basic_mainwin') && g:basic_mainwin > 0
+    if exists('g:global_mainwin') && g:global_mainwin > 0
         let l:winidn_original = bufwinid('%')
-        call win_gotoid(g:basic_mainwin)
+        call win_gotoid(g:global_mainwin)
     endif
     let l:orig_cursor = getpos('.')
     let l:orig_view = winsaveview()
@@ -702,7 +699,7 @@ function! FileSave(...)
     let l:safe_colm = max([1, min([l:orig_cursor[2], col([l:safe_line, '$'])])])
     call setpos('.', [l:orig_cursor[0], l:safe_line, l:safe_colm, l:orig_cursor[3]])
     call winrestview(l:orig_view)
-    if exists('g:basic_mainwin') && g:basic_mainwin > 0
+    if exists('g:global_mainwin') && g:global_mainwin > 0
         call win_gotoid(l:winidn_original)
     endif
 endfunction
@@ -712,22 +709,22 @@ function! FileFormat(...)
     " --------------------------------------------------
     " save env
     " --------------------------------------------------
-    if exists('g:basic_mainwin') && g:basic_mainwin > 0
+    if exists('g:global_mainwin') && g:global_mainwin > 0
         let l:winidn_original = bufwinid('%')
-        call win_gotoid(g:basic_mainwin)
+        call win_gotoid(g:global_mainwin)
     endif
     " --------------------------------------------------
     " process
     " --------------------------------------------------
     let l:res = 0
     if index(["c", "cpp", "objc", "objcpp", "h", "hpp"], &filetype) >= 0
-        silent execute '!clang-format20 -style=file:'.g:config_dir_tool.'/clang-format/.clang-format -i %'
+        silent execute '!clang-format20 -style=file:'.g:config_path_tool.'/clang-format/.clang-format -i %'
         let l:res = v:shell_error
         if l:res == 0
             edit!
         endif
     elseif index(["php"], &filetype) >= 0
-        silent execute '!'.g:config_dir_tool.'/php-cs-fixer/php-cs-fixer --config='.g:config_dir_tool.'/php-cs-fixer/.php-cs-fixer.php fix %'
+        silent execute '!'.g:config_path_tool.'/php-cs-fixer/php-cs-fixer --config='.g:config_path_tool.'/php-cs-fixer/.php-cs-fixer.php fix %'
         let l:res = v:shell_error
         if l:res == 0
             edit!
@@ -738,7 +735,7 @@ function! FileFormat(...)
     " --------------------------------------------------
     " restore env
     " --------------------------------------------------
-    if exists('g:basic_mainwin') && g:basic_mainwin > 0
+    if exists('g:global_mainwin') && g:global_mainwin > 0
         call win_gotoid(l:winidn_original)
     endif
     return l:res
@@ -749,9 +746,9 @@ function! FileEncopen(...)
     " --------------------------------------------------
     " save env
     " --------------------------------------------------
-    if exists('g:basic_mainwin') && g:basic_mainwin > 0
+    if exists('g:global_mainwin') && g:global_mainwin > 0
         let l:winidn_original = bufwinid('%')
-        call win_gotoid(g:basic_mainwin)
+        call win_gotoid(g:global_mainwin)
     endif
     " --------------------------------------------------
     " process
@@ -795,7 +792,7 @@ function! FileEncopen(...)
     " --------------------------------------------------
     " restore env
     " --------------------------------------------------
-    if exists('g:basic_mainwin') && g:basic_mainwin > 0
+    if exists('g:global_mainwin') && g:global_mainwin > 0
         call win_gotoid(l:winidn_original)
     endif
 endfunction
@@ -805,9 +802,9 @@ function! FileEncsave(...)
     " --------------------------------------------------
     " save env
     " --------------------------------------------------
-    if exists('g:basic_mainwin') && g:basic_mainwin > 0
+    if exists('g:global_mainwin') && g:global_mainwin > 0
         let l:winidn_original = bufwinid('%')
-        call win_gotoid(g:basic_mainwin)
+        call win_gotoid(g:global_mainwin)
     endif
     " --------------------------------------------------
     " process
@@ -833,7 +830,7 @@ function! FileEncsave(...)
     " --------------------------------------------------
     " restore env
     " --------------------------------------------------
-    if exists('g:basic_mainwin') && g:basic_mainwin > 0
+    if exists('g:global_mainwin') && g:global_mainwin > 0
         call win_gotoid(l:winidn_original)
     endif
 endfunction
@@ -843,9 +840,9 @@ function! FileCopyright(...)
     " --------------------------------------------------
     " save env
     " --------------------------------------------------
-    if exists('g:basic_mainwin') && g:basic_mainwin > 0
+    if exists('g:global_mainwin') && g:global_mainwin > 0
         let l:winidn_original = bufwinid('%')
-        call win_gotoid(g:basic_mainwin)
+        call win_gotoid(g:global_mainwin)
     endif
     " --------------------------------------------------
     " process
@@ -971,7 +968,7 @@ function! FileCopyright(...)
     " --------------------------------------------------
     " restore env
     " --------------------------------------------------
-    if exists('g:basic_mainwin') && g:basic_mainwin > 0
+    if exists('g:global_mainwin') && g:global_mainwin > 0
         call win_gotoid(l:winidn_original)
     endif
     return l:res_prompt
@@ -985,9 +982,9 @@ function! MakePrev(...)
     " --------------------------------------------------
     " save env
     " --------------------------------------------------
-    if exists('g:basic_mainwin') && g:basic_mainwin > 0
+    if exists('g:global_mainwin') && g:global_mainwin > 0
         let l:winidn_original = bufwinid('%')
-        call win_gotoid(g:basic_mainwin)
+        call win_gotoid(g:global_mainwin)
     endif
     " --------------------------------------------------
     " process
@@ -996,7 +993,7 @@ function! MakePrev(...)
     " --------------------------------------------------
     " restore env
     " --------------------------------------------------
-    if exists('g:basic_mainwin') && g:basic_mainwin > 0
+    if exists('g:global_mainwin') && g:global_mainwin > 0
         call win_gotoid(l:winidn_original)
     endif
 endfunction
@@ -1005,9 +1002,9 @@ function! MakeNext(...)
     " --------------------------------------------------
     " save env
     " --------------------------------------------------
-    if exists('g:basic_mainwin') && g:basic_mainwin > 0
+    if exists('g:global_mainwin') && g:global_mainwin > 0
         let l:winidn_original = bufwinid('%')
-        call win_gotoid(g:basic_mainwin)
+        call win_gotoid(g:global_mainwin)
     endif
     " --------------------------------------------------
     " process
@@ -1016,7 +1013,7 @@ function! MakeNext(...)
     " --------------------------------------------------
     " restore env
     " --------------------------------------------------
-    if exists('g:basic_mainwin') && g:basic_mainwin > 0
+    if exists('g:global_mainwin') && g:global_mainwin > 0
         call win_gotoid(l:winidn_original)
     endif
 endfunction
@@ -1025,9 +1022,9 @@ function! MakeDohi(...)
     " --------------------------------------------------
     " save env
     " --------------------------------------------------
-    if exists('g:basic_mainwin') && g:basic_mainwin > 0
+    if exists('g:global_mainwin') && g:global_mainwin > 0
         let l:winidn_original = bufwinid('%')
-        call win_gotoid(g:basic_mainwin)
+        call win_gotoid(g:global_mainwin)
     endif
     " --------------------------------------------------
     " process
@@ -1040,7 +1037,7 @@ function! MakeDohi(...)
     " --------------------------------------------------
     " restore env
     " --------------------------------------------------
-    if exists('g:basic_mainwin') && g:basic_mainwin > 0
+    if exists('g:global_mainwin') && g:global_mainwin > 0
         call win_gotoid(l:winidn_original)
     endif
 endfunction
@@ -1049,9 +1046,9 @@ function! MakeNohi(...)
     " --------------------------------------------------
     " save env
     " --------------------------------------------------
-    if exists('g:basic_mainwin') && g:basic_mainwin > 0
+    if exists('g:global_mainwin') && g:global_mainwin > 0
         let l:winidn_original = bufwinid('%')
-        call win_gotoid(g:basic_mainwin)
+        call win_gotoid(g:global_mainwin)
     endif
     " --------------------------------------------------
     " process
@@ -1065,7 +1062,7 @@ function! MakeNohi(...)
     " --------------------------------------------------
     " restore env
     " --------------------------------------------------
-    if exists('g:basic_mainwin') && g:basic_mainwin > 0
+    if exists('g:global_mainwin') && g:global_mainwin > 0
         call win_gotoid(l:winidn_original)
     endif
 endfunction
@@ -1074,9 +1071,9 @@ function! MakeBuild(...)
     " --------------------------------------------------
     " save env
     " --------------------------------------------------
-    if exists('g:basic_mainwin') && g:basic_mainwin > 0
+    if exists('g:global_mainwin') && g:global_mainwin > 0
         let l:winidn_original = bufwinid('%')
-        call win_gotoid(g:basic_mainwin)
+        call win_gotoid(g:global_mainwin)
     endif
     " --------------------------------------------------
     " process
@@ -1113,7 +1110,7 @@ function! MakeBuild(...)
     " --------------------------------------------------
     " restore env
     " --------------------------------------------------
-    if exists('g:basic_mainwin') && g:basic_mainwin > 0
+    if exists('g:global_mainwin') && g:global_mainwin > 0
         call win_gotoid(l:winidn_original)
     endif
 endfunction
@@ -1122,9 +1119,9 @@ function! MakeDebug(...)
     " --------------------------------------------------
     " save env
     " --------------------------------------------------
-    if exists('g:basic_mainwin') && g:basic_mainwin > 0
+    if exists('g:global_mainwin') && g:global_mainwin > 0
         let l:winidn_original = bufwinid('%')
-        call win_gotoid(g:basic_mainwin)
+        call win_gotoid(g:global_mainwin)
     endif
     " --------------------------------------------------
     " process
@@ -1147,7 +1144,7 @@ function! MakeDebug(...)
     " --------------------------------------------------
     " restore env
     " --------------------------------------------------
-    if exists('g:basic_mainwin') && g:basic_mainwin > 0
+    if exists('g:global_mainwin') && g:global_mainwin > 0
         call win_gotoid(l:winidn_original)
     endif
 endfunction
@@ -1156,9 +1153,9 @@ function! MakeBrowser(...)
     " --------------------------------------------------
     " save env
     " --------------------------------------------------
-    if exists('g:basic_mainwin') && g:basic_mainwin > 0
+    if exists('g:global_mainwin') && g:global_mainwin > 0
         let l:winidn_original = bufwinid('%')
-        call win_gotoid(g:basic_mainwin)
+        call win_gotoid(g:global_mainwin)
     endif
     " --------------------------------------------------
     " process
@@ -1175,10 +1172,10 @@ function! MakeBrowser(...)
         if a:0 > 0 && &filetype ==# "markdown"
             silent execute '!'.l:system_browser[a:1].' '.shellescape(g:config_markdown_script.'?f='.l:work_file)
         elseif a:0 > 0
-            if stridx(l:work_file, g:config_dir_work) ==# -1
+            if stridx(l:work_file, g:config_path_work) ==# -1
                 silent execute '!'.l:system_browser[a:1].' '.shellescape('file:///'.l:work_file)
             else
-                let l:work_file = substitute(l:work_file, '\v'.CheckSlash('string', g:config_dir_work).'\c', g:config_debug_url, '')
+                let l:work_file = substitute(l:work_file, '\v'.CheckSlash('string', g:config_path_work).'\c', g:config_debug_url, '')
                 silent execute '!'.l:system_browser[a:1].' '.shellescape(l:work_file)
             endif
         endif
@@ -1187,7 +1184,7 @@ function! MakeBrowser(...)
     " --------------------------------------------------
     " restore env
     " --------------------------------------------------
-    if exists('g:basic_mainwin') && g:basic_mainwin > 0
+    if exists('g:global_mainwin') && g:global_mainwin > 0
         call win_gotoid(l:winidn_original)
     endif
 endfunction
@@ -1239,12 +1236,20 @@ endfunction
 " Command
 " ============================================================================
 " --------------------------------------------------
-" check config
+" global config
 " --------------------------------------------------
-augroup vim_cmd_check
+augroup vim_cmd_gloconf
     autocmd!
     autocmd VimEnter,WinNew,WinClosed,WinScrolled * call CheckMainwin()
     autocmd VimEnter * call CheckConfig()
+augroup END
+
+" --------------------------------------------------
+" project config
+" --------------------------------------------------
+augroup vim_cmd_proconf
+    autocmd!
+    autocmd DirChanged * call CheckProconf()
 augroup END
 
 " --------------------------------------------------
@@ -1282,7 +1287,7 @@ let g:bufferlist_enabled   = 1
 let g:bufferlist_autostart = 0
 let g:bufferlist_position  = 'top'
 let g:bufferlist_reopen    = 1
-let g:bufferlist_datapath  = g:config_dir_data.'/bufferlist'
+let g:bufferlist_datapath  = g:config_path_data.'/bufferlist'
 
 " ============================================================================
 " Vim-Filelist
@@ -1291,9 +1296,9 @@ let g:filelist_enabled   = 1
 let g:filelist_autostart = 0
 let g:filelist_position  = 'left'
 let g:filelist_winwidth  = 30
-let g:filelist_mainpath  = g:config_dir_tree
+let g:filelist_mainpath  = g:config_path_tree
 let g:filelist_showhide  = 0
-let g:filelist_datapath  = g:config_dir_data.'/filelist'
+let g:filelist_datapath  = g:config_path_data.'/filelist'
 
 " ============================================================================
 " Vim-Viewmap
@@ -1319,7 +1324,7 @@ let g:specialcolor_csscolor_updelay = 3000
 " Vim-Runscript
 " ============================================================================
 let g:runscript_enabled = 1
-let g:runscript_setpath = g:config_dir_data.'/runscript'
+let g:runscript_setpath = g:config_path_data.'/runscript'
 let g:runscript_runcomm = 'php -d html_errors=0'
 
 " ============================================================================
@@ -1388,11 +1393,11 @@ vmap <Leader>/ :<C-\>eKeySearchComm('v')<CR>
 " --------------------------------------------------
 function! KeySearchFile(...)
     let l:select_visual = exists('a:1') && a:1 ==# 'v' ? '\v'.substitute(CheckSlash('string', CheckVisual()), '\v\n\c', '\\n', 'g').'\C' : ''
-    let l:current_dir = fnameescape(substitute(getcwd(), '\v[\/\\]+\c', '/', 'g'))
-    let l:current_dir = empty(l:current_dir) ? '~' : l:current_dir
+    let l:curr_path = fnameescape(substitute(getcwd(), '\v[\/\\]+\c', '/', 'g'))
+    let l:curr_path = empty(l:curr_path) ? '~' : l:curr_path
     let l:set_pos = empty(l:select_visual) ? 10 : 8
     call setcmdpos(l:set_pos+strlen(l:select_visual))
-    return 'vimgrep /'.l:select_visual.'/gj '.l:current_dir.'/**/*'
+    return 'vimgrep /'.l:select_visual.'/gj '.l:curr_path.'/**/*'
 endfunction
 map  <Leader>f :<C-\>eKeySearchFile()<CR>
 vmap <Leader>f :<C-\>eKeySearchFile('v')<CR>
