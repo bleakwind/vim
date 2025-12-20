@@ -724,11 +724,11 @@ function! FileFormat(...)
             edit!
         endif
     elseif index(["php"], &filetype) >= 0
-        silent execute '!'.g:config_path_tool.'/php-cs-fixer/php-cs-fixer --config='.g:config_path_tool.'/php-cs-fixer/.php-cs-fixer.php fix %'
-        let l:res = v:shell_error
-        if l:res == 0
-            edit!
-        endif
+        " silent execute '!'.g:config_path_tool.'/php-cs-fixer/php-cs-fixer --config='.g:config_path_tool.'/php-cs-fixer/.php-cs-fixer.php fix %'
+        " let l:res = v:shell_error
+        " if l:res == 0
+        "     edit!
+        " endif
     else
         "...
     endif
