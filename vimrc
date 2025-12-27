@@ -1260,6 +1260,25 @@ augroup vim_cmd_syntax
     autocmd BufWritePost,FileChangedShellPost * :syntax sync fromstart
 augroup END
 
+" --------------------------------------------------
+" diff cursor
+" --------------------------------------------------
+augroup vim_cmd_diffcursor
+    let g:hldifcurlincbg = !empty(synIDattr(hlID('CursorLine'), 'bg', 'cterm')) ? synIDattr(hlID('CursorLine'), 'bg', 'cterm') : 'DarkGray'
+    let g:hldifcurlingbg = !empty(synIDattr(hlID('CursorLine'), 'bg', 'gui'))   ? synIDattr(hlID('CursorLine'), 'bg', 'gui')   : '#2C323C'
+    let g:hldifcurcolcbg = !empty(synIDattr(hlID('CursorColumn'), 'bg', 'cterm')) ? synIDattr(hlID('CursorColumn'), 'bg', 'cterm') : 'DarkGray'
+    let g:hldifcurcolgbg = !empty(synIDattr(hlID('CursorColumn'), 'bg', 'gui'))   ? synIDattr(hlID('CursorColumn'), 'bg', 'gui')   : '#2C323C'
+    autocmd!
+    autocmd OptionSet diff
+                \ if v:option_new |
+                \     execute 'hi CursorLine ctermbg=NONE guibg=NONE' |
+                \     execute 'hi CursorColumn ctermbg=NONE guibg=NONE' |
+                \ elseif !v:option_new |
+                \     execute 'hi CursorLine ctermbg='.g:hldifcurlincbg.' guibg='.g:hldifcurlingbg |
+                \     execute 'hi CursorColumn ctermbg='.g:hldifcurcolcbg.' guibg='.g:hldifcurcolgbg |
+                \ endif
+augroup END
+
 " ############################################################################
 " Plugin List Setting by Bleakwind
 " ############################################################################
