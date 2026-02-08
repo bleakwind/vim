@@ -161,6 +161,7 @@ endif
 " ============================================================================
 let g:skip_defaults_vim  = 1
 let g:skip_loading_mswin = 1
+let g:auto_lang_format   = ['c']
 
 let &compatible          = 0
 let &tags                = './.tags;,.tags'
@@ -718,17 +719,21 @@ function! FileFormat(...)
     " --------------------------------------------------
     let l:res = 0
     if index(["c", "cpp", "objc", "objcpp", "h", "hpp"], &filetype) >= 0
-        silent execute '!clang-format20 -style=file:'.g:config_path_tool.'/clang-format/.clang-format -i %'
-        let l:res = v:shell_error
-        if l:res == 0
-            edit!
+        if (exists('g:auto_lang_format') && index(g:auto_lang_format, 'c') != -1) || (exists('a:1') && a:1 ==# 'f')
+            silent execute '!clang-format20 -style=file:'.g:config_path_tool.'/clang-format/.clang-format -i %'
+            let l:res = v:shell_error
+            if l:res == 0
+                edit!
+            endif
         endif
     elseif index(["php"], &filetype) >= 0
-        " silent execute '!'.g:config_path_tool.'/php-cs-fixer/php-cs-fixer --config='.g:config_path_tool.'/php-cs-fixer/.php-cs-fixer.php fix %'
-        " let l:res = v:shell_error
-        " if l:res == 0
-        "     edit!
-        " endif
+        if (exists('g:auto_lang_format') && index(g:auto_lang_format, 'php') != -1) || (exists('a:1') && a:1 ==# 'f')
+            silent execute '!'.g:config_path_tool.'/php-cs-fixer/php-cs-fixer --config='.g:config_path_tool.'/php-cs-fixer/.php-cs-fixer.php fix %'
+            let l:res = v:shell_error
+            if l:res == 0
+                edit!
+            endif
+        endif
     else
         "...
     endif
