@@ -635,11 +635,7 @@ function! FileLocate(...)
     " --------------------------------------------------
     " process
     " --------------------------------------------------
-    if !filereadable(expand('%:p'))
-        echohl HlPmtErr | echo "This file is not save yet..." | echohl None
-    else
-        execute 'FilelistLocateFile'
-    endif
+    call filelist#LocateFile()
 endfunction
 command! -nargs=? FileLocate :call FileLocate(<q-args>)
 
@@ -746,100 +742,6 @@ function! FileFormat(...)
     return l:res
 endfunction
 command! -nargs=? FileFormat :call FileFormat(<q-args>)
-
-function! FileEncopen(...)
-    " --------------------------------------------------
-    " save env
-    " --------------------------------------------------
-    if exists('g:global_mainwin') && g:global_mainwin > 0
-        let l:winidn_original = bufwinid('%')
-        call win_gotoid(g:global_mainwin)
-    endif
-    " --------------------------------------------------
-    " process
-    " --------------------------------------------------
-    let l:title  = "Please select your encoding reopen this file..."
-    let l:mnu_list = ['Encoding list:']
-    " set encoding
-    let l:enc_list = split(&fileencodings, ',') | let l:enc_len = len(l:enc_list)
-    " set other
-    let l:oth_list = [] | let l:oth_len = {}
-    let l:i = 0
-    let l:name = 'add_bom' | let l:i += 1 | call add(l:oth_list, l:name) | let l:oth_len[l:name] = l:enc_len + l:i
-    let l:name = 'del_bom' | let l:i += 1 | call add(l:oth_list, l:name) | let l:oth_len[l:name] = l:enc_len + l:i
-    " menu encoding
-    for l:sc in range(len(l:enc_list))
-        call add(l:mnu_list, printf("%4s: enc - %s", l:sc + 1, l:enc_list[l:sc]))
-    endfor
-    " menu other
-    for l:sc in l:oth_list
-        call add(l:mnu_list, printf("%4s: ope > %s", l:oth_len[l:sc], l:sc))
-    endfor
-    " show menu
-    echohl HlPmtWar | echo l:title | echohl None
-    let l:input_list = inputlist(l:mnu_list)
-    if l:input_list > 0 && l:input_list <= l:enc_len
-        execute 'edit ++enc='.l:enc_list[l:input_list - 1].' '.fnameescape(substitute(expand("%:p"), '\v[\/\\]+\c', '/', 'g'))
-        execute 'setlocal noreadonly'
-        redraw
-        echohl HlPmtSuc | echo "Reopen with ".l:enc_list[l:input_list - 1]." successful..." | echohl None
-    elseif l:input_list ==# l:oth_len['add_bom']
-        execute 'setlocal bomb'
-        silent execute 'write'
-        redraw
-        echohl HlPmtSuc | echo "Add bomb successful..." | echohl None
-    elseif l:input_list ==# l:oth_len['del_bom']
-        execute 'setlocal nobomb'
-        silent execute 'write'
-        redraw
-        echohl HlPmtSuc | echo "Delete bomb successful..." | echohl None
-    endif
-    " --------------------------------------------------
-    " restore env
-    " --------------------------------------------------
-    if exists('g:global_mainwin') && g:global_mainwin > 0
-        call win_gotoid(l:winidn_original)
-    endif
-endfunction
-command! -nargs=? FileEncopen :call FileEncopen(<q-args>)
-
-function! FileEncsave(...)
-    " --------------------------------------------------
-    " save env
-    " --------------------------------------------------
-    if exists('g:global_mainwin') && g:global_mainwin > 0
-        let l:winidn_original = bufwinid('%')
-        call win_gotoid(g:global_mainwin)
-    endif
-    " --------------------------------------------------
-    " process
-    " --------------------------------------------------
-    let l:title  = "Please select your encoding save this file..."
-    let l:mnu_list = ['Encoding list:']
-    " set encoding
-    let l:enc_list = split(&fileencodings, ',') | let l:enc_len = len(l:enc_list)
-    " menu encoding
-    for l:sc in range(len(l:enc_list))
-        call add(l:mnu_list, printf("%4s: enc - %s", l:sc + 1, l:enc_list[l:sc]))
-    endfor
-    " show menu
-    echohl HlPmtWar | echo l:title | echohl None
-    let l:input_list = inputlist(l:mnu_list)
-    if l:input_list > 0 && l:input_list <= l:enc_len
-        execute 'write ++enc='.l:enc_list[l:input_list - 1].' '.fnameescape(substitute(expand("%:p"), '\v[\/\\]+\c', '/', 'g'))
-        execute 'set fileencoding='.l:enc_list[l:input_list - 1].''
-        silent execute 'write'
-        redraw
-        echohl HlPmtSuc | echo "Converted to ".l:enc_list[l:input_list - 1]." successful..." | echohl None
-    endif
-    " --------------------------------------------------
-    " restore env
-    " --------------------------------------------------
-    if exists('g:global_mainwin') && g:global_mainwin > 0
-        call win_gotoid(l:winidn_original)
-    endif
-endfunction
-command! -nargs=? FileEncsave :call FileEncsave(<q-args>)
 
 function! FileCopyright(...)
     " --------------------------------------------------
