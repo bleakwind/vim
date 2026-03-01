@@ -1244,7 +1244,7 @@ let g:specialcolor_matchtag_range   = 100
 let g:specialcolor_matchtag_updelay = 1000
 let g:specialcolor_csscolor_enabled = 1
 let g:specialcolor_csscolor_range   = 100
-let g:specialcolor_csscolor_updelay = 3000
+let g:specialcolor_csscolor_updelay = 1000
 
 " ============================================================================
 " Vim-Runscript
