@@ -579,66 +579,8 @@ function! CheckSlash(...)
 endfunction
 
 " ============================================================================
-" Function for Buffer
-" ============================================================================
-function! BufferNew(...)
-    " --------------------------------------------------
-    " save env
-    " --------------------------------------------------
-    if exists('g:global_mainwin') && g:global_mainwin > 0
-        let l:winidn_original = bufwinid('%')
-        call win_gotoid(g:global_mainwin)
-    endif
-    " --------------------------------------------------
-    " process
-    " --------------------------------------------------
-    call bufferlist#TabNew()
-    " --------------------------------------------------
-    " restore env
-    " --------------------------------------------------
-    if exists('g:global_mainwin') && g:global_mainwin > 0
-        call win_gotoid(l:winidn_original)
-    endif
-endfunction
-
-function! BufferClose(...)
-    " --------------------------------------------------
-    " save env
-    " --------------------------------------------------
-    if exists('g:global_mainwin') && g:global_mainwin > 0
-        let l:winidn_original = bufwinid('%')
-        call win_gotoid(g:global_mainwin)
-    endif
-    " --------------------------------------------------
-    " process
-    " --------------------------------------------------
-    call bufferlist#TabClose()
-    " --------------------------------------------------
-    " restore env
-    " --------------------------------------------------
-    if exists('g:global_mainwin') && g:global_mainwin > 0
-        call win_gotoid(l:winidn_original)
-    endif
-endfunction
-
-" ============================================================================
 " Function for File
 " ============================================================================
-function! FileLocate(...)
-    " --------------------------------------------------
-    " save env
-    " --------------------------------------------------
-    if exists('g:global_mainwin') && g:global_mainwin > 0
-        let l:winidn_original = bufwinid('%')
-        call win_gotoid(g:global_mainwin)
-    endif
-    " --------------------------------------------------
-    " process
-    " --------------------------------------------------
-    call filelist#LocateFile()
-endfunction
-command! -nargs=? FileLocate :call FileLocate(<q-args>)
-
 function! FileSave(...)
     " --------------------------------------------------
     " save env
@@ -672,7 +614,7 @@ function! FileSave(...)
         set fileformat=unix
     endif
     " update copyright
-    let l:res_copyright = FileCopyright()
+    let l:res_copyright = filelist#CopyRight()
     " handle tabsave
     let l:res_tabsave   = bufferlist#TabSave()
     " code format
@@ -742,145 +684,6 @@ function! FileFormat(...)
     return l:res
 endfunction
 command! -nargs=? FileFormat :call FileFormat(<q-args>)
-
-function! FileCopyright(...)
-    " --------------------------------------------------
-    " save env
-    " --------------------------------------------------
-    if exists('g:global_mainwin') && g:global_mainwin > 0
-        let l:winidn_original = bufwinid('%')
-        call win_gotoid(g:global_mainwin)
-    endif
-    " --------------------------------------------------
-    " process
-    " --------------------------------------------------
-    let l:nickname              = 'Bleakwind'
-    let l:fullname              = 'Rick Wu'
-    let l:mailaddr              = 'bleakwind@qq.com'
-    let l:datetime              = strftime("%Y-%m-%d %H:%M:%S")
-    let l:filename              = expand("%:t")
-    let l:dateyear              = strftime("%Y")
-    let l:cpywidth              = 78
-    let l:progtype              = ['<?php', '<%asp']
-
-    let l:if_update_datetime    = 0
-    let l:if_update_filename    = 0
-    let l:if_update_copydate    = 0
-    let l:if_copyright          = 0
-    let l:if_mine               = 0
-    let l:original_line         = line('.')
-    let l:original_col          = col('.')
-    let l:line_total            = line('$')
-    let l:line_copyright        = 0
-    let l:line_program          = 0
-    let l:prompt_item           = []
-    let l:res_prompt            = ''
-
-    if l:cpywidth < 75
-        let l:cpywidth = 78
-    endif
-
-    let l:progtype = map(l:progtype, 'CheckSlash(''string'', v:val)')
-
-    call cursor(1, 1)
-    let l:i = 1
-    while l:i < l:line_total
-        let l:content = getline(l:i)
-        if l:content =~ '\v^\s*(\/\*|\*|\+|\|).*$\c'
-            if l:content =~ '\v^.*\$Id\:.*'.CheckSlash('string', l:nickname).'.*\$\s*[^\s]+$\c'
-                let l:if_mine = 1
-            endif
-            let l:if_copyright = 1
-            let l:i = l:i+1
-        elseif l:content =~ '\v^\s*('.join(l:progtype, "|").').*$\c'
-            if l:line_program ==# 0
-                let l:line_program = l:i
-            endif
-            let l:i = l:i+1
-        elseif l:content =~ '\v^(\s*)$\c'
-            let l:i = l:i+1
-        else
-            break
-        endif
-    endwhile
-    if l:i > 1
-        let l:line_copyright = l:i-1
-    endif
-
-    if exists('a:1') && (a:1 ==# 'add' || a:1 ==# 1)
-        if l:if_copyright != 1
-            if l:line_program > 0
-                call cursor(l:line_program+1, 1)
-            else
-                call cursor(1, 1)
-            endif
-            let l:add_copyright = []
-            call add(l:add_copyright, "/* vim: set expandtab tabstop=4 softtabstop=4 shiftwidth=4: */")
-            call add(l:add_copyright, "/**")
-            call add(l:add_copyright, " * +-------------------------------------------------------------------------".                                                                    "+")
-            call add(l:add_copyright, " * | $Id: ".l:filename." ".l:datetime." ".l:nickname.                " Exp $ ".repeat(" ", l:cpywidth-strlen(l:filename.l:datetime.l:nickname)-20)."|")
-            call add(l:add_copyright, " * +-------------------------------------------------------------------------".                                                                    "+")
-            call add(l:add_copyright, " * | Copyright (c) 2008-".l:dateyear." ".l:nickname."(".l:fullname.      "). ".repeat(" ", l:cpywidth-strlen(l:dateyear.l:nickname.l:fullname)-30)."|")
-            call add(l:add_copyright, " * +-------------------------------------------------------------------------".                                                                    "+")
-            call add(l:add_copyright, " * | This source file is ".l:filename.                                    ". ".repeat(" ", l:cpywidth-strlen(l:filename)-28).                      "|")
-            call add(l:add_copyright, " * | This source file is release under private license. If you did not       ".repeat(" ", l:cpywidth-78).                                         "|")
-            call add(l:add_copyright, " * | receive an authorize of the our license and are unable to obtain it,    ".repeat(" ", l:cpywidth-78).                                         "|")
-            call add(l:add_copyright, " * | please send an email to ".l:mailaddr.           " and get an authorize. ".repeat(" ", l:cpywidth-strlen(l:mailaddr)-53).                      "|")
-            call add(l:add_copyright, " * +-------------------------------------------------------------------------".                                                                    "+")
-            call add(l:add_copyright, " * | Author: ".l:nickname."(".l:fullname.")"." <".l:mailaddr.             "> ".repeat(" ", l:cpywidth-strlen(l:nickname.l:fullname.l:mailaddr)-20)."|")
-            call add(l:add_copyright, " * +-------------------------------------------------------------------------".                                                                    "+")
-            call add(l:add_copyright, " */")
-            call add(l:add_copyright, "")
-            call append(l:line_program, l:add_copyright)
-            echohl HlPmtSuc | echo "Add Copyright successful..." | echohl None
-        else
-            echohl HlPmtErr | echo "Already have copyright..." | echohl None
-        endif
-    else
-        if l:if_copyright ==# 1 && l:if_mine ==# 1
-            call cursor(1, 1)
-            let l:i = 1
-            while l:i < l:line_copyright
-                let l:content_new = ''
-                let l:content = getline(l:i)
-                if l:content =~ '\v^\s*\*\s*\|\s*\$Id\:.*\$\s*\|$\c'
-                    let l:content_new = substitute(l:content, '\v^\s*\*\s*\|\s*\$Id\:.*\$\s*\|$\c', '\=" * | $Id: ".l:filename." ".l:datetime." ".l:nickname." Exp $ ".repeat(" ", l:cpywidth-strlen(l:filename.l:datetime.l:nickname)-20)."|"', 'g')
-                    "silent! execute 'undojoin'
-                    call setline(l:i, l:content_new)
-                    let l:if_update_filename = 1
-                    call add(l:prompt_item, 'Filename')
-                    let l:if_update_datetime = 1
-                    call add(l:prompt_item, 'Datetime')
-                elseif l:content =~ '\v^\s*\*\s*\|\s*Copyright\s*\(c\)\s*(\d{4})\-\d{4}\s*[^\|]+\s*\|$\c'
-                    let l:content_new = substitute(l:content, '\v^\s*\*\s*\|\s*Copyright\s*\(c\)\s*(\d{4})\-\d{4}\s*[^\|]+\s*\|$\c', '\=" * | Copyright (c) ".submatch(1)."-".l:dateyear." ".l:nickname."(".l:fullname."). ".repeat(" ", l:cpywidth-strlen(l:dateyear.l:nickname.l:fullname)-30)."|"', 'g')
-                    "silent! execute 'undojoin'
-                    call setline(l:i, l:content_new)
-                    let l:if_update_copydate = 1
-                    call add(l:prompt_item, 'Copydate')
-                elseif l:content =~ '\v^\s*\*\s*\|\s*This source file is\s*[^\|\ ]+\s*\|$\c'
-                    let l:content_new = substitute(l:content, '\v^\s*\*\s*\|\s*This source file is\s*[^\|\ ]+\s*\|$\c', '\=" * | This source file is ".l:filename.". ".repeat(" ", l:cpywidth-strlen(l:filename)-28)."|"', 'g')
-                    "silent! execute 'undojoin'
-                    call setline(l:i, l:content_new)
-                    let l:if_update_copydate = 1
-                    call add(l:prompt_item, 'Copydate')
-                endif
-                let l:i = l:i+1
-            endwhile
-            if l:if_update_datetime ==# 1 || l:if_update_filename ==# 1 || l:if_update_copydate ==# 1
-                let l:res_prompt = "Successful: Update ".join(l:prompt_item, ",")." successful..."
-            endif
-        endif
-    endif
-    call cursor(l:original_line, l:original_col)
-    " --------------------------------------------------
-    " restore env
-    " --------------------------------------------------
-    if exists('g:global_mainwin') && g:global_mainwin > 0
-        call win_gotoid(l:winidn_original)
-    endif
-    return l:res_prompt
-endfunction
-command! -nargs=? FileCopyright :call FileCopyright(<q-args>)
 
 " ============================================================================
 " Function for Make
@@ -1226,6 +1029,31 @@ let g:filelist_mainpath  = g:config_path_tree
 let g:filelist_showhide  = 0
 let g:filelist_datapath  = g:config_path_data.'/filelist'
 
+let g:filelist_cprt          = {}
+let g:filelist_cprt.nickname = 'Bleakwind'
+let g:filelist_cprt.fullname = 'Rick Wu'
+let g:filelist_cprt.mailaddr = 'bleakwind@qq.com'
+let g:filelist_cprt.progtype = ['<?php', '<%asp']
+let g:filelist_cprt.cpywidth = 78
+let g:filelist_cprt.tplcrcon = [
+            \ '/* vim: set expandtab tabstop=4 softtabstop=4 shiftwidth=4: */',
+            \ '/**',
+            \ ' * +-------------------------------------------------------------------------+',
+            \ ' * | $Id: [FILENAME] [DATETIME] [NICKNAME] Exp $ [                         ] |',
+            \ ' * +-------------------------------------------------------------------------+',
+            \ ' * | Copyright (c) 2008-[DATEYEAR] [NICKNAME]([FULLNAME]). [               ] |',
+            \ ' * +-------------------------------------------------------------------------+',
+            \ ' * | This source file is [FILENAME]. [                                     ] |',
+            \ ' * | This source file is released under private license. If you did not [  ] |',
+            \ ' * | receive an authorize of the our license and are unable to obtain it, [] |',
+            \ ' * | please send an email to [MAILADDR] and get an authorize. [            ] |',
+            \ ' * +-------------------------------------------------------------------------+',
+            \ ' * | Author: [NICKNAME]([FULLNAME]) <[MAILADDR]> [                         ] |',
+            \ ' * +-------------------------------------------------------------------------+',
+            \ ' */',
+            \ ''
+            \ ]
+
 " ============================================================================
 " Vim-Viewmap
 " ============================================================================
@@ -1361,13 +1189,13 @@ vmap <Leader>r :<C-\>erunscript#ReadyComm()<CR>
 " --------------------------------------------------
 " <Leader>n
 " --------------------------------------------------
-map  <Leader>n :call BufferNew()<CR>
+map  <Leader>n :call bufferlist#TabNew()<CR>
 vmap <Leader>n <Esc><Leader>n
 
 " --------------------------------------------------
 " <Leader>c
 " --------------------------------------------------
-map  <Leader>c :call BufferClose()<CR>
+map  <Leader>c :call bufferlist#TabClose()<CR>
 vmap <Leader>c <Esc><Leader>c
 
 " --------------------------------------------------
@@ -1393,7 +1221,7 @@ vmap <Leader>] <Esc><Leader>]
 " --------------------------------------------------
 map <F2>    :call MakePrev()<CR>
 map <F3>    :call MakeNext()<CR>
-map <F4>    :call FileLocate()<CR>
+map <F4>    :call filelist#LocateFile()<CR>
 
 map <F5>    :call neatview#StructTree()<CR>
 map <F6>    :call neatview#StructOutput()<CR>
