@@ -707,6 +707,7 @@ function! MakePrev(...)
         call win_gotoid(l:winidn_original)
     endif
 endfunction
+command! -nargs=? MakePrev :call MakePrev(<q-args>)
 
 function! MakeNext(...)
     " --------------------------------------------------
@@ -727,6 +728,7 @@ function! MakeNext(...)
         call win_gotoid(l:winidn_original)
     endif
 endfunction
+command! -nargs=? MakeNext :call MakeNext(<q-args>)
 
 function! MakeDohi(...)
     " --------------------------------------------------
@@ -751,6 +753,7 @@ function! MakeDohi(...)
         call win_gotoid(l:winidn_original)
     endif
 endfunction
+command! -nargs=? MakeDohi :call MakeDohi(<q-args>)
 
 function! MakeNohi(...)
     " --------------------------------------------------
@@ -776,6 +779,7 @@ function! MakeNohi(...)
         call win_gotoid(l:winidn_original)
     endif
 endfunction
+command! -nargs=? MakeNohi :call MakeNohi(<q-args>)
 
 function! MakeBuild(...)
     " --------------------------------------------------
@@ -824,6 +828,7 @@ function! MakeBuild(...)
         call win_gotoid(l:winidn_original)
     endif
 endfunction
+command! -nargs=? MakeBuild :call MakeBuild(<q-args>)
 
 function! MakeDebug(...)
     " --------------------------------------------------
@@ -858,6 +863,7 @@ function! MakeDebug(...)
         call win_gotoid(l:winidn_original)
     endif
 endfunction
+command! -nargs=? MakeDebug :call MakeDebug(<q-args>)
 
 function! MakeBrowser(...)
     " --------------------------------------------------
@@ -898,11 +904,12 @@ function! MakeBrowser(...)
         call win_gotoid(l:winidn_original)
     endif
 endfunction
+command! -nargs=? MakeBrowser :call MakeBrowser(<q-args>)
 
 " ============================================================================
-" Function for _Debug
+" Function for Debug
 " ============================================================================
-function! _Debug(...)
+function! DebugEnv(...)
     echohl HlPmtSuc | echo "========= Start  =========" | echohl None
     echo "> bufnr('%')    : ".bufnr('%')
     echo "> bufname('%')  : ".bufname('%')
@@ -941,6 +948,7 @@ function! _Debug(...)
     endfor
     echohl HlPmtSuc | echo "========= Finish =========" | echohl None
 endfunction
+command! -nargs=? DebugEnv :call DebugEnv(<q-args>)
 
 " ============================================================================
 " Command
@@ -1227,7 +1235,7 @@ map <F5>    :call neatview#StructTree()<CR>
 map <F6>    :call neatview#StructOutput()<CR>
 map <F7>    :call neatview#StructInfo()<CR>
 map <F8>    :call neatview#StructClear()<CR>
-map <C-F8>  :call _Debug()<CR>
+map <C-F8>  :call DebugEnv()<CR>
 
 map <F9>    :call MakeDebug()<CR>
 map <F12>   :call MakeBrowser('chrome')<CR>
