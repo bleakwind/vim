@@ -830,7 +830,7 @@ function! MakeBuild(...)
 endfunction
 command! -nargs=? MakeBuild :call MakeBuild(<q-args>)
 
-function! MakeDebug(...)
+function! MakeLaunch(...)
     " --------------------------------------------------
     " save env
     " --------------------------------------------------
@@ -863,7 +863,7 @@ function! MakeDebug(...)
         call win_gotoid(l:winidn_original)
     endif
 endfunction
-command! -nargs=? MakeDebug :call MakeDebug(<q-args>)
+command! -nargs=? MakeLaunch :call MakeLaunch(<q-args>)
 
 function! MakeBrowser(...)
     " --------------------------------------------------
@@ -1237,7 +1237,7 @@ map <F7>    :call neatview#StructInfo()<CR>
 map <F8>    :call neatview#StructClear()<CR>
 map <C-F8>  :call DebugEnv()<CR>
 
-map <F9>    :call MakeDebug()<CR>
+map <F9>    :call MakeLaunch()<CR>
 map <F12>   :call MakeBrowser('chrome')<CR>
 map <C-F12> :call MakeBrowser('firefox')<CR>
 
