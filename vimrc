@@ -1099,6 +1099,11 @@ let g:autoplete_usekeyword = 1
 let g:autoplete_usebuffer  = 1
 let g:autoplete_usefile    = 1
 
+let g:autoplete_insenabled = 1
+let g:autoplete_insdelay   = 500
+let g:autoplete_insminchar = 2
+let g:autoplete_insftype   = ['*']
+
 " ============================================================================
 " Vim-Marktext
 " ============================================================================
