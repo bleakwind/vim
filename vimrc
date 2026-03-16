@@ -1098,6 +1098,7 @@ let g:autoplete_usedict    = 1
 let g:autoplete_usekeyword = 1
 let g:autoplete_usebuffer  = 1
 let g:autoplete_usefile    = 1
+let g:autoplete_custdict    = '/pub/_program/vim/_dict'
 
 let g:autoplete_insenabled = 1
 let g:autoplete_insdelay   = 500
