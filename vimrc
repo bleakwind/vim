@@ -123,7 +123,7 @@ if has('unix')
     let g:config_path_work                  = '/pub/project'
     let g:config_path_plug                  = '/pub/_program/vim/vimfiles'
     let g:config_path_data                  = '/pub/_program/vim/data'
-    let g:config_path_tool                  = '/pub/_program/vim/_tool'
+    let g:config_path_tool                  = '/pub/_program/vim/_tool/vim'
     let g:config_debug_url                  = 'http://127.0.0.1:88'
     let g:config_debug_browser1             = 'chrome'
     let g:config_debug_browser2             = 'firefox'
@@ -136,7 +136,7 @@ elseif has('mac')
     let g:config_path_work                  = '/pub/project'
     let g:config_path_plug                  = '/pub/_program/vim/vimfiles'
     let g:config_path_data                  = '/pub/_program/vim/data'
-    let g:config_path_tool                  = '/pub/_program/vim/_tool'
+    let g:config_path_tool                  = '/pub/_program/vim/_tool/vim'
     let g:config_debug_url                  = 'http://127.0.0.1:88'
     let g:config_debug_browser1             = 'chrome'
     let g:config_debug_browser2             = 'firefox'
@@ -149,7 +149,7 @@ elseif has('win64') || has('win32')
     let g:config_path_work                  = 'E:/project'
     let g:config_path_plug                  = 'D:/Program Files/vim/vimfiles'
     let g:config_path_data                  = 'D:/Program Files/vim/data'
-    let g:config_path_tool                  = 'D:/Program Files/vim/_tool'
+    let g:config_path_tool                  = 'D:/Program Files/vim/_tool/vim'
     let g:config_debug_url                  = 'http://127.0.0.1:88'
     let g:config_debug_browser1             = 'start '.shellescape('C:/Program Files (x86)/Google/Chrome/Application/chrome.exe')
     let g:config_debug_browser2             = 'start '.shellescape('D:/Program Files/Firefox/firefox.exe')
@@ -1105,7 +1105,7 @@ let g:autoplete_insdelay   = 500
 let g:autoplete_insminchar = 2
 let g:autoplete_insftype   = ['*']
 
-let g:autoplete_cusdict    = '/pub/_program/vim/_dict'
+let g:autoplete_cusdict    = '/pub/_program/vim/_tool/autoplete/dict'
 
 " ============================================================================
 " Vim-Marktext
