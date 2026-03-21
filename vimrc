@@ -1093,7 +1093,6 @@ let g:runscript_runcomm = 'php -d html_errors=0'
 " Vim-Autoplete
 " ============================================================================
 let g:autoplete_enabled    = 1
-let g:autoplete_trigtype   = 'ins'
 
 let g:autoplete_useomni    = 1
 let g:autoplete_usedefdict = 1
@@ -1102,6 +1101,7 @@ let g:autoplete_usekeyword = 1
 let g:autoplete_usebuffer  = 1
 let g:autoplete_usefile    = 1
 
+let g:autoplete_insstate   = 1
 let g:autoplete_insdelay   = 500
 let g:autoplete_insminchar = 2
 let g:autoplete_insftype   = ['*']
