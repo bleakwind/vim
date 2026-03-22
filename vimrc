@@ -1106,6 +1106,9 @@ let g:autoplete_insdelay   = 500
 let g:autoplete_insminchar = 2
 let g:autoplete_insftype   = ['*']
 
+let g:autoplete_maxabbr    = 30
+let g:autoplete_maxmenu    = 80
+let g:autoplete_maxaddi    = 30
 let g:autoplete_cusdict    = '/pub/_program/vim/_tool/autoplete/dict'
 
 " ============================================================================
