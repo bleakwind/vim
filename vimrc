@@ -1094,9 +1094,9 @@ let g:runscript_runcomm = 'php -d html_errors=0'
 " ============================================================================
 let g:autoplete_enabled    = 1
 
-let g:autoplete_useomni    = 1
 let g:autoplete_usedefdict = 1
 let g:autoplete_usecusdict = 1
+let g:autoplete_useomni    = 1
 let g:autoplete_usekeyword = 1
 let g:autoplete_usebuffer  = 1
 let g:autoplete_usefile    = 1
