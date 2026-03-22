@@ -123,7 +123,7 @@ if has('unix')
     let g:config_path_work                  = '/pub/project'
     let g:config_path_plug                  = '/pub/_program/vim/vimfiles'
     let g:config_path_data                  = '/pub/_program/vim/data'
-    let g:config_path_tool                  = '/pub/_program/vim/_tool/vim'
+    let g:config_path_tool                  = '/pub/_program/vim/_tool'
     let g:config_debug_url                  = 'http://127.0.0.1:88'
     let g:config_debug_browser1             = 'chrome'
     let g:config_debug_browser2             = 'firefox'
@@ -136,7 +136,7 @@ elseif has('mac')
     let g:config_path_work                  = '/pub/project'
     let g:config_path_plug                  = '/pub/_program/vim/vimfiles'
     let g:config_path_data                  = '/pub/_program/vim/data'
-    let g:config_path_tool                  = '/pub/_program/vim/_tool/vim'
+    let g:config_path_tool                  = '/pub/_program/vim/_tool'
     let g:config_debug_url                  = 'http://127.0.0.1:88'
     let g:config_debug_browser1             = 'chrome'
     let g:config_debug_browser2             = 'firefox'
@@ -149,7 +149,7 @@ elseif has('win64') || has('win32')
     let g:config_path_work                  = 'E:/project'
     let g:config_path_plug                  = 'D:/Program Files/vim/vimfiles'
     let g:config_path_data                  = 'D:/Program Files/vim/data'
-    let g:config_path_tool                  = 'D:/Program Files/vim/_tool/vim'
+    let g:config_path_tool                  = 'D:/Program Files/vim/_tool'
     let g:config_debug_url                  = 'http://127.0.0.1:88'
     let g:config_debug_browser1             = 'start '.shellescape('C:/Program Files (x86)/Google/Chrome/Application/chrome.exe')
     let g:config_debug_browser2             = 'start '.shellescape('D:/Program Files/Firefox/firefox.exe')
@@ -658,7 +658,7 @@ function! FileFormat(...)
     let l:res = 0
     if index(["c", "cpp", "objc", "objcpp", "h", "hpp"], &filetype) >= 0
         if (exists('g:auto_lang_format') && index(g:auto_lang_format, 'c') != -1) || (exists('a:1') && a:1 ==# 'f')
-            silent execute '!clang-format20 -style=file:'.g:config_path_tool.'/clang-format/.clang-format -i %'
+            silent execute '!clang-format20 -style=file:'.g:config_path_tool.'/vim/clang-format/.clang-format -i %'
             let l:res = v:shell_error
             if l:res == 0
                 edit!
@@ -666,7 +666,7 @@ function! FileFormat(...)
         endif
     elseif index(["php"], &filetype) >= 0
         if (exists('g:auto_lang_format') && index(g:auto_lang_format, 'php') != -1) || (exists('a:1') && a:1 ==# 'f')
-            silent execute '!'.g:config_path_tool.'/php-cs-fixer/php-cs-fixer --config='.g:config_path_tool.'/php-cs-fixer/.php-cs-fixer.php fix %'
+            silent execute '!'.g:config_path_tool.'/vim/php-cs-fixer/php-cs-fixer --config='.g:config_path_tool.'/vim/php-cs-fixer/.php-cs-fixer.php fix %'
             let l:res = v:shell_error
             if l:res == 0
                 edit!
@@ -1086,7 +1086,8 @@ let g:specialcolor_csscolor_updelay = 1000
 " Vim-Runscript
 " ============================================================================
 let g:runscript_enabled = 1
-let g:runscript_setpath = g:config_path_data.'/runscript'
+let g:runscript_inpscpt = g:config_path_tool.'/runscript/script'
+let g:runscript_inppath = g:config_path_data.'/runscript'
 let g:runscript_runcomm = 'php -d html_errors=0'
 
 " ============================================================================
@@ -1109,7 +1110,7 @@ let g:autoplete_insftype   = ['*']
 let g:autoplete_maxabbr    = 30
 let g:autoplete_maxmenu    = 80
 let g:autoplete_maxaddi    = 30
-let g:autoplete_cusdict    = '/pub/_program/vim/_tool/autoplete/dict'
+let g:autoplete_cusdict    = g:config_path_tool.'/autoplete/dict'
 
 " ============================================================================
 " Vim-Marktext
