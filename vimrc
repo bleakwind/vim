@@ -109,109 +109,86 @@ endif
 " ============================================================================
 
 " ############################################################################
-" Settings by Bleakwind
+" Setting list
 " ############################################################################
 " ============================================================================
 " Global Config
 " ============================================================================
-let g:config_plugin_on                      = 'on'
-if has('unix')
-    let g:config_set_encode                 = 'utf-8'
-    let g:config_set_enclist                = 'utf-8,gb2312,gbk,gb18030,latin1,Unicode,utf-16'
-    let g:config_set_font                   = 'DejaVu Sans Mono 9'
-    let g:config_path_tree                  = '/pub/project'
-    let g:config_path_work                  = '/pub/project'
-    let g:config_path_plug                  = '/pub/_program/vim/vimfiles'
-    let g:config_path_data                  = '/pub/_program/vim/data'
-    let g:config_path_tool                  = '/pub/_program/vim/_tool'
-    let g:config_debug_url                  = 'http://127.0.0.1:88'
-    let g:config_debug_browser1             = 'chrome'
-    let g:config_debug_browser2             = 'firefox'
-    let g:config_markdown_script            = 'http://127.0.0.1:88/project/markdown/markdown/markdown.php'
-elseif has('mac')
-    let g:config_set_encode                 = 'utf-8'
-    let g:config_set_enclist                = 'utf-8,gb2312,gbk,gb18030,latin1,Unicode,utf-16'
-    let g:config_set_font                   = 'DejaVu Sans Mono:h9'
-    let g:config_path_tree                  = '/pub/project'
-    let g:config_path_work                  = '/pub/project'
-    let g:config_path_plug                  = '/pub/_program/vim/vimfiles'
-    let g:config_path_data                  = '/pub/_program/vim/data'
-    let g:config_path_tool                  = '/pub/_program/vim/_tool'
-    let g:config_debug_url                  = 'http://127.0.0.1:88'
-    let g:config_debug_browser1             = 'chrome'
-    let g:config_debug_browser2             = 'firefox'
-    let g:config_markdown_script            = 'http://127.0.0.1:88/project/markdown/markdown/markdown.php'
+" Set config diff
+let g:config_set_encode                 = 'utf-8'
+let g:config_set_enclist                = 'utf-8,gb2312,gbk,gb18030,latin1,Unicode,utf-16'
+let g:config_set_font                   = 'DejaVu Sans Mono 9'
+let g:config_path_work                  = '/pub/project'
+let g:config_path_data                  = '/pub/_program/vim/data'
+let g:config_path_tool                  = '/pub/_program/vim/_tool'
+let g:config_path_plug                  = '/pub/_program/vim/vimfiles'
+let g:config_debug_url                  = 'http://127.0.0.1:88'
+let g:config_debug_browser1             = 'chrome'
+let g:config_debug_browser2             = 'firefox'
+let g:config_markdown_script            = 'http://127.0.0.1:88/project/markdown/markdown/markdown.php'
+if has('mac')
+    let g:config_set_encode             = 'utf-8'
+    let g:config_set_enclist            = 'utf-8,gb2312,gbk,gb18030,latin1,Unicode,utf-16'
+    let g:config_set_font               = 'DejaVu Sans Mono:h9'
+    let g:config_path_work              = '/pub/project'
+    let g:config_path_data              = '/pub/_program/vim/data'
+    let g:config_path_tool              = '/pub/_program/vim/_tool'
+    let g:config_path_plug              = '/pub/_program/vim/vimfiles'
+    let g:config_debug_url              = 'http://127.0.0.1:88'
+    let g:config_debug_browser1         = 'chrome'
+    let g:config_debug_browser2         = 'firefox'
+    let g:config_markdown_script        = 'http://127.0.0.1:88/project/markdown/markdown/markdown.php'
 elseif has('win64') || has('win32')
-    let g:config_set_encode                 = 'cp936'
-    let g:config_set_enclist                = 'utf-8,gb2312,gbk,gb18030,latin1,Unicode,utf-16'
-    let g:config_set_font                   = 'DejaVu Sans Mono:h9'
-    let g:config_path_tree                  = 'E:/project'
-    let g:config_path_work                  = 'E:/project'
-    let g:config_path_plug                  = 'D:/Program Files/vim/vimfiles'
-    let g:config_path_data                  = 'D:/Program Files/vim/data'
-    let g:config_path_tool                  = 'D:/Program Files/vim/_tool'
-    let g:config_debug_url                  = 'http://127.0.0.1:88'
-    let g:config_debug_browser1             = 'start '.shellescape('C:/Program Files (x86)/Google/Chrome/Application/chrome.exe')
-    let g:config_debug_browser2             = 'start '.shellescape('D:/Program Files/Firefox/firefox.exe')
-    let g:config_markdown_script            = 'http://127.0.0.1:88/project/markdown/markdown/markdown.php'
+    let g:config_set_encode             = 'cp936'
+    let g:config_set_enclist            = 'utf-8,gb2312,gbk,gb18030,latin1,Unicode,utf-16'
+    let g:config_set_font               = 'DejaVu Sans Mono:h9'
+    let g:config_path_work              = 'E:/project'
+    let g:config_path_data              = 'D:/Program Files/vim/data'
+    let g:config_path_tool              = 'D:/Program Files/vim/_tool'
+    let g:config_path_plug              = 'D:/Program Files/vim/vimfiles'
+    let g:config_debug_url              = 'http://127.0.0.1:88'
+    let g:config_debug_browser1         = 'start '.shellescape('C:/Program Files (x86)/Google/Chrome/Application/chrome.exe')
+    let g:config_debug_browser2         = 'start '.shellescape('D:/Program Files/Firefox/firefox.exe')
+    let g:config_markdown_script        = 'http://127.0.0.1:88/project/markdown/markdown/markdown.php'
 endif
 
+" Set config list
+let g:auto_lang_format                  = ['c']
+
+" Set global variable
+let g:skip_defaults_vim     = 1
+let g:skip_loading_mswin    = 1
+
+" set env config
+if !has("gui_running") || !has("clientserver")
+    let g:config_path_data  = g:config_path_data.'/vim_' . getpid()
+else
+    let g:config_path_data  = g:config_path_data.'/gvim'
+endif
 " ============================================================================
 " Global Setting
 " ============================================================================
-let g:skip_defaults_vim  = 1
-let g:skip_loading_mswin = 1
-let g:auto_lang_format   = ['c']
+" Set Config Option
+let &compatible     = 0
+let &tags           = './.tags;,.tags'
+let &iskeyword      = join(uniq(sort(split(&iskeyword . ',_,-,$,@,%,#', ','))), ',')
+let &wildignore     = join(uniq(sort(split(&wildignore . ',*/.svn/**,*/.git/**', ','))), ',')
 
-let &compatible          = 0
-let &tags                = './.tags;,.tags'
-let &wildignore         .= '*/.svn/**,*/.git/**'
+" Set Dir Option
+let &backupdir      = g:config_path_data.'/vim/backupdir/'
+let &viewdir        = g:config_path_data.'/vim/viewdir/'
+let &undodir        = g:config_path_data.'/vim/undodir/'
+let &directory      = g:config_path_data.'/vim/swapdir/'
 
-let &encoding            = g:config_set_encode
-let &termencoding        = g:config_set_encode
-let &fileencoding        = g:config_set_encode
-let &fileencodings       = g:config_set_enclist
-let &guifont             = g:config_set_font
-let &guifontwide         = ''
-
-let &backupdir           = g:config_path_data.'/vim/backupdir/'
-let &viewdir             = g:config_path_data.'/vim/viewdir/'
-let &undodir             = g:config_path_data.'/vim/undodir/'
-let &directory           = g:config_path_data.'/vim/swapdir/'
-
-" ============================================================================
-" Plugin List
-" ============================================================================
-" ----------------------------------------------------------------------------
-filetype off
-let &runtimepath .= ','.g:config_path_plug.'/bundle/Vundle.vim'
-call vundle#begin(g:config_path_plug.'/bundle')
-" ----------------------------------------------------------------------------
-Plugin 'VundleVim/Vundle.vim'
-" ----------------------------------------------------------------------------
-Plugin 'bleakwind/vim-colorful'
-Plugin 'bleakwind/vim-neatview'
-Plugin 'bleakwind/vim-bufferlist'
-Plugin 'bleakwind/vim-filelist'
-Plugin 'bleakwind/vim-viewmap'
-Plugin 'bleakwind/vim-specialcolor'
-Plugin 'bleakwind/vim-runscript'
-Plugin 'bleakwind/vim-autoplete'
-Plugin 'bleakwind/vim-marktext'
-" ----------------------------------------------------------------------------
-call vundle#end()
-" ----------------------------------------------------------------------------
-
-" ============================================================================
-" System Setting
-" ============================================================================
-" Set Filetype
-filetype on
-filetype plugin on
-filetype indent on
+" Set Encoding Option
+let &encoding       = g:config_set_encode
+let &termencoding   = g:config_set_encode
+let &fileencoding   = g:config_set_encode
+let &fileencodings  = g:config_set_enclist
+let &guifont        = g:config_set_font
+let &guifontwide    = ''
 
 " Set Gui Option
-"set guioptions-=m
 set guioptions-=T
 set guioptions-=l
 set guioptions-=L
@@ -270,7 +247,6 @@ set softtabstop=4
 set shiftwidth=4
 set synmaxcol=1000
 set redrawtime=6000
-set iskeyword+=_,$,@,%,#,-
 set selection=inclusive
 
 " Set Undo
@@ -293,6 +269,7 @@ set autoread
 set noconfirm
 set hlsearch
 set noshellslash
+set termguicolors
 set equalalways
 set helpheight=20
 set mouse=a
@@ -308,12 +285,100 @@ set completeopt=menuone,noinsert,noselect
 set matchpairs=(:),{:},[:]
 set fillchars=stl:\ ,stlnc:\ ,vert:\ ,fold:-,diff:-
 
-" Set Term
-"if !empty($TMUX)
-    set termguicolors
-"endif
+" ============================================================================
+" System Setting
+" ============================================================================
+" Clean Autocmd
+autocmd!
 
+" Set global
+let g:global_mainwin            = 0
+let g:global_default_wildignore = &wildignore
+let g:global_default_directory  = getcwd()
+
+" Set config
+let g:config_vimrc              = substitute(expand('<sfile>:p'), '\v[\/\\]+\c', '/', 'g')
+let g:config_path_work          = substitute(g:config_path_work, '\v[\/\\]+\c', '/', 'g')
+let g:config_path_data          = substitute(g:config_path_data, '\v[\/\\]+\c', '/', 'g')
+let g:config_path_tool          = substitute(g:config_path_tool, '\v[\/\\]+\c', '/', 'g')
+let g:config_path_plug          = substitute(g:config_path_plug, '\v[\/\\]+\c', '/', 'g')
+let g:config_debug_browser1     = substitute(g:config_debug_browser1, '\v[\/\\]+\c', '/', 'g')
+let g:config_debug_browser2     = substitute(g:config_debug_browser2, '\v[\/\\]+\c', '/', 'g')
+
+" Single Instance
+if has("gui_running") && has("clientserver")
+    let s:sl_list = split(serverlist(), "\n")
+    if len(s:sl_list) > 1 || (len(s:sl_list) == 1 && s:sl_list[0] != v:servername)
+        let s:sl_target = s:sl_list[0]
+        if len(s:sl_list) > 1 && s:sl_list[0] == v:servername
+            let s:sl_target = s:sl_list[1]
+        endif
+        for s:sl_v in argv()
+            call remote_send(s:sl_target, ":e " . s:sl_v . "\<CR>")
+        endfor
+        qall!
+    endif
+endif
+
+" Full Screen
+if has("gui_running")
+    if has('unix')
+        set lines=999
+        set columns=9999
+    elseif has('mac')
+        set lines=999
+        set columns=9999
+    elseif has('win64') || has('win32')
+        autocmd GUIEnter * simalt ~x
+    endif
+endif
+
+" ############################################################################
+" Plugin List
+" ############################################################################
+" ============================================================================
+" plugin begin
+" ============================================================================
+filetype off
+let &runtimepath .= ','.g:config_path_plug.'/bundle/Vundle.vim'
+call vundle#begin(g:config_path_plug.'/bundle')
+
+" ============================================================================
+" plugin base
+" ============================================================================
+Plugin 'VundleVim/Vundle.vim'
+
+" ============================================================================
+" plugin list
+" ============================================================================
+Plugin 'bleakwind/vim-colorful'
+Plugin 'bleakwind/vim-neatview'
+Plugin 'bleakwind/vim-bufferlist'
+Plugin 'bleakwind/vim-filelist'
+Plugin 'bleakwind/vim-viewmap'
+Plugin 'bleakwind/vim-specialcolor'
+Plugin 'bleakwind/vim-runscript'
+Plugin 'bleakwind/vim-autoplete'
+Plugin 'bleakwind/vim-marktext'
+
+" ============================================================================
+" plugin end
+" ============================================================================
+call vundle#end()
+
+" ############################################################################
+" Initialize System
+" ############################################################################
+" ============================================================================
+" Set Filetype
+" ============================================================================
+filetype on
+filetype plugin on
+filetype indent on
+
+" ============================================================================
 " Set Keyboard
+" ============================================================================
 map     <C-Insert>      "+y:let @*=@+<CR>
 map     <S-Insert>      "+p
 imap    <S-Insert>      <Esc><S-Insert>a
@@ -333,43 +398,9 @@ imap    <4-MiddleMouse> <4-LeftMouse>
 vmap    <4-MiddleMouse> <4-LeftMouse>
 
 " ============================================================================
-" Initialize
+" Syntax Color
 " ============================================================================
-" Clean Autocmd
-autocmd!
-
-" Full Screen
-if has("gui_running")
-    if has('unix')
-        set lines=999
-        set columns=9999
-    elseif has('mac')
-        set lines=999
-        set columns=9999
-    elseif has('win64') || has('win32')
-        autocmd GUIEnter * simalt ~x
-    endif
-endif
-
-" Set global
-let g:global_mainwin            = 0
-let g:global_default_wildignore = &wildignore
-let g:global_default_directory  = getcwd()
-
-" Set config
-let g:config_vimrc              = substitute(expand('<sfile>:p'), '\v[\/\\]+\c', '/', 'g')
-let g:config_path_tree          = substitute(g:config_path_tree, '\v[\/\\]+\c', '/', 'g')
-let g:config_path_work          = substitute(g:config_path_work, '\v[\/\\]+\c', '/', 'g')
-let g:config_path_plug          = substitute(g:config_path_plug, '\v[\/\\]+\c', '/', 'g')
-let g:config_path_data          = substitute(g:config_path_data, '\v[\/\\]+\c', '/', 'g')
-let g:config_path_tool          = substitute(g:config_path_tool, '\v[\/\\]+\c', '/', 'g')
-let g:config_debug_browser1     = substitute(g:config_debug_browser1, '\v[\/\\]+\c', '/', 'g')
-let g:config_debug_browser2     = substitute(g:config_debug_browser2, '\v[\/\\]+\c', '/', 'g')
-
-" ############################################################################
-" Syntax Color by Bleakwind
-" ############################################################################
-" ============================================================================
+" ----------------------------------------------------------------------------
 " Red         LightRed        DarkRed
 " Green       LightGreen      DarkGreen       SeaGreen
 " Blue        LightBlue       DarkBlue        SlateBlue
@@ -380,10 +411,10 @@ let g:config_debug_browser2     = substitute(g:config_debug_browser2, '\v[\/\\]+
 " Black       White
 " Orange      Purple          Violet
 " Bold, Underline, Undercurl, Reverse, Italic, Standout, NONE
-" ============================================================================
+" ----------------------------------------------------------------------------
 " $str = '...'; preg_match_all('/(c[A-Z][a-zA-Z0-9_]*)[^a-zA-Z0-9_]/', $str, $matches); print_r(array_unique($matches[1]));
 " $str = '...'; preg_match_all('/\s(hi|highlight)\s+(def\s+|default\s+|link\s+)*([a-zA-Z0-9_]*)\s/', $str, $matches); sort($matches[3]); print_r(array_values(array_unique($matches[3])));
-" ============================================================================
+" ----------------------------------------------------------------------------
 syntax enable
 syntax on
 colorscheme colorful
@@ -396,15 +427,10 @@ hi! HlPmtWar ctermfg=Yellow ctermbg=NONE cterm=Bold guifg=#EEBE77 guibg=NONE gui
 hi! HlPmtErr ctermfg=Red    ctermbg=NONE cterm=Bold guifg=#F56C6C guibg=NONE gui=Bold
 
 " ############################################################################
-" --- Plugin Manage Begin ---
-" ############################################################################
-if g:config_plugin_on ==# 'on'
-
-" ############################################################################
-" Function List Define by Bleakwind
+" Process System
 " ############################################################################
 " ============================================================================
-" Setting
+" Build Data
 " ============================================================================
 let g:config_builddir                       = {}
 let g:config_builddir['root']               = g:config_path_data
@@ -417,71 +443,13 @@ let g:config_buildfile                      = {}
 let g:config_builddata                      = {}
 
 " ============================================================================
-" g:neatview
-" ============================================================================
-let g:neatview_setname                      = {}
-let g:neatview_settype                      = {}
-let g:neatview_setpart                      = {}
-let g:neatview_setbuff                      = {}
-let g:neatview_setcoth                      = {}
-let g:neatview_setsize                      = {}
-let g:neatview_setopen                      = {}
-let g:neatview_setclse                      = {}
-let g:neatview_setstat                      = {}
-let g:neatview_setshow                      = {}
-
-let g:neatview_setname['bufferlist']        = 'Bufferlist'
-let g:neatview_settype['bufferlist']        = 'bufferlist'
-let g:neatview_setpart['bufferlist']        = 'tab'
-let g:neatview_setbuff['bufferlist']        = 'vim-bufferlist'
-let g:neatview_setcoth['bufferlist']        = []
-let g:neatview_setsize['bufferlist']        = 1
-let g:neatview_setopen['bufferlist']        = 'BufferlistOpen'
-let g:neatview_setclse['bufferlist']        = 'BufferlistClose'
-let g:neatview_setstat['bufferlist']        = 1
-let g:neatview_setshow['bufferlist']        = 0
-
-let g:neatview_setname['filelist']          = 'Filelist'
-let g:neatview_settype['filelist']          = 'filelist'
-let g:neatview_setpart['filelist']          = 'tree'
-let g:neatview_setbuff['filelist']          = 'vim-filelist'
-let g:neatview_setcoth['filelist']          = []
-let g:neatview_setsize['filelist']          = 30
-let g:neatview_setopen['filelist']          = 'FilelistOpen'
-let g:neatview_setclse['filelist']          = 'FilelistClose'
-let g:neatview_setstat['filelist']          = 1
-let g:neatview_setshow['filelist']          = 0
-
-let g:neatview_setname['quickfix']          = 'Quickfix'
-let g:neatview_settype['quickfix']          = 'qf'
-let g:neatview_setpart['quickfix']          = 'output'
-let g:neatview_setbuff['quickfix']          = ''
-let g:neatview_setcoth['quickfix']          = []
-let g:neatview_setsize['quickfix']          = 10
-let g:neatview_setopen['quickfix']          = 'botright copen '.g:neatview_setsize['quickfix']
-let g:neatview_setclse['quickfix']          = 'cclose'
-let g:neatview_setstat['quickfix']          = 1
-let g:neatview_setshow['quickfix']          = 0
-
-let g:neatview_setname['viewmap']           = 'Viewmap'
-let g:neatview_settype['viewmap']           = 'viewmap'
-let g:neatview_setpart['viewmap']           = 'info'
-let g:neatview_setbuff['viewmap']           = 'vim-viewmap'
-let g:neatview_setcoth['viewmap']           = []
-let g:neatview_setsize['viewmap']           = 20
-let g:neatview_setopen['viewmap']           = 'ViewmapOpen'
-let g:neatview_setclse['viewmap']           = 'ViewmapClose'
-let g:neatview_setstat['viewmap']           = 1
-let g:neatview_setshow['viewmap']           = 0
-
-" ============================================================================
 " Function for Check
 " ============================================================================
 function! CheckMainwin(...)
     let g:global_mainwin = 0
-    for l:winnbr in range(1, winnr('$'))
-        let l:winidn = win_getid(l:winnbr)
-        let l:bufnbr = winbufnr(l:winnbr)
+    for l:v in range(1, winnr('$'))
+        let l:winidn = win_getid(l:v)
+        let l:bufnbr = winbufnr(l:v)
         let l:buftype = getbufvar(l:bufnbr, '&buftype')
         if empty(l:buftype) || l:buftype ==# 'help'
             let g:global_mainwin = l:winidn
@@ -492,20 +460,20 @@ endfunction
 
 function! CheckConfig(...)
     if exists('g:config_builddir')
-        for il in keys(g:config_builddir)
-            if filewritable(g:config_builddir[il]) != 2
-                call mkdir(g:config_builddir[il], 'p', 0755)
+        for l:v in keys(g:config_builddir)
+            if filewritable(g:config_builddir[l:v]) != 2
+                call mkdir(g:config_builddir[l:v], 'p', 0755)
             endif
         endfor
     endif
     if exists('g:config_buildfile')
-        for il in keys(g:config_buildfile)
-            if filewritable(g:config_buildfile[il]) != 1
-                call writefile([], g:config_buildfile[il], 'b')
-                if has_key(g:config_builddata, il)
-                    call writefile(g:config_builddata[il], g:config_buildfile[il], 'b')
+        for l:v in keys(g:config_buildfile)
+            if filewritable(g:config_buildfile[l:v]) != 1
+                call writefile([], g:config_buildfile[l:v], 'b')
+                if has_key(g:config_builddata, l:v)
+                    call writefile(g:config_builddata[l:v], g:config_buildfile[l:v], 'b')
                 endif
-                call setfperm(g:config_buildfile[il], 'rwxrwxrwx')
+                call setfperm(g:config_buildfile[l:v], 'rwxrwxrwx')
             endif
         endfor
     endif
@@ -576,6 +544,16 @@ function! CheckSlash(...)
         endif
     endif
     return l:result_str
+endfunction
+
+function! CheckClean(...)
+    if !has("gui_running") || !has("clientserver")
+        if exists('g:config_path_data') && g:config_path_data =~# '\vvim_[0-9]+$'
+            if isdirectory(g:config_path_data)
+                call delete(g:config_path_data, 'rf')
+            endif
+        endif
+    endif
 endfunction
 
 " ============================================================================
@@ -743,8 +721,8 @@ function! MakeDohi(...)
     " --------------------------------------------------
     let g:env_qfmatch = []
     let l:qflist = getqflist()
-    for il in l:qflist
-       call add(g:env_qfmatch, matchadd('Error', '\%'.il['lnum'].'l'))
+    for l:v in l:qflist
+       call add(g:env_qfmatch, matchadd('Error', '\%'.l:v['lnum'].'l'))
     endfor
     " --------------------------------------------------
     " restore env
@@ -767,8 +745,8 @@ function! MakeNohi(...)
     " process
     " --------------------------------------------------
     if exists('g:env_qfmatch') && !empty(g:env_qfmatch)
-        for il in g:env_qfmatch
-           call matchdelete(il)
+        for l:v in g:env_qfmatch
+           call matchdelete(l:v)
         endfor
         let g:env_qfmatch = []
     endif
@@ -923,13 +901,13 @@ function! DebugEnv(...)
     echohl HlPmtSuc | echo "========= Start  =========" | echohl None
     echo printf("= %-8s = %-8s = %-8s = %-16s = %-16s = %-16s", 'bufnr', 'winnr', 'winid', 'filetype', 'buftype', 'bufname')
     let buflist = getbufinfo()
-    for il in buflist
-        let l:bufnbr = il.bufnr
-        let l:winnbr = bufwinnr(il.bufnr)
-        let l:winidn = bufwinnr(il.bufnr) != -1 ? win_getid(bufwinnr(il.bufnr)) : ''
-        let l:filtype = getbufvar(il.bufnr, '&filetype')
-        let l:buftype = getbufvar(il.bufnr, '&buftype')
-        let l:bufname = bufname(il.bufnr)
+    for l:v in buflist
+        let l:bufnbr = l:v.bufnr
+        let l:winnbr = bufwinnr(l:v.bufnr)
+        let l:winidn = bufwinnr(l:v.bufnr) != -1 ? win_getid(bufwinnr(l:v.bufnr)) : ''
+        let l:filtype = getbufvar(l:v.bufnr, '&filetype')
+        let l:buftype = getbufvar(l:v.bufnr, '&buftype')
+        let l:bufname = bufname(l:v.bufnr)
         echo printf("> %-8d > %-8d > %-8d > %-16s > %-16s > %-16s", l:bufnbr, l:winnbr, l:winidn, l:filtype, l:buftype, l:bufname)
     endfor
     echohl HlPmtSuc | echo "========= Finish =========" | echohl None
@@ -937,13 +915,13 @@ function! DebugEnv(...)
     echohl HlPmtSuc | echo "========= Start  =========" | echohl None
     echo printf("= %-8s = %-8s = %-8s = %-16s = %-16s = %-16s", 'bufnr', 'winnr', 'winid', 'filetype', 'buftype', 'bufname')
     let l:winlist = getwininfo()
-    for il in l:winlist
-        let l:bufnbr = il.bufnr
-        let l:winnbr = il.winnr
-        let l:winidn = il.winid
-        let l:filtype = getbufvar(il.bufnr, '&filetype')
-        let l:buftype = getbufvar(il.bufnr, '&buftype')
-        let l:bufname = bufname(il.bufnr)
+    for l:v in l:winlist
+        let l:bufnbr = l:v.bufnr
+        let l:winnbr = l:v.winnr
+        let l:winidn = l:v.winid
+        let l:filtype = getbufvar(l:v.bufnr, '&filetype')
+        let l:buftype = getbufvar(l:v.bufnr, '&buftype')
+        let l:bufname = bufname(l:v.bufnr)
         echo printf("> %-8d > %-8d > %-8d > %-16s > %-16s > %-16s", l:bufnbr, l:winnbr, l:winidn, l:filtype, l:buftype, l:bufname)
     endfor
     echohl HlPmtSuc | echo "========= Finish =========" | echohl None
@@ -951,7 +929,7 @@ endfunction
 command! -nargs=? DebugEnv :call DebugEnv(<q-args>)
 
 " ============================================================================
-" Command
+" Command list
 " ============================================================================
 " --------------------------------------------------
 " global config
@@ -979,6 +957,14 @@ augroup vim_cmd_syntax
 augroup END
 
 " --------------------------------------------------
+" cleanup data
+" --------------------------------------------------
+augroup vim_cmd_cleanup
+    autocmd!
+    autocmd VimLeavePre * call CheckClean()
+augroup END
+
+" --------------------------------------------------
 " diff cursor
 " --------------------------------------------------
 augroup vim_cmd_diffcursor
@@ -998,7 +984,7 @@ augroup vim_cmd_diffcursor
 augroup END
 
 " ############################################################################
-" Plugin List Setting by Bleakwind
+" Plugin Setting
 " ############################################################################
 " ============================================================================
 " Vundle
@@ -1013,9 +999,64 @@ augroup END
 " ============================================================================
 " Vim-Neatview
 " ============================================================================
-let g:neatview_enabled   = 1
-let g:neatview_autostart = 1
-let g:neatview_initfun   = 'neatview#StructTree()'
+let g:neatview_setname               = {}
+let g:neatview_settype               = {}
+let g:neatview_setpart               = {}
+let g:neatview_setbuff               = {}
+let g:neatview_setcoth               = {}
+let g:neatview_setsize               = {}
+let g:neatview_setopen               = {}
+let g:neatview_setclse               = {}
+let g:neatview_setstat               = {}
+let g:neatview_setshow               = {}
+
+let g:neatview_setname['bufferlist'] = 'Bufferlist'
+let g:neatview_settype['bufferlist'] = 'bufferlist'
+let g:neatview_setpart['bufferlist'] = 'tab'
+let g:neatview_setbuff['bufferlist'] = 'vim-bufferlist'
+let g:neatview_setcoth['bufferlist'] = []
+let g:neatview_setsize['bufferlist'] = 1
+let g:neatview_setopen['bufferlist'] = 'BufferlistOpen'
+let g:neatview_setclse['bufferlist'] = 'BufferlistClose'
+let g:neatview_setstat['bufferlist'] = 1
+let g:neatview_setshow['bufferlist'] = 0
+
+let g:neatview_setname['filelist']   = 'Filelist'
+let g:neatview_settype['filelist']   = 'filelist'
+let g:neatview_setpart['filelist']   = 'tree'
+let g:neatview_setbuff['filelist']   = 'vim-filelist'
+let g:neatview_setcoth['filelist']   = []
+let g:neatview_setsize['filelist']   = 30
+let g:neatview_setopen['filelist']   = 'FilelistOpen'
+let g:neatview_setclse['filelist']   = 'FilelistClose'
+let g:neatview_setstat['filelist']   = 1
+let g:neatview_setshow['filelist']   = 0
+
+let g:neatview_setname['quickfix']   = 'Quickfix'
+let g:neatview_settype['quickfix']   = 'qf'
+let g:neatview_setpart['quickfix']   = 'output'
+let g:neatview_setbuff['quickfix']   = ''
+let g:neatview_setcoth['quickfix']   = []
+let g:neatview_setsize['quickfix']   = 10
+let g:neatview_setopen['quickfix']   = 'botright copen '.g:neatview_setsize['quickfix']
+let g:neatview_setclse['quickfix']   = 'cclose'
+let g:neatview_setstat['quickfix']   = 1
+let g:neatview_setshow['quickfix']   = 0
+
+let g:neatview_setname['viewmap']    = 'Viewmap'
+let g:neatview_settype['viewmap']    = 'viewmap'
+let g:neatview_setpart['viewmap']    = 'info'
+let g:neatview_setbuff['viewmap']    = 'vim-viewmap'
+let g:neatview_setcoth['viewmap']    = []
+let g:neatview_setsize['viewmap']    = 20
+let g:neatview_setopen['viewmap']    = 'ViewmapOpen'
+let g:neatview_setclse['viewmap']    = 'ViewmapClose'
+let g:neatview_setstat['viewmap']    = 1
+let g:neatview_setshow['viewmap']    = 0
+
+let g:neatview_enabled               = 1
+let g:neatview_autostart             = 1
+let g:neatview_initfun               = 'neatview#StructTree()'
 
 " ============================================================================
 " Vim-Bufferlist
@@ -1033,7 +1074,7 @@ let g:filelist_enabled   = 1
 let g:filelist_autostart = 0
 let g:filelist_position  = 'left'
 let g:filelist_winwidth  = 30
-let g:filelist_mainpath  = g:config_path_tree
+let g:filelist_mainpath  = g:config_path_work
 let g:filelist_showhide  = 0
 let g:filelist_datapath  = g:config_path_data.'/filelist'
 
@@ -1123,7 +1164,7 @@ let g:marktext_time_tformat    = '%Y-%m-%d %H:%M:%S'
 let g:marktext_time_autoupdate = 1
 
 " ############################################################################
-" Other Setting by Bleakwind
+" Other Setting
 " ############################################################################
 " ============================================================================
 " Command
@@ -1255,11 +1296,6 @@ map <F12>   :call MakeBrowser('chrome')<CR>
 map <C-F12> :call MakeBrowser('firefox')<CR>
 
 " ############################################################################
-" --- Plugin Manage End ---
-" ############################################################################
-endif
-
-" ############################################################################
-" === End ===
+" === Vimrc End ===
 " ############################################################################
 

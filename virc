@@ -53,20 +53,26 @@ augroup END
 " ============================================================================
 " Global Setting
 " ============================================================================
-set nocompatible
-set tags=./.tags;,.tags
-set wildignore+=*/.svn/*,*/.git/*
+" Set Config Option
+let &compatible     = 0
+let &tags           = './.tags;,.tags'
+let &wildignore    .= '*/.svn/**,*/.git/**'
 
-" ============================================================================
-" System Setting
-" ============================================================================
-" Set Filetype
-filetype on
-filetype plugin on
-filetype indent on
+" Set Dir Option
+let &backupdir      = g:config_path_data.'/vim/backupdir/'
+let &viewdir        = g:config_path_data.'/vim/viewdir/'
+let &undodir        = g:config_path_data.'/vim/undodir/'
+let &directory      = g:config_path_data.'/vim/swapdir/'
+
+" Set Encoding Option
+let &encoding       = g:config_set_encode
+let &termencoding   = g:config_set_encode
+let &fileencoding   = g:config_set_encode
+let &fileencodings  = g:config_set_enclist
+let &guifont        = g:config_set_font
+let &guifontwide    = ''
 
 " Set Gui Option
-"set guioptions-=m
 set guioptions-=T
 set guioptions-=l
 set guioptions-=L
@@ -76,8 +82,6 @@ set guioptions+=b
 set showtabline=1
 
 " Set Character Encoding
-set fileencoding=utf-8
-set fileencodings=utf-8,utf-16,gb2312,gbk,gb18030,big5,latin1,Unicode
 set fileformat=unix
 set fileformats=unix
 set ambiwidth=double
@@ -150,6 +154,7 @@ set autoread
 set noconfirm
 set hlsearch
 set noshellslash
+set termguicolors
 set equalalways
 set helpheight=20
 set mouse=a
@@ -165,12 +170,22 @@ set completeopt=menuone,noinsert,noselect
 set matchpairs=(:),{:},[:]
 set fillchars=stl:\ ,stlnc:\ ,vert:\ ,fold:-,diff:-
 
-" Set Term
-"if !empty($TMUX)
-    set termguicolors
-"endif
+" ============================================================================
+" System Setting
+" ============================================================================
+" Clean Autocmd
+autocmd!
 
+" ============================================================================
+" Set Filetype
+" ============================================================================
+filetype on
+filetype plugin on
+filetype indent on
+
+" ============================================================================
 " Set Keyboard
+" ============================================================================
 map     <C-Insert>      "+y:let @*=@+<CR>
 map     <S-Insert>      "+p
 imap    <S-Insert>      <Esc><S-Insert>a
@@ -190,14 +205,8 @@ imap    <4-MiddleMouse> <4-LeftMouse>
 vmap    <4-MiddleMouse> <4-LeftMouse>
 
 " ============================================================================
-" Initialize
+" Syntax Color
 " ============================================================================
-" Clean Autocmd
-" autocmd!
-
-" ############################################################################
-" Syntax Color by Bleakwind
-" ############################################################################
 " ----------------------------------------------------------------------------
 " Red         LightRed        DarkRed
 " Green       LightGreen      DarkGreen       SeaGreen
@@ -215,6 +224,14 @@ vmap    <4-MiddleMouse> <4-LeftMouse>
 " ----------------------------------------------------------------------------
 syntax enable
 syntax on
+colorscheme colorful
+
+" prompt message
+hi! HlPmtDef ctermfg=Gray   ctermbg=NONE cterm=Bold guifg=#B1B3B8 guibg=NONE gui=Bold
+hi! HlPmtNor ctermfg=Blue   ctermbg=NONE cterm=Bold guifg=#79BBFF guibg=NONE gui=Bold
+hi! HlPmtSuc ctermfg=Green  ctermbg=NONE cterm=Bold guifg=#95D475 guibg=NONE gui=Bold
+hi! HlPmtWar ctermfg=Yellow ctermbg=NONE cterm=Bold guifg=#EEBE77 guibg=NONE gui=Bold
+hi! HlPmtErr ctermfg=Red    ctermbg=NONE cterm=Bold guifg=#F56C6C guibg=NONE gui=Bold
 
 " ============================================================================
 " Color detail
@@ -260,7 +277,7 @@ hi ModeMsg                          ctermfg=LightBlue   ctermbg=NONE        cter
 hi MsgArea                          ctermfg=White       ctermbg=Black       cterm=NONE      guifg=#DDDDDD   guibg=#282C34   gui=NONE
 hi MoreMsg                          ctermfg=LightBlue   ctermbg=NONE        cterm=Bold      guifg=#82BDE8   guibg=NONE      gui=Bold
 hi Question                         ctermfg=LightBlue   ctermbg=NONE        cterm=Bold      guifg=#82BDE8   guibg=NONE      gui=Bold
-hi QuickFixLine                     ctermfg=White       ctermbg=DarkMagenta cterm=NONE      guifg=#FFFFFF   guibg=#AE508D   gui=NONE
+hi QuickFixLine                     ctermfg=White       ctermbg=Blue        cterm=NONE      guifg=#FFFFFF   guibg=#6A5ACD   gui=NONE
 hi WarningMsg                       ctermfg=Yellow      ctermbg=NONE        cterm=Bold      guifg=#EEBE77   guibg=NONE      gui=Bold
 hi ErrorMsg                         ctermfg=Red         ctermbg=NONE        cterm=Bold      guifg=#EF939C   guibg=NONE      gui=Bold
 hi MessageWindow                    ctermfg=LightBlue   ctermbg=NONE        cterm=Bold      guifg=#82BDE8   guibg=NONE      gui=Bold
@@ -274,13 +291,13 @@ hi PmenuKind                        ctermfg=Black       ctermbg=LightGray   cter
 hi PmenuExtra                       ctermfg=Black       ctermbg=LightGray   cterm=NONE      guifg=#000000   guibg=#A9A9A9   gui=NONE
 hi PmenuSbar                        ctermfg=Black       ctermbg=Gray        cterm=NONE      guifg=#000000   guibg=#59647A   gui=NONE
 hi PmenuThumb                       ctermfg=Black       ctermbg=DarkGray    cterm=NONE      guifg=#000000   guibg=#4C525D   gui=NONE
-hi PmenuSel                         ctermfg=White       ctermbg=DarkMagenta cterm=NONE      guifg=#FFFFFF   guibg=#AE508D   gui=NONE
-hi PmenuMatchSel                    ctermfg=White       ctermbg=DarkMagenta cterm=NONE      guifg=#FFFFFF   guibg=#AE508D   gui=NONE
-hi PmenuKindSel                     ctermfg=White       ctermbg=DarkMagenta cterm=NONE      guifg=#FFFFFF   guibg=#AE508D   gui=NONE
-hi PmenuExtraSel                    ctermfg=White       ctermbg=DarkMagenta cterm=NONE      guifg=#FFFFFF   guibg=#AE508D   gui=NONE
-hi ComplMatchIns                    ctermfg=White       ctermbg=DarkMagenta cterm=NONE      guifg=#FFFFFF   guibg=#AE508D   gui=NONE
+hi PmenuSel                         ctermfg=White       ctermbg=Blue        cterm=NONE      guifg=#FFFFFF   guibg=#6A5ACD   gui=NONE
+hi PmenuMatchSel                    ctermfg=White       ctermbg=Blue        cterm=NONE      guifg=#FFFFFF   guibg=#6A5ACD   gui=NONE
+hi PmenuKindSel                     ctermfg=White       ctermbg=Blue        cterm=NONE      guifg=#FFFFFF   guibg=#6A5ACD   gui=NONE
+hi PmenuExtraSel                    ctermfg=White       ctermbg=Blue        cterm=NONE      guifg=#FFFFFF   guibg=#6A5ACD   gui=NONE
+hi ComplMatchIns                    ctermfg=White       ctermbg=Blue        cterm=NONE      guifg=#FFFFFF   guibg=#6A5ACD   gui=NONE
 hi PopupNotification                ctermfg=Black       ctermbg=LightGray   cterm=NONE      guifg=#000000   guibg=#A9A9A9   gui=NONE
-hi PopupSelected                    ctermfg=Black       ctermbg=LightGray   cterm=NONE      guifg=#000000   guibg=#A9A9A9   gui=NONE
+hi PopupSelected                    ctermfg=White       ctermbg=Blue        cterm=NONE      guifg=#FFFFFF   guibg=#6A5ACD   gui=NONE
 hi TabLine                          ctermfg=Black       ctermbg=DarkGray    cterm=NONE      guifg=#A9A9A9   guibg=#21252B   gui=NONE
 hi TabLineFill                      ctermfg=Black       ctermbg=Gray        cterm=NONE      guifg=#21252B   guibg=#21252B   gui=NONE
 hi TabLineSel                       ctermfg=Black       ctermbg=LightGray   cterm=NONE      guifg=#000000   guibg=#A9A9A9   gui=NONE
