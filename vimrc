@@ -1070,13 +1070,13 @@ let g:bufferlist_datapath  = g:config_path_data . '/bufferlist'
 " ============================================================================
 " Vim-Filelist
 " ============================================================================
-let g:filelist_enabled   = 1
-let g:filelist_autostart = 0
-let g:filelist_position  = 'left'
-let g:filelist_winwidth  = 30
-let g:filelist_mainpath  = g:config_path_work
-let g:filelist_showhide  = 0
-let g:filelist_datapath  = g:config_path_data . '/filelist'
+let g:filelist_enabled       = 1
+let g:filelist_autostart     = 0
+let g:filelist_position      = 'left'
+let g:filelist_winwidth      = 30
+let g:filelist_mainpath      = g:config_path_work
+let g:filelist_showhide      = 0
+let g:filelist_datapath      = g:config_path_data . '/filelist'
 
 let g:filelist_cprt          = {}
 let g:filelist_cprt.nickname = 'Bleakwind'
