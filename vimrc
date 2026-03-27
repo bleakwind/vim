@@ -147,8 +147,8 @@ elseif has('win64') || has('win32')
     let g:config_path_tool              = 'D:/Program Files/vim/_tool'
     let g:config_path_plug              = 'D:/Program Files/vim/vimfiles'
     let g:config_debug_url              = 'http://127.0.0.1:88'
-    let g:config_debug_browser1         = 'start '.shellescape('C:/Program Files (x86)/Google/Chrome/Application/chrome.exe')
-    let g:config_debug_browser2         = 'start '.shellescape('D:/Program Files/Firefox/firefox.exe')
+    let g:config_debug_browser1         = 'start ' . shellescape('C:/Program Files (x86)/Google/Chrome/Application/chrome.exe')
+    let g:config_debug_browser2         = 'start ' . shellescape('D:/Program Files/Firefox/firefox.exe')
     let g:config_markdown_script        = 'http://127.0.0.1:88/project/markdown/markdown/markdown.php'
 endif
 
@@ -161,9 +161,9 @@ let g:skip_loading_mswin    = 1
 
 " set env config
 if !has("gui_running") || !has("clientserver")
-    let g:config_path_data  = g:config_path_data.'/vim_' . getpid()
+    let g:config_path_data  = g:config_path_data . '/vim_' . getpid()
 else
-    let g:config_path_data  = g:config_path_data.'/gvim'
+    let g:config_path_data  = g:config_path_data . '/gvim'
 endif
 " ============================================================================
 " Global Setting
@@ -175,10 +175,10 @@ let &iskeyword      = join(uniq(sort(split(&iskeyword . ',_,-,$,@,%,#', ','))), 
 let &wildignore     = join(uniq(sort(split(&wildignore . ',*/.svn/**,*/.git/**', ','))), ',')
 
 " Set Dir Option
-let &backupdir      = g:config_path_data.'/vim/backupdir/'
-let &viewdir        = g:config_path_data.'/vim/viewdir/'
-let &undodir        = g:config_path_data.'/vim/undodir/'
-let &directory      = g:config_path_data.'/vim/swapdir/'
+let &backupdir      = g:config_path_data . '/vim/backupdir/'
+let &viewdir        = g:config_path_data . '/vim/viewdir/'
+let &undodir        = g:config_path_data . '/vim/undodir/'
+let &directory      = g:config_path_data . '/vim/swapdir/'
 
 " Set Encoding Option
 let &encoding       = g:config_set_encode
@@ -340,8 +340,8 @@ endif
 " plugin begin
 " ============================================================================
 filetype off
-let &runtimepath .= ','.g:config_path_plug.'/bundle/Vundle.vim'
-call vundle#begin(g:config_path_plug.'/bundle')
+let &runtimepath .= ',' . g:config_path_plug . '/bundle/Vundle.vim'
+call vundle#begin(g:config_path_plug . '/bundle')
 
 " ============================================================================
 " plugin base
@@ -434,11 +434,11 @@ hi! HlPmtErr ctermfg=Red    ctermbg=NONE cterm=Bold guifg=#F56C6C guibg=NONE gui
 " ============================================================================
 let g:config_builddir                       = {}
 let g:config_builddir['root']               = g:config_path_data
-let g:config_builddir['vim']                = g:config_path_data.'/vim'
-let g:config_builddir['vim_backupdir']      = g:config_path_data.'/vim/backupdir'
-let g:config_builddir['vim_viewdir']        = g:config_path_data.'/vim/viewdir'
-let g:config_builddir['vim_undodir']        = g:config_path_data.'/vim/undodir'
-let g:config_builddir['vim_swapdir']        = g:config_path_data.'/vim/swapdir'
+let g:config_builddir['vim']                = g:config_path_data . '/vim'
+let g:config_builddir['vim_backupdir']      = g:config_path_data . '/vim/backupdir'
+let g:config_builddir['vim_viewdir']        = g:config_path_data . '/vim/viewdir'
+let g:config_builddir['vim_undodir']        = g:config_path_data . '/vim/undodir'
+let g:config_builddir['vim_swapdir']        = g:config_path_data . '/vim/swapdir'
 let g:config_buildfile                      = {}
 let g:config_builddata                      = {}
 
@@ -483,9 +483,9 @@ function! CheckProconf(...)
     let l:curr_path = getcwd()
     if l:curr_path != g:global_default_directory
         let &wildignore = g:global_default_wildignore
-        if filereadable(l:curr_path."/.vimrc")
-            " let &wildignore .= ','.getcwd().'/build/**'
-            execute "source ".l:curr_path."/.vimrc"
+        if filereadable(l:curr_path . "/.vimrc")
+            " let &wildignore .= ',' . getcwd() . '/build/**'
+            execute "source " . l:curr_path . "/.vimrc"
         endif
         let g:global_default_directory = l:curr_path
     endif
@@ -517,7 +517,7 @@ function! CheckVisual(...)
     endif
     let l:result = join(l:content, "\n")
     if l:if_wrap ==# 1
-        let l:result = l:result."\n"
+        let l:result = l:result . "\n"
     endif
     return l:result
 endfunction
@@ -636,7 +636,7 @@ function! FileFormat(...)
     let l:res = 0
     if index(["c", "cpp", "objc", "objcpp", "h", "hpp"], &filetype) >= 0
         if (exists('g:auto_lang_format') && index(g:auto_lang_format, 'c') != -1) || (exists('a:1') && a:1 ==# 'f')
-            silent execute '!clang-format20 -style=file:'.g:config_path_tool.'/vim/clang-format/.clang-format -i %'
+            silent execute '!clang-format20 -style=file:' . g:config_path_tool . '/vim/clang-format/.clang-format -i %'
             let l:res = v:shell_error
             if l:res == 0
                 edit!
@@ -644,7 +644,7 @@ function! FileFormat(...)
         endif
     elseif index(["php"], &filetype) >= 0
         if (exists('g:auto_lang_format') && index(g:auto_lang_format, 'php') != -1) || (exists('a:1') && a:1 ==# 'f')
-            silent execute '!'.g:config_path_tool.'/vim/php-cs-fixer/php-cs-fixer --config='.g:config_path_tool.'/vim/php-cs-fixer/.php-cs-fixer.php fix %'
+            silent execute '!' . g:config_path_tool . '/vim/php-cs-fixer/php-cs-fixer --config=' . g:config_path_tool . '/vim/php-cs-fixer/.php-cs-fixer.php fix %'
             let l:res = v:shell_error
             if l:res == 0
                 edit!
@@ -722,7 +722,7 @@ function! MakeDohi(...)
     let g:env_qfmatch = []
     let l:qflist = getqflist()
     for l:v in l:qflist
-       call add(g:env_qfmatch, matchadd('Error', '\%'.l:v['lnum'].'l'))
+       call add(g:env_qfmatch, matchadd('Error', '\%' . l:v['lnum'] . 'l'))
     endfor
     " --------------------------------------------------
     " restore env
@@ -826,7 +826,7 @@ function! MakeLaunch(...)
         if &filetype ==# 'c'
             let l:work_file = substitute(expand("%:p:r"), '\v[\/\\]+\c', '/', 'g')
             if filewritable(l:work_file) ==# 1
-                execute '!time '.shellescape(l:work_file)
+                execute '!time ' . shellescape(l:work_file)
             endif
         elseif &filetype ==# 'php'
             "...
@@ -864,13 +864,13 @@ function! MakeBrowser(...)
         let l:work_file = substitute(expand("%:p"), '\v[\/\\]+\c', '/', 'g')
         setlocal noshellslash
         if a:0 > 0 && &filetype ==# "markdown"
-            silent execute '!'.l:system_browser[a:1].' '.shellescape(g:config_markdown_script.'?f='.l:work_file)
+            silent execute '!' . l:system_browser[a:1] . ' ' . shellescape(g:config_markdown_script . '?f=' . l:work_file)
         elseif a:0 > 0
             if stridx(l:work_file, g:config_path_work) ==# -1
-                silent execute '!'.l:system_browser[a:1].' '.shellescape('file:///'.l:work_file)
+                silent execute '!' . l:system_browser[a:1] . ' ' . shellescape('file:///' . l:work_file)
             else
-                let l:work_file = substitute(l:work_file, '\v'.CheckSlash('string', g:config_path_work).'\c', g:config_debug_url, '')
-                silent execute '!'.l:system_browser[a:1].' '.shellescape(l:work_file)
+                let l:work_file = substitute(l:work_file, '\v' . CheckSlash('string', g:config_path_work) . '\c', g:config_debug_url, '')
+                silent execute '!' . l:system_browser[a:1] . ' ' . shellescape(l:work_file)
             endif
         endif
         setlocal shellslash<
@@ -889,13 +889,13 @@ command! -nargs=? MakeBrowser :call MakeBrowser(<q-args>)
 " ============================================================================
 function! DebugEnv(...)
     echohl HlPmtSuc | echo "========= Start  =========" | echohl None
-    echo "> bufnr('%')    : ".bufnr('%')
-    echo "> bufname('%')  : ".bufname('%')
-    echo "> bufwinnr('%') : ".bufwinnr('%')
-    echo "> winbufnr('%') : ".winbufnr('%')
-    echo "> winnr()       : ".winnr()
-    echo "> win_getid()   : ".win_getid()
-    echo "> &modified     : ".&modified
+    echo "> bufnr('%')    : " . bufnr('%')
+    echo "> bufname('%')  : " . bufname('%')
+    echo "> bufwinnr('%') : " . bufwinnr('%')
+    echo "> winbufnr('%') : " . winbufnr('%')
+    echo "> winnr()       : " . winnr()
+    echo "> win_getid()   : " . win_getid()
+    echo "> &modified     : " . &modified
     echohl HlPmtSuc | echo "========= Finish =========" | echohl None
 
     echohl HlPmtSuc | echo "========= Start  =========" | echohl None
@@ -978,8 +978,8 @@ augroup vim_cmd_diffcursor
                 \     execute 'hi CursorLine   ctermbg=NONE guibg=NONE' |
                 \     execute 'hi CursorColumn ctermbg=NONE guibg=NONE' |
                 \ elseif !v:option_new |
-                \     execute 'hi CursorLine   ctermbg='.g:hldifcurlincbg.' guibg='.g:hldifcurlingbg |
-                \     execute 'hi CursorColumn ctermbg='.g:hldifcurcolcbg.' guibg='.g:hldifcurcolgbg |
+                \     execute 'hi CursorLine   ctermbg=' . g:hldifcurlincbg . ' guibg=' . g:hldifcurlingbg |
+                \     execute 'hi CursorColumn ctermbg=' . g:hldifcurcolcbg . ' guibg=' . g:hldifcurcolgbg |
                 \ endif
 augroup END
 
@@ -1038,7 +1038,7 @@ let g:neatview_setpart['quickfix']   = 'output'
 let g:neatview_setbuff['quickfix']   = ''
 let g:neatview_setcoth['quickfix']   = []
 let g:neatview_setsize['quickfix']   = 10
-let g:neatview_setopen['quickfix']   = 'botright copen '.g:neatview_setsize['quickfix']
+let g:neatview_setopen['quickfix']   = 'botright copen ' . g:neatview_setsize['quickfix']
 let g:neatview_setclse['quickfix']   = 'cclose'
 let g:neatview_setstat['quickfix']   = 1
 let g:neatview_setshow['quickfix']   = 0
@@ -1065,7 +1065,7 @@ let g:bufferlist_enabled   = 1
 let g:bufferlist_autostart = 0
 let g:bufferlist_position  = 'top'
 let g:bufferlist_reopen    = 1
-let g:bufferlist_datapath  = g:config_path_data.'/bufferlist'
+let g:bufferlist_datapath  = g:config_path_data . '/bufferlist'
 
 " ============================================================================
 " Vim-Filelist
@@ -1076,7 +1076,7 @@ let g:filelist_position  = 'left'
 let g:filelist_winwidth  = 30
 let g:filelist_mainpath  = g:config_path_work
 let g:filelist_showhide  = 0
-let g:filelist_datapath  = g:config_path_data.'/filelist'
+let g:filelist_datapath  = g:config_path_data . '/filelist'
 
 let g:filelist_cprt          = {}
 let g:filelist_cprt.nickname = 'Bleakwind'
@@ -1127,8 +1127,8 @@ let g:specialcolor_csscolor_updelay = 1000
 " Vim-Runscript
 " ============================================================================
 let g:runscript_enabled = 1
-let g:runscript_inpscpt = g:config_path_tool.'/runscript/script'
-let g:runscript_inppath = g:config_path_data.'/runscript'
+let g:runscript_inpscpt = g:config_path_tool . '/runscript/script'
+let g:runscript_inppath = g:config_path_data . '/runscript'
 let g:runscript_runcomm = 'php -d html_errors=0'
 
 " ============================================================================
@@ -1151,7 +1151,7 @@ let g:autoplete_insftype   = ['*']
 let g:autoplete_maxabbr    = 30
 let g:autoplete_maxmenu    = 80
 let g:autoplete_maxaddi    = 30
-let g:autoplete_cusdict    = g:config_path_tool.'/autoplete/dict'
+let g:autoplete_cusdict    = g:config_path_tool . '/autoplete/dict'
 
 " ============================================================================
 " Vim-Marktext
@@ -1196,10 +1196,10 @@ cmap <S-Insert> <C-r>=KeyCommParse(@+)<CR>
 " <Leader>/
 " --------------------------------------------------
 function! KeySearchComm(...)
-    let l:select_visual = exists('a:1') && a:1 ==# 'v' ? '\v'.substitute(CheckSlash('string', CheckVisual()), '\v\n\c', '\\n', 'g').'\C' : ''
+    let l:select_visual = exists('a:1') && a:1 ==# 'v' ? '\v' . substitute(CheckSlash('string', CheckVisual()), '\v\n\c', '\\n', 'g') . '\C' : ''
     let l:set_pos = 0
     call setcmdpos(l:set_pos+strlen(l:select_visual))
-    return '/'.l:select_visual.''
+    return '/' . l:select_visual . ''
 endfunction
 map  <Leader>/ :<C-\>eKeySearchComm()<CR>
 vmap <Leader>/ :<C-\>eKeySearchComm('v')<CR>
@@ -1208,12 +1208,12 @@ vmap <Leader>/ :<C-\>eKeySearchComm('v')<CR>
 " <Leader>f
 " --------------------------------------------------
 function! KeySearchFile(...)
-    let l:select_visual = exists('a:1') && a:1 ==# 'v' ? '\v'.substitute(CheckSlash('string', CheckVisual()), '\v\n\c', '\\n', 'g').'\C' : ''
+    let l:select_visual = exists('a:1') && a:1 ==# 'v' ? '\v' . substitute(CheckSlash('string', CheckVisual()), '\v\n\c', '\\n', 'g') . '\C' : ''
     let l:curr_path = fnameescape(substitute(getcwd(), '\v[\/\\]+\c', '/', 'g'))
     let l:curr_path = empty(l:curr_path) ? '~' : l:curr_path
     let l:set_pos = empty(l:select_visual) ? 10 : 8
     call setcmdpos(l:set_pos+strlen(l:select_visual))
-    return 'vimgrep /'.l:select_visual.'/gj '.l:curr_path.'/**/*'
+    return 'vimgrep /' . l:select_visual . '/gj ' . l:curr_path . '/**/*'
 endfunction
 map  <Leader>f :<C-\>eKeySearchFile()<CR>
 vmap <Leader>f :<C-\>eKeySearchFile('v')<CR>
@@ -1222,10 +1222,10 @@ vmap <Leader>f :<C-\>eKeySearchFile('v')<CR>
 " <Leader>h
 " --------------------------------------------------
 function! KeyReplaceBuf(...)
-    let l:select_visual = exists('a:1') && a:1 ==# 'v' ? '\v'.substitute(CheckSlash('string', CheckVisual()), '\v\n\c', '\\n', 'g').'\C' : ''
+    let l:select_visual = exists('a:1') && a:1 ==# 'v' ? '\v' . substitute(CheckSlash('string', CheckVisual()), '\v\n\c', '\\n', 'g') . '\C' : ''
     let l:set_pos = empty(l:select_visual) ? 6 : 7
     call setcmdpos(l:set_pos+strlen(l:select_visual))
-    return '.,$s/'.l:select_visual.'//gc'
+    return '.,$s/' . l:select_visual . '//gc'
 endfunction
 map  <Leader>h :<C-\>eKeyReplaceBuf()<CR>
 vmap <Leader>h :<C-\>eKeyReplaceBuf('v')<CR>
@@ -1234,10 +1234,10 @@ vmap <Leader>h :<C-\>eKeyReplaceBuf('v')<CR>
 " <Leader>g
 " --------------------------------------------------
 function! KeyReplaceFile(...)
-    let l:select_visual = exists('a:1') && a:1 ==# 'v' ? '\v'.substitute(CheckSlash('string', CheckVisual()), '\v\n\c', '\\n', 'g').'\C' : ''
+    let l:select_visual = exists('a:1') && a:1 ==# 'v' ? '\v' . substitute(CheckSlash('string', CheckVisual()), '\v\n\c', '\\n', 'g') . '\C' : ''
     let l:set_pos = empty(l:select_visual) ? 10 : 11
     call setcmdpos(l:set_pos+strlen(l:select_visual))
-    return 'bufdo %s/'.l:select_visual.'//gc | update'
+    return 'bufdo %s/' . l:select_visual . '//gc | update'
 endfunction
 map  <Leader>g :<C-\>eKeyReplaceFile()<CR>
 vmap <Leader>g :<C-\>eKeyReplaceFile('v')<CR>
