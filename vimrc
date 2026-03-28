@@ -1078,6 +1078,12 @@ let g:filelist_mainpath      = g:config_path_work
 let g:filelist_showhide      = 0
 let g:filelist_datapath      = g:config_path_data . '/filelist'
 
+let g:filelist_ecst          = {}
+let g:filelist_ecst.code     = g:config_set_enclist
+
+let g:filelist_ecoa          = {}
+let g:filelist_ecoa.code     = g:config_set_enclist
+
 let g:filelist_cprt          = {}
 let g:filelist_cprt.nickname = 'Bleakwind'
 let g:filelist_cprt.fullname = 'Rick Wu'
