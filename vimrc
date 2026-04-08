@@ -165,14 +165,15 @@ if !has("gui_running") || !has("clientserver")
 else
     let g:config_path_data  = g:config_path_data . '/gvim'
 endif
+
 " ============================================================================
 " Global Setting
 " ============================================================================
 " Set Config Option
 let &compatible     = 0
-let &tags           = './.tags;,.tags'
-let &iskeyword      = join(uniq(sort(split(&iskeyword . ',_,-,$,@,%,#', ','))), ',')
+let &tags           = './.tags,.tags'
 let &wildignore     = join(uniq(sort(split(&wildignore . ',*/.svn/**,*/.git/**', ','))), ',')
+let &iskeyword      = join(uniq(sort(split(&iskeyword . ',_,-,$,@,%,#', ','))), ',')
 
 " Set Dir Option
 let &backupdir      = g:config_path_data . '/vim/backupdir/'
